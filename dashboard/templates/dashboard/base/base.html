@@ -10,7 +10,7 @@
 
   <!-- GOOGLE FONTS -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500|Poppins:400,500,600,700|Roboto:400,500" rel="stylesheet"/>
-  <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css' %}" rel="stylesheet" />
+  <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet" />
 
   <!-- PLUGINS CSS STYLE -->
   <link href="{% static 'dashboard/assets/plugins/toaster/toastr.min.css' %}" rel="stylesheet" />
@@ -48,10 +48,24 @@
     </script>
 
     <div class="mobile-sticky-body-overlay"></div>
+    <div class="wrapper">
+      
+      <!--
+  ====================================
+  ——— LEFT SIDEBAR WITH FOOTER
+  =====================================
+  -->
+  {% include 'dashboard/base/sidebar.html' %}
+  <div class="page-wrapper">
+          <!-- Header -->
+  {% include 'dashboard/base/mainheader.html' %}
 
 {% block content %}
 
 {% endblock %}
+{% include 'dashboard/base/footer.html' %}
+</div>
+</div>
     
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCn8TFXGg17HAUcNpkwtxxyT9Io9B_NcM" defer></script>
 <script src="{% static 'dashboard/assets/plugins/jquery/jquery.min.js' %}"></script>
