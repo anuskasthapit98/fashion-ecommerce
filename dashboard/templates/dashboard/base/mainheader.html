@@ -96,6 +96,11 @@
                 </a>
               </li>
               <li>
+                <a href="{% url 'dashboard:change_password' %}">
+                  <i class="fa fa-key" aria-hidden="true"></i> Change Password
+                </a>
+              </li>
+              <li>
                 <a href="#"> <i class="mdi mdi-diamond-stone"></i> Projects </a>
               </li>
               <li>
@@ -103,7 +108,7 @@
               </li>
   
               <li class="dropdown-footer">
-                <a href="signin.html"> <i class="mdi mdi-logout"></i> Log Out </a>
+                <a href="{% url 'dashboard:admin_logout' %}"> <i class="mdi mdi-logout"></i> Log Out </a>
               </li>
             </ul>
           </li>
