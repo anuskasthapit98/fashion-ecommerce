@@ -24,6 +24,7 @@ class TimeStamp(models.Model):
 class Category(TimeStamp):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
+    subCategory = models.ForeignKey('self', on_delete=models.CASCADE)
     
     class Meta:
         verbose_name = ('Category')
@@ -32,17 +33,17 @@ class Category(TimeStamp):
     def __str__(self):
         return self.name
     
-class SubCategory(TimeStamp):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE )
-    name= models.CharField(max_length=250)
-    img = models.ImageField(upload_to="subcategory")
+# class SubCategory(TimeStamp):
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE )
+#     name= models.CharField(max_length=250)
+#     img = models.ImageField(upload_to="subcategory")
         
-    class Meta:
-        verbose_name = ('SubCategory')
-        verbose_name_plural = ('SubCategories')
+#     class Meta:
+#         verbose_name = ('SubCategory')
+#         verbose_name_plural = ('SubCategories')
     
-    def __str__(self):
-        return self.name   
+#     def __str__(self):
+#         return self.name   
     
 class Brands(TimeStamp):
     name = models.CharField(max_length=250)
