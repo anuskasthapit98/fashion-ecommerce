@@ -1,4 +1,9 @@
 {% extends 'dashboard/base/base.html' %}
+{% block style %}
+<style>
+{% include 'dashboard/documents/upload-file.css' %}
+</style>
+{% endblock %}
 {% block content %}
 <div class="content-wrapper">
     <div class="content">							
@@ -9,38 +14,63 @@
                         <h2>Basic Form Controls</h2>
                     </div>
                     <div class="card-body">
-                        <form method="" enctype="">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.media }}
                             <div class="row form-group">
                                 <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlInput1">Email address</label>
-                                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter Email">
+                                    <label for="exampleFormControlInput1">Product Name</label>
+                                    {{ form.name }}
                                 </div>
                                 <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlPassword">Password</label>
-                                    <input type="password" class="form-control" id="exampleFormControlPassword" placeholder="Password">
+                                    <label for="exampleFormControlPassword">Slug (unique*)</label>
+                                    {{ form.slug }}
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Category </label>
+                                    {{ form.categories }}
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">Sucategory</label>
+                                    {{ form.brands }}
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Brand </label>
+                                    {{ form.brands }}
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">Status</label>
+                                    {{ form.status }} <span>available</span>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Price </label>
+                                    {{ form.price }}
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">discount</label>
+                                    {{ form.discount }}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="exampleFormControlSelect12">Example select</label>
-                                <select class="form-control" id="exampleFormControlSelect12">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
+                                <label for="exampleFormControlFile1"></label>
+                                {% include 'dashboard/product/upload-image.html' %}
                             </div>
                             <div class="form-group">
-                                <label for="exampleFormControlTextarea1">Example textarea</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <label for="exampleFormControlTextarea1">Description</label>
+                                <p>
+                                {{ form.description }}
+                                </p>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleFormControlFile1">Example file input</label>
-                                <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                            </div>
+                            
                             <div class="form-footer pt-4 pt-5 mt-4 border-top">
                                 <button type="submit" class="btn btn-primary btn-default">Submit</button>
-                                <button type="submit" class="btn btn-secondary btn-default">Cancel</button>
+                                <a href="{% url 'dashboard:product-list' %}" class="btn btn-secondary btn-default">Cancel</a>
                             </div>
                         </form>
                     </di>
@@ -50,4 +80,10 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block script %}
+<script>
+{% include 'dashboard/documents/upload-file.js' %}
+</script>
 {% endblock %}

@@ -74,7 +74,7 @@ class Products(TimeStamp):
     status = models.BooleanField(default=True)
     slug = models.SlugField(unique=True, primary_key=True)
     discount = models.PositiveIntegerField()
-    view_count = models.PositiveIntegerField(default=0)
+    view_count = models.PositiveIntegerField(default=0, null=True, blank=True)
 
     class Meta:
         verbose_name = ('Product')
