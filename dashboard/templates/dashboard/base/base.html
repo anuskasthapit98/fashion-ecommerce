@@ -15,7 +15,17 @@
   <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet" />
 
   <!-- PLUGINS CSS STYLE -->
-  <link href="{% static 'dashboard/assets/plugins/toaster/toastr.min.css' %}" rel="stylesheet" />
+<link
+      type="text/css"
+      href="{% static 'dashboard/assets/toastr/toastr.min.css' %}"
+      rel="stylesheet"
+    
+    />
+       <!-- sweetalert -->
+    <link
+      rel="stylesheet"
+      href="{% static 'dashboard/assets/css/sweetalert2.min.css' %}"
+    />
   <link href="{% static 'dashboard/assets/plugins/nprogress/nprogress.css' %}" rel="stylesheet" />
   <link href="{% static 'dashboard/assets/plugins/flag-icons/css/flag-icon.min.css' %}" rel="stylesheet"/>
   <link href="{% static 'dashboard/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.css' %}" rel="stylesheet" />
@@ -75,7 +85,8 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCn8TFXGg17HAUcNpkwtxxyT9Io9B_NcM" defer></script>
 <script src="{% static 'dashboard/assets/plugins/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'dashboard/assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'dashboard/assets/plugins/toaster/toastr.min.js' %}"></script>
+ <script src="{% static 'dashboard/assets/toastr/toastr.min.js' %}"></script>
+ <script src="{% static 'dashboard/assets/js/sweetalert.min.js' %}"></script>
 <script src="{% static 'dashboard/assets/plugins/slimscrollbar/jquery.slimscroll.min.js' %}"></script>
 <script src="{% static 'dashboard/assets/plugins/charts/Chart.min.js' %}"></script>
 <script src="{% static 'dashboard/assets/plugins/ladda/spin.min.js' %}"></script>
@@ -92,6 +103,7 @@
 <script src="{% static 'dashboard/assets/js/date-range.js' %}"></script>
 <script src="{% static 'dashboard/assets/js/map.js' %}"></script>
 <script src="{% static 'dashboard/assets/js/custom.js' %}"></script>
+
 {% block script %} {% endblock %}
 
 

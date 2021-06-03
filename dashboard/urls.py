@@ -4,6 +4,16 @@ from .views import *
 app_name = 'dashboard'
 urlpatterns = [
     path('dashboard/', AdminDashboardView.as_view(), name="admin-dashboard"),
+    
+    
+    #Category
+    path('dashboard/category/', CategoryListView.as_view(), name = "category"),
+    path('dashboard/category/create/', CategoryCreateView.as_view(), name = "category_create"),
+    path('dashboard/category/<slug:slug>/update/', CategoryUpdateView.as_view(), name = "category_update"),
+    path('dashboard/category/<slug:slug>/delete/', CategoryDeleteView.as_view(), name = "category_delete"),
+    
+    
+    
     path('dashboard/product/image/create/',
          ProductImageCreateView.as_view(), name='product-image-create'),
     path('dashboard/product/create/',

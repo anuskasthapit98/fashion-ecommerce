@@ -14,14 +14,14 @@ class AdminRequiredMixin(object):
         return super().dispatch(request, *args, *kwargs)
 
 
-class DeleteMixin():
+class DeleteMixin(object):
     def get(self, *args, **kwargs):
-        return super().get(*args, **kwargs)
+        return self.delete(*args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
 
 
-class NonDeletedItemMixin():
-    def get_qyeryset(self):
+class NonDeletedItemMixin(object):
+    def get_queryset(self):
         return super().get_queryset().filter(deleted_at__isnull=True)

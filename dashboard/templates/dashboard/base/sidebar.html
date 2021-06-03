@@ -52,6 +52,25 @@
                 </div>
               </ul>
             </li>
+
+            
+           <li  class="has-sub" >
+                    <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#icons"
+                      aria-expanded="false" aria-controls="icons">
+                      <span class="nav-text">Category</span> <b class="caret"></b>
+                    </a>
+                    <ul  class="collapse"  id="icons">
+                      <div class="sub-menu">
+                        
+                        <li >
+                          <a href="{% url 'dashboard:category' %}">List</a>
+                        </li>
+                        
+                    
+                        
+                      </div>
+                    </ul>
+                  </li>
             <li  class="has-sub" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#ui-elements"
                 aria-expanded="false" aria-controls="ui-elements">
@@ -71,6 +90,7 @@
                         <li >
                           <a href="alert.html">Alert</a>
                         </li>
+                      
                         <li >
                           <a href="badge.html">Badge</a>
                         </li>
