@@ -8,7 +8,7 @@ urlpatterns = [
     
     #Category
     path('category/', CategoryListView.as_view(), name = "category"),
-    path('category/create/', CategoryListView.as_view(), name = "category_create"),
-    path('category/update/<int:pk>/', CategoryListView.as_view(), name = "category_update"),
-    path('category/delete/<int:pk>/', CategoryListView.as_view(), name = "category_delete"),
+    path('category/create/', CategoryCreateView.as_view(), name = "category_create"),
+    # path('category/update/<int:pk>/', CategoryListView.as_view(), name = "category_update"),
+    # path('category/delete/<int:pk>/', CategoryListView.as_view(), name = "category_delete"),
 ]

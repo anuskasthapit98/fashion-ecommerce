@@ -1,0 +1,76 @@
+{% extends 'dashboard/base/index.html' %} 
+{% load static %} 
+{% block content %}
+<div class="wrapper">
+  {% include 'dashboard/base/sidebar.html' %}
+  <div class="page-wrapper">
+    <!-- Header -->
+    {% include 'dashboard/base/mainheader.html' %}
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Add new category</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                         {% csrf_token %}
+                         {{form.media}}
+                         <div class="form-group">
+                                <label for="exampleFormControlInput1">ID</label>
+                                {{form.slug}}
+                            </div>
+                            <div class="row form-group">
+                             
+                                <div class="col-md-12 col-sm-12">
+                                    <label for="exampleFormControlInput1">Category Name</label>
+                                {{form.name}}
+                                </div>
+                                {% comment %} <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">Description</label>
+                                    {{form.description}}
+                                </div> {% endcomment %}
+                            </div>
+                            {% comment %} <div class="form-group">
+                                <label for="exampleFormControlSelect12">S</label>
+                                <select class="form-control" id="exampleFormControlSelect12">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div> {% endcomment %}
+                            {% comment %} <div class="form-group">
+                                <label for="exampleFormControlInput1">Sub-Category</label>
+                                {{form.slug}}
+                            </div> {% endcomment %}
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Description</label>
+                                <p>{{form.description}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlFile1">Images</label>
+                                {{form.img}}
+                            </div>
+                            <div class="form-footer pt-4 pt-5 mt-4 border-top">
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                                <button class="btn btn-secondary btn-default">
+                                 <a class="text-white" href="{% url 'dashboard:category' %}">Cancel</a>
+                                 </button>
+                            </div>
+                        </form>
+                    </di>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+  {% include 'dashboard/base/footer.html' %}
+  </div>
+</div>
+{% endblock %}
