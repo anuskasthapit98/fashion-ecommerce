@@ -80,7 +80,7 @@ class ProductDeleteView(DeleteMixin, DeleteView):
 class LoginView(FormView):
     template_name = 'dashboard/auth/login.html'
     form_class = StaffLoginForm
-    success_url = reverse_lazy('dashboard:admin- dashboard')
+    success_url = reverse_lazy('dashboard:admin-dashboard')
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
@@ -140,3 +140,24 @@ class PasswordsChangeView(PasswordChangeView):
         form = super().get_form()
         form.set_user(self.request.user)
         return form
+
+
+class BrandListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/brand/list.html'
+    model = Brands
+
+class BrandCreateView(CreateView):
+    template_name = 'dashboard/brand/create.html'
+    form_class = BrandForm
+    success_url = reverse_lazy('dashboard:brand-list')
+
+class BrandUpdateView(UpdateView):
+    template_name = 'dashboard/brand/create.html'
+    model = Brands
+    form_class = BrandForm
+    success_url = reverse_lazy('dashboard:brand-list')
+
+class BrandDeleteView(DeleteMixin, DeleteView):
+    model = Brands
+    success_url = reverse_lazy('dashboard:brand-list')
+    template_name = 'dashboard/brand/list.html'
