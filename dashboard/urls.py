@@ -9,8 +9,8 @@ urlpatterns = [
     #Category
     path('dashboard/category/', CategoryListView.as_view(), name = "category"),
     path('dashboard/category/create/', CategoryCreateView.as_view(), name = "category_create"),
-    path('dashboard/category/<slug:slug>/update/', CategoryListView.as_view(), name = "category_update"),
-    path('dashboard/category/<slug:slug>/delete/', CategoryListView.as_view(), name = "category_delete"),
+    path('dashboard/category/<slug:slug>/update/', CategoryUpdateView.as_view(), name = "category_update"),
+    path('dashboard/category/<slug:slug>/delete/', CategoryDeleteView.as_view(), name = "category_delete"),
     
     
     

@@ -1,4 +1,4 @@
-from re import template
+
 
 from django.db.models.base import Model
 from dashboard.models import Category
@@ -36,12 +36,14 @@ class AdminDashboardView(TemplateView):
 
 
 
-class CategoryListView(ListView):
+class CategoryListView(NonDeletedItemMixin, ListView):
     template_name = 'dashboard/Category/list.html'
-
+    model = Category
     
     def get_queryset(self):
-        return Category.objects.filter(parent__isnull=True)
+        queryset = super().get_queryset()
+        queryset = queryset.filter(parent__isnull=True)
+        return queryset
     
 class CategoryCreateView(CreateView):
     template_name = 'dashboard/Category/form.html'
@@ -49,7 +51,16 @@ class CategoryCreateView(CreateView):
     form_class = CategoryForm
     success_url = reverse_lazy('dashboard:category')
     
+class CategoryUpdateView(UpdateView):
+    template_name = 'dashboard/Category/form.html'
+    model = Category
+    form_class = CategoryForm
+    success_url = reverse_lazy('dashboard:category')
 
+
+class CategoryDeleteView( DeleteMixin, DeleteView):
+    model = Category
+    success_url = reverse_lazy('dashboard:category')
     
     
     

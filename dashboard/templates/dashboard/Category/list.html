@@ -54,15 +54,15 @@
 														<td>{{category.description|safe}}</td>
 														<td><img src="{{ category.img.url }}" alt="" /></td>
                             <td>
-                            <a  href="{% url 'dashboard:category_update' category.slug %}"><button class="btn btn-outline-success"> 
-                            
-                           <span class="mdi mdi-circle-edit-outline"> Edit</span>
-                            </button></a> 
-                            
-                             <a  href="{% url 'dashboard:category_delete' category.slug %}"><button class="btn btn-outline-danger"> 
-                            
-                           <span class="mdi mdi-trash-can"> Delete</span>
-                            </button></a> 
+                             <span ><a class="btn btn-outline-success" href="{% url 'dashboard:category_update' category.slug %}"
+                              ><span class="mdi mdi-circle-edit-outline"> Edit</span></a
+                          ></span>
+                        <span
+                          ><a class="btn btn-outline-danger delete" href="{% url 'dashboard:category_delete' category.slug %}"
+                            ><span class="mdi mdi-trash-can"> Delete</span></a></span
+                        >
+
+
                         
                             
                             </td>
@@ -77,4 +77,27 @@
  </div>
           </div>
 
+{% endblock %}
+{% block script %}
+<script>
+$('.delete').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will permanently deleted !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal(" 'Your file has been deleted.'!", {
+                        icon: "success",
+                    });
+                    window.location.href = $(this).attr('href');
+
+                }
+            });
+    })
+</script>
 {% endblock %}
