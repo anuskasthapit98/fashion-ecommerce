@@ -66,7 +66,6 @@ class ChangePasswordForm(PasswordChangeForm):
         if valpwd != valrpwd:
             raise forms.ValidationError({
                 'new_password1': 'Password Not Matched'})
-
         else:
             pass
         return self.cleaned_data

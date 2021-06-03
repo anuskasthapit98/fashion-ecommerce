@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.generic import TemplateView, FormView, View
 from django.urls import reverse_lazy
 from .forms import *
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import render, redirect
 from .mixin import *
 from django.conf import settings as conf_settings
 from django.utils.crypto import get_random_string
@@ -13,7 +13,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.views import PasswordChangeView
 # Create your views here.
 
-class AdminDashboardView(TemplateView):
+class AdminDashboardView(AdminRequiredMixin,TemplateView):
 	template_name = 'dashboard/base/index.html'
 
 
