@@ -1,16 +1,7 @@
 {% extends 'dashboard/base/index.html' %} 
 {% load static %} 
 {% block content %}
-<div class="wrapper">
-  <!--
-====================================
-——— LEFT SIDEBAR WITH FOOTER
-=====================================
--->
-  {% include 'dashboard/base/sidebar.html' %}
-  <div class="page-wrapper">
-    <!-- Header -->
-    {% include 'dashboard/base/mainheader.html' %}
+
 
     <div class="content-wrapper">
       <div class="content">
@@ -51,6 +42,7 @@
 														<th scope="col">Category</th>
 														<th scope="col">Description</th>
 														<th scope="col">Image</th>
+                            <th scope="col">Action</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -61,6 +53,20 @@
 														<td>{{category.name}}</td>
 														<td>{{category.description|safe}}</td>
 														<td><img src="{{ category.img.url }}" alt="" /></td>
+                            <td>
+                            <a  href="{% url 'dashboard:category_update' category.slug %}"><button class="btn btn-outline-success"> 
+                            
+                           <span class="mdi mdi-circle-edit-outline"> Edit</span>
+                            </button></a> 
+                            
+                             <a  href="{% url 'dashboard:category_delete' category.slug %}"><button class="btn btn-outline-danger"> 
+                            
+                           <span class="mdi mdi-trash-can"> Delete</span>
+                            </button></a> 
+                        
+                            
+                            </td>
+
 													</tr>
                            {%endfor%}
 												</tbody>
@@ -70,7 +76,5 @@
 	</div>
  </div>
           </div>
-    {% include 'dashboard/base/footer.html' %}
-  </div>
-</div>
+
 {% endblock %}

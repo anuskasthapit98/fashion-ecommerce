@@ -1,0 +1,86 @@
+{% extends 'dashboard/base/base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="breadcrumb-wrapper">
+            <h1>Product</h1>
+            <a href="{% url 'dashboard:product-create' %}" style="float: right;" type="button" class="mb-1 btn btn-outline-success">Add Product</a>
+
+                          
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb p-0">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard:admin-dashboard' %}">
+                    <span class="mdi mdi-home"></span>                
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    Out
+                </li>
+                <li class="breadcrumb-item" aria-current="page">Products</li>
+                </ol>
+
+            </nav>
+
+        </div>
+
+        <div class="row mx-auto">
+            
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Product List</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S.N</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Subcategory</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Discount</th>
+                                    <th scope="col">Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in object_list %}
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.brands }}</td>
+                                    <td>{{ product.categories }}</td>
+                                    <td>Subcategory</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>
+                                        {% if product.status %}
+                                        <span>In Stock</span>
+                                        {% else %}
+                                        <span>Out of Stock </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span>
+
+                                        </span>
+                                        <span>
+                                            
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>				
+    </div>
+  </div>
+{% endblock %}
