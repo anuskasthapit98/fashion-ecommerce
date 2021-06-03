@@ -1,8 +1,13 @@
-from django.shortcuts import render
-from django.views import generic
+from django.contrib.auth.views import PasswordChangeView
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.utils.crypto import get_random_string
+from django.conf import settings as conf_settings
+from .mixin import *
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import TemplateView, FormView, View
-from django.urls import reverse_lazy
+from django.views import generic
 from .forms import *
 from django.shortcuts import render, redirect
 from .mixin import *
@@ -11,10 +16,65 @@ from django.utils.crypto import get_random_string
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.views import PasswordChangeView
+from django.http import JsonResponse
 # Create your views here.
 
 class AdminDashboardView(AdminRequiredMixin,TemplateView):
 	template_name = 'dashboard/base/index.html'
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView
+from django.shortcuts import render
+
+
+# Create your views here.
+
+
+class ProductImageCreateView(CreateView):
+    model = ProductImage
+    form_class = ProductImageForm
+    template_name = "dashboard/product/imageform.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            return super().dispatch(request, *args, **kwargs)
+        return JsonResponse({"error": "Cannot access this page"}, status=404)
+
+    def form_valid(self, form):
+        instance = form.save()
+        return JsonResponse(
+            {
+                "status": "ok",
+                "pk": instance.pk,
+                "url": instance.image.url,
+            }
+        )
+
+    def form_invalid(self, form):
+        return JsonResponse({"errors": form.errors}, status=400)
+
+
+class ProductCreateView(CreateView):
+    template_name = 'dashboard/product/create.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('dashboard:product-list')
+
+
+class PrductUpdateView(UpdateView):
+    template_name = 'dashboard/product/create.html'
+    model = Products
+    form_class = ProductForm
+    success_url = reverse_lazy('dashboard:product-list')
+
+
+class ProductListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/product/list.html'
+    model = Products
+
+
+class ProductDeleteView(DeleteMixin, DeleteView):
+    model = Products
+    success_url = reverse_lazy('dashboard:product-list')
+    template_name = 'dashboard/base/index.html'
 
 
 class LoginView(FormView):
@@ -69,6 +129,7 @@ class RecoverPasswordView(FormView):
         )
         messages.success(self.request, "Password reset code is sent")
         return super().form_valid(form)
+
 
 class PasswordsChangeView(PasswordChangeView):
     template_name = 'dashboard/auth/password_change.html'

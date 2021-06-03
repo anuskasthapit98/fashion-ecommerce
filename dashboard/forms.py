@@ -1,16 +1,34 @@
 from django import forms
 from .models import *
+
 from django.contrib.auth.forms import PasswordChangeForm
+
 
 class FormControlMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({
-
                 'class': 'form-control'
-
             })
+
+
+class ProductForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Products
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs.update({
+            'class': "control outlined control-checkbox checkbox-success"
+        })
+
+
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = ['image']
 
 
 class StaffLoginForm(forms.Form):
@@ -25,7 +43,7 @@ class StaffLoginForm(forms.Form):
 
 
 class PasswordResetForm(forms.Form):
- 
+
     email = forms.CharField(widget=forms.EmailInput(attrs={
         'class': 'form-control',
         'placeholder': 'Enter email address'
@@ -39,6 +57,7 @@ class PasswordResetForm(forms.Form):
             raise forms.ValidationError("User with this email doesn't exist")
 
         return e
+
 
 class ChangePasswordForm(PasswordChangeForm):
     old_password_flag = True
@@ -69,4 +88,3 @@ class ChangePasswordForm(PasswordChangeForm):
         else:
             pass
         return self.cleaned_data
-    

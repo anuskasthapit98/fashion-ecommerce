@@ -6,6 +6,7 @@ from django.utils import timezone
 
 # Create your models here.
 
+
 class TimeStamp(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -20,62 +21,69 @@ class TimeStamp(models.Model):
             return super().save()
         else:
             return super().delete()
-        
+
+
 class Category(TimeStamp):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
     subCategory = models.ForeignKey('self', on_delete=models.CASCADE)
-    
+
     class Meta:
         verbose_name = ('Category')
         verbose_name_plural = ('Categories')
-        
+
     def __str__(self):
         return self.name
-    
+
 # class SubCategory(TimeStamp):
 #     category = models.ForeignKey(Category, on_delete=models.CASCADE )
 #     name= models.CharField(max_length=250)
 #     img = models.ImageField(upload_to="subcategory")
-        
+
 #     class Meta:
 #         verbose_name = ('SubCategory')
 #         verbose_name_plural = ('SubCategories')
-    
+
 #     def __str__(self):
-#         return self.name   
-    
+#         return self.name
+
+
 class Brands(TimeStamp):
     name = models.CharField(max_length=250)
-    logo =  models.ImageField(upload_to="brands") 
-    
+    logo = models.ImageField(upload_to="brands")
+
     class Meta:
         verbose_name = ('Brand')
         verbose_name_plural = ('Brands')
-        
+
     def __str__(self):
         return self.name
 
-        
+
+class ProductImage(TimeStamp):
+    image = models.ImageField(upload_to="products")
+
+
 class Products(TimeStamp):
     categories = models.ForeignKey(Category, on_delete=models.CASCADE)
     brands = models.ForeignKey(Brands, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
-    image = models.ImageField(upload_to="products") 
+    image = models.ManyToManyField(ProductImage)
     description = RichTextField()
     price = models.PositiveIntegerField()
-    status= models.BooleanField (default= True)
-    slug = models.SlugField(unique= True, primary_key= True)
+    status = models.BooleanField(default=True)
+    slug = models.SlugField(unique=True, primary_key=True)
     discount = models.PositiveIntegerField()
-    view_count = models.PositiveIntegerField(default= 0)
-    
+    view_count = models.PositiveIntegerField(default=0, null=True, blank=True)
+
     class Meta:
         verbose_name = ('Product')
         verbose_name_plural = ('Products')
-        
+
     def __str__(self):
         return self.name
-    
+
+
 class Account(User):
     mobile = models.CharField(max_length=250)
     address = models.CharField(max_length=250)
@@ -83,4 +91,3 @@ class Account(User):
 
     def __str__(self):
         return self.username
-    

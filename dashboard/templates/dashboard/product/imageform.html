@@ -1,0 +1,12 @@
+<script> 
+    isSubmitting = false;
+    
+    $('form').submit(function(){
+        isSubmitting = true;
+    });
+
+    window.onbeforeunload = function() {
+        if(!isSubmitting)
+            return "Do you really want to leave this page ?";
+    };
+</script>
