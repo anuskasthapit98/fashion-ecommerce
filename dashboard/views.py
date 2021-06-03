@@ -195,7 +195,8 @@ class BrandUpdateView(UpdateView):
     form_class = BrandForm
     success_url = reverse_lazy('dashboard:brand-list')
 
-class BrandDeleteView(DeleteMixin, DeleteView):
+
+class BrandDeleteView( DeleteMixin, DeleteView):
     model = Brands
     success_url = reverse_lazy('dashboard:brand-list')
-    template_name = 'dashboard/brand/list.html'
+    

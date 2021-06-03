@@ -51,9 +51,11 @@
                                     <td>
                                         <span><a class="btn btn-warning mr-2"
                                                 href="{% url 'dashboard:brand-update' brand.pk %}">
-                                              <i class="mdi mdi-edit m-1" aria-hidden="true"></i>Edit</a></span>
-                                        <span><a class="btn btn-danger delete" href="{% url 'dashboard:brand-delete' brand.pk %}">
-                                            <i class="mdi mdi-trash m-1"></i></a></span>
+                                              <span class="mdi mdi-circle-edit-outline"></span>Edit</a></span>
+                                         <span><a class="btn btn-outline-danger delete" 
+                                                href="{% url 'dashboard:brand-delete' brand.pk %}">
+                                                <span class="mdi mdi-trash-can"> Delete</span></a></span
+                        >
                                     </td>
                                 </tr>
                                 {% endfor %}
