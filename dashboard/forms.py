@@ -18,6 +18,12 @@ class ProductForm(FormControlMixin, forms.ModelForm):
         model = Products
         fields = "__all__"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs.update({
+            'class': "control outlined control-checkbox checkbox-success"
+        })
+
 
 class ProductImageForm(forms.ModelForm):
     class Meta:

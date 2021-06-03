@@ -37,18 +37,43 @@
                             <thead>
                                 <tr>
                                     <th scope="col">S.N</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Subcategory</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Discount</th>
+                                    <th scope="col">Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for product in object_list %}
                                 <tr>
-                                    <td scope="row">1</td>
-                                    <td>Lucia</td>
-                                    <td>Christ</td>
-                                    <td>@Lucia</td>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.brands }}</td>
+                                    <td>{{ product.categories }}</td>
+                                    <td>Subcategory</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>
+                                        {% if product.status %}
+                                        <span>In Stock</span>
+                                        {% else %}
+                                        <span>Out of Stock </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span>
+
+                                        </span>
+                                        <span>
+                                            
+                                        </span>
+                                    </td>
                                 </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>

@@ -5,6 +5,8 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="{{ csrf_token }}">
+
 
   <title>Sleek - Admin 'dashboard Template</title>
 
@@ -29,6 +31,10 @@
   <!-- FAVICON -->
   <link href="{% static 'dashboard/assets/img/favicon.png' %} " rel="shortcut icon" />
 
+  {% block style %}
+
+
+  {% endblock %}
   <!--
     HTML5 shim and Respond.js' %} for IE8 support of HTML5 elements and media queries
   -->
@@ -66,7 +72,6 @@
 {% include 'dashboard/base/footer.html' %}
 </div>
 </div>
-    
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCn8TFXGg17HAUcNpkwtxxyT9Io9B_NcM" defer></script>
 <script src="{% static 'dashboard/assets/plugins/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'dashboard/assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -87,6 +92,7 @@
 <script src="{% static 'dashboard/assets/js/date-range.js' %}"></script>
 <script src="{% static 'dashboard/assets/js/map.js' %}"></script>
 <script src="{% static 'dashboard/assets/js/custom.js' %}"></script>
+{% block script %} {% endblock %}
 
 
 

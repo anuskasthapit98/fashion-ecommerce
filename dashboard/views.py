@@ -12,25 +12,37 @@ from .forms import *
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, ListView
 from django.shortcuts import render
+from django.http import JsonResponse
 
 # Create your views here.
 
 
-class DeleteMixin():
-    def get(self, *args, **kwargs):
-        return super().get(*args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
-
-
-class NonDeletedItemMixin():
-    def get_qyeryset(self):
-        return super().get_queryset().filter(deleted_at__isnull=True)
-
-
 class AdminDashboardView(TemplateView):
     template_name = 'dashboard/base/index.html'
+
+
+class ProductImageCreateView(CreateView):
+    model = ProductImage
+    form_class = ProductImageForm
+    template_name = "dashboard/product/imageform.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            return super().dispatch(request, *args, **kwargs)
+        return JsonResponse({"error": "Cannot access this page"}, status=404)
+
+    def form_valid(self, form):
+        instance = form.save()
+        return JsonResponse(
+            {
+                "status": "ok",
+                "pk": instance.pk,
+                "url": instance.image.url,
+            }
+        )
+
+    def form_invalid(self, form):
+        return JsonResponse({"errors": form.errors}, status=400)
 
 
 class ProductCreateView(CreateView):
