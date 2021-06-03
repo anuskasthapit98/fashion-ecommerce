@@ -1,0 +1,44 @@
+{% extends 'dashboard/base/base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Basic Form Controls</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.media }}
+                           
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Brand Name</label>
+                                    {{ form.name }}
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Logo </label>
+                                    {{ form.logo }}
+                                </div>
+                                
+                            </div>
+                            
+                            
+                            <div class="form-footer pt-4 pt-5 mt-4 border-top">
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                                <a href="{% url 'dashboard:product-list' %}" class="btn btn-secondary btn-default">Cancel</a>
+                            </div>
+                        </form>
+                    </di>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
