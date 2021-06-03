@@ -1,3 +1,9 @@
+
+
+from django.db.models.base import Model
+from dashboard.models import Category
+from .forms import *
+from .models import Category
 from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
 from django.contrib import messages
@@ -25,8 +31,40 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.shortcuts import render
 
+class AdminDashboardView(TemplateView):
+	template_name = 'dashboard/base/index.html'
 
-# Create your views here.
+
+
+class CategoryListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/Category/list.html'
+    model = Category
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(parent__isnull=True)
+        return queryset
+    
+class CategoryCreateView(CreateView):
+    template_name = 'dashboard/Category/form.html'
+    Model = Category
+    form_class = CategoryForm
+    success_url = reverse_lazy('dashboard:category')
+    
+class CategoryUpdateView(UpdateView):
+    template_name = 'dashboard/Category/form.html'
+    model = Category
+    form_class = CategoryForm
+    success_url = reverse_lazy('dashboard:category')
+
+
+class CategoryDeleteView( DeleteMixin, DeleteView):
+    model = Category
+    success_url = reverse_lazy('dashboard:category')
+    
+    
+    
+   
 
 
 class ProductImageCreateView(CreateView):

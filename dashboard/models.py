@@ -26,15 +26,25 @@ class TimeStamp(models.Model):
 class Category(TimeStamp):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
-    subCategory = models.ForeignKey('self', on_delete=models.CASCADE)
-
+    parent = models.ForeignKey('self', related_name="sub_Category", on_delete=models.CASCADE, null=True , blank= True, ) 
+    slug = models.SlugField(unique= True, primary_key= True)
+    description = RichTextField()
+    
     class Meta:
         verbose_name = ('Category')
         verbose_name_plural = ('Categories')
 
     def __str__(self):
-        return self.name
+                                   
+        full_path = [self.name]            
+        k = self.parent
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent
 
+        return ' -> '.join(full_path[::-1])
+
+    
 # class SubCategory(TimeStamp):
 #     category = models.ForeignKey(Category, on_delete=models.CASCADE )
 #     name= models.CharField(max_length=250)

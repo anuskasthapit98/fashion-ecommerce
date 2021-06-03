@@ -7,6 +7,18 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 
 
+class CategoryForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
+     
+
+       
+
+
+    
 class ProductForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Products
