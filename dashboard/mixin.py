@@ -6,6 +6,7 @@ class AdminRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         user = request.user
         if user.is_authenticated and user.is_superuser:
+        # if user.is_authenticated and user.groups.filter(name="Admin").exists():
             pass
         else:
             return redirect('/login/')
@@ -25,3 +26,12 @@ class DeleteMixin(object):
 class NonDeletedItemMixin(object):
     def get_queryset(self):
         return super().get_queryset().filter(deleted_at__isnull=True)
+
+
+class FormControlMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })

@@ -1,17 +1,11 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import *
-
+from .mixin import *
 from django.contrib.auth.forms import PasswordChangeForm
 
 
-class FormControlMixin:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control'
-            })
+
 
 
 class CategoryForm(FormControlMixin, forms.ModelForm):
@@ -106,3 +100,17 @@ class ChangePasswordForm(PasswordChangeForm):
         else:
             pass
         return self.cleaned_data
+
+
+
+class BrandForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Brands
+        fields = "__all__"
+        widgets = {
+            'brand_logo': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'choose image'
+            })
+        }
+
