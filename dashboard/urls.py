@@ -19,7 +19,7 @@ urlpatterns = [
     path('dashboard/product/create/',
          ProductCreateView.as_view(), name='product-create'),
     path('dashboard/product/<slug:slug>/update/',
-         PrductUpdateView.as_view(), 'product-update'),
+         ProductUpdateView.as_view(), 'product-update'),
     path('dashboard/product/list/',
          ProductListView.as_view(), name='product-list'),
     path('dashboard/product/<slug:slug>/delete,',

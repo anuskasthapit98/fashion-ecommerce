@@ -45,6 +45,7 @@ class CategoryListView(NonDeletedItemMixin, ListView):
         queryset = queryset.filter(parent__isnull=True)
         return queryset
     
+    
 class CategoryCreateView(CreateView):
     template_name = 'dashboard/Category/form.html'
     Model = Category
@@ -97,7 +98,7 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('dashboard:product-list')
 
 
-class PrductUpdateView(UpdateView):
+class ProductUpdateView(UpdateView):
     template_name = 'dashboard/product/create.html'
     model = Products
     form_class = ProductForm
