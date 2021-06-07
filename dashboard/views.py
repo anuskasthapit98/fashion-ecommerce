@@ -1,56 +1,48 @@
 
-
-from django.db.models.base import Model
-from dashboard.models import Category
-from .forms import *
-from .models import Category
-from django.contrib.auth.views import PasswordChangeView
-from django.core.mail import send_mail
-from django.contrib import messages
-from django.utils.crypto import get_random_string
 from django.conf import settings as conf_settings
-from .mixin import *
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth import authenticate, login, logout
-from django.views import generic
-from .forms import *
-from django.shortcuts import render, redirect
-from .mixin import *
-from django.conf import settings as conf_settings
-from django.utils.crypto import get_random_string
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.contrib.auth.views import PasswordChangeView
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from django.urls import reverse_lazy
 from django.http import JsonResponse
+
+from .models import *
+from .mixin import *
+from .forms import *
+
+
 # Create your views here.
 
-class AdminDashboardView(AdminRequiredMixin,TemplateView):
-	template_name = 'dashboard/base/index.html'
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView
-from django.shortcuts import render
+
+class AdminDashboardView(AdminRequiredMixin, TemplateView):
+    template_name = 'dashboard/base/index.html'
+
 
 class AdminDashboardView(TemplateView):
-	template_name = 'dashboard/base/index.html'
+    template_name = 'dashboard/base/index.html'
 
 
-
+# category's view starts here
 class CategoryListView(NonDeletedItemMixin, ListView):
     template_name = 'dashboard/Category/list.html'
     model = Category
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(parent__isnull=True)
         return queryset
-    
+
+
 class CategoryCreateView(CreateView):
     template_name = 'dashboard/Category/form.html'
-    Model = Category
     form_class = CategoryForm
     success_url = reverse_lazy('dashboard:category')
-    
+
+
 class CategoryUpdateView(UpdateView):
     template_name = 'dashboard/Category/form.html'
     model = Category
@@ -58,13 +50,9 @@ class CategoryUpdateView(UpdateView):
     success_url = reverse_lazy('dashboard:category')
 
 
-class CategoryDeleteView( DeleteMixin, DeleteView):
+class CategoryDeleteView(DeleteMixin, DeleteView):
     model = Category
     success_url = reverse_lazy('dashboard:category')
-    
-    
-    
-   
 
 
 class ProductImageCreateView(CreateView):
@@ -91,6 +79,12 @@ class ProductImageCreateView(CreateView):
         return JsonResponse({"errors": form.errors}, status=400)
 
 
+# products view starts here
+class ProductListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/product/list.html'
+    model = Products
+
+
 class ProductCreateView(CreateView):
     template_name = 'dashboard/product/create.html'
     form_class = ProductForm
@@ -104,17 +98,13 @@ class PrductUpdateView(UpdateView):
     success_url = reverse_lazy('dashboard:product-list')
 
 
-class ProductListView(NonDeletedItemMixin, ListView):
-    template_name = 'dashboard/product/list.html'
-    model = Products
-
-
 class ProductDeleteView(DeleteMixin, DeleteView):
     model = Products
     success_url = reverse_lazy('dashboard:product-list')
     template_name = 'dashboard/base/index.html'
 
 
+# login view starts here
 class LoginView(FormView):
     template_name = 'dashboard/auth/login.html'
     form_class = StaffLoginForm
@@ -139,12 +129,14 @@ class LoginView(FormView):
         return super().form_valid(form)
 
 
+# logout view
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/login/')
 
 
+# password reset view
 class RecoverPasswordView(FormView):
     template_name = 'dashboard/auth/recover-password.html'
     form_class = PasswordResetForm
@@ -169,6 +161,7 @@ class RecoverPasswordView(FormView):
         return super().form_valid(form)
 
 
+# password change view
 class PasswordsChangeView(PasswordChangeView):
     template_name = 'dashboard/auth/password_change.html'
     form_class = ChangePasswordForm
@@ -180,14 +173,17 @@ class PasswordsChangeView(PasswordChangeView):
         return form
 
 
+# brand's views starts here
 class BrandListView(NonDeletedItemMixin, ListView):
     template_name = 'dashboard/brand/list.html'
     model = Brands
+
 
 class BrandCreateView(CreateView):
     template_name = 'dashboard/brand/create.html'
     form_class = BrandForm
     success_url = reverse_lazy('dashboard:brand-list')
+
 
 class BrandUpdateView(UpdateView):
     template_name = 'dashboard/brand/create.html'
@@ -196,7 +192,6 @@ class BrandUpdateView(UpdateView):
     success_url = reverse_lazy('dashboard:brand-list')
 
 
-class BrandDeleteView( DeleteMixin, DeleteView):
+class BrandDeleteView(DeleteMixin, DeleteView):
     model = Brands
     success_url = reverse_lazy('dashboard:brand-list')
-    
