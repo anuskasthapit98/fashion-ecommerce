@@ -5,7 +5,7 @@
     <div class="content">							
         <div class="breadcrumb-wrapper">
             <h1>Product</h1>
-            <a href="{% url 'dashboard:product-create' %}" style="float: right;" type="button" class="mb-1 btn btn-outline-success">Add Product</a>
+            <a href="{% url 'dashboard:brand-create' %}" style="float: right;" type="button" class="mb-1 btn btn-outline-success">Add Brand</a>
 
                           
             <nav aria-label="breadcrumb">
@@ -16,9 +16,9 @@
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    Out
+                    Our
                 </li>
-                <li class="breadcrumb-item" aria-current="page">Products</li>
+                <li class="breadcrumb-item" aria-current="page">Brands</li>
                 </ol>
 
             </nav>
@@ -30,7 +30,7 @@
             <div class="col-12">
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom">
-                        <h2>Product List</h2>
+                        <h2>Brands List</h2>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -38,39 +38,24 @@
                                 <tr>
                                     <th scope="col">S.N</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Brand</th>
-                                    <th scope="col">Category</th>
-                                    <th scope="col">Subcategory</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Discount</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col">Logo</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for product in object_list %}
+                                {% for brand in object_list %}
                                 <tr>
                                     <td scope="row">{{ forloop.counter }}</td>
-                                    <td>{{ product.name }}</td>
-                                    <td>{{ product.brands }}</td>
-                                    <td>{{ product.categories }}</td>
-                                    <td>Subcategory</td>
-                                    <td>{{ product.price }}</td>
-                                    <td>{{ product.price }}</td>
+                                    <td>{{ brand.name }}</td>
+                                    <td><img src="{{ brand.logo.url}}" style="width: 20%"/></td>
                                     <td>
-                                        {% if product.status %}
-                                        <span>In Stock</span>
-                                        {% else %}
-                                        <span>Out of Stock </span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <a href="{% url 'dashboard:product-update' product.slug %}" class="btn btn-sm btn-primary">Edit</a>
-                                        </span>
-                                        <span>
-                                            <a href="{% url 'dashboard:product-delete' product.slug %}" class="btn btn-sm btn-danger delete">Delete</a>
-                                        </span>
+                                        <span><a class="btn btn-warning mr-2"
+                                                href="{% url 'dashboard:brand-update' brand.pk %}">
+                                              <span class="mdi mdi-circle-edit-outline"></span>Edit</a></span>
+                                         <span><a class="btn btn-outline-danger delete" 
+                                                href="{% url 'dashboard:brand-delete' brand.pk %}">
+                                                <span class="mdi mdi-trash-can"> Delete</span></a></span
+                        >
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -97,11 +82,10 @@ $('.delete').click(function(e) {
             })
             .then((willDelete) => {
                 if (willDelete) {
+                    window.location.href = $(this).attr('href');
                     swal(" 'Your file has been deleted.'!", {
                         icon: "success",
                     });
-                    window.location.href = $(this).attr('href');
-
                 }
             });
     })

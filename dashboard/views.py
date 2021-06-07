@@ -1,6 +1,5 @@
 
-
-from django.db.models.base import Model
+from django.conf import settings as conf_settings
 from dashboard.models import Category
 from .forms import *
 from .models import Category
@@ -14,9 +13,9 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth import authenticate, login, logout
 from django.views import generic
-from .forms import *
+
 from django.shortcuts import render, redirect
-from .mixin import *
+
 from django.conf import settings as conf_settings
 from django.utils.crypto import get_random_string
 from django.contrib import messages
@@ -30,12 +29,19 @@ class AdminDashboardView(AdminRequiredMixin,TemplateView):
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.shortcuts import render
+from dashboard.serialize import *
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import generics
 
+#Dashboard
 class AdminDashboardView(TemplateView):
 	template_name = 'dashboard/base/index.html'
 
 
 
+#Category
 class CategoryListView(NonDeletedItemMixin, ListView):
     template_name = 'dashboard/Category/list.html'
     model = Category
@@ -44,11 +50,12 @@ class CategoryListView(NonDeletedItemMixin, ListView):
         queryset = super().get_queryset()
         queryset = queryset.filter(parent__isnull=True)
         return queryset
+
+
     
     
 class CategoryCreateView(CreateView):
     template_name = 'dashboard/Category/form.html'
-    Model = Category
     form_class = CategoryForm
     success_url = reverse_lazy('dashboard:category')
     
@@ -64,9 +71,30 @@ class CategoryDeleteView( DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:category')
     
     
+# class CategoryList(APIView):
+    
+#     def get(self,request):
+#         category = Category.objects.all()
+#         categoryserialize = CategorySerialize(category, many = True)    
+#         return Response(categoryserialize.data)
+    
+#     def post(self, request, format=None):
+#         category = CategorySerialize(data=request.data)
+#         if category.is_valid():
+#             category.save()
+#             return Response(category.data, status=status.HTTP_201_CREATED)
+#         return Response(category.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class CategoryListCreate(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerialize
+    
+class CategoryUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerialize
     
    
-
+#Product
 
 class ProductImageCreateView(CreateView):
     model = ProductImage
@@ -115,11 +143,11 @@ class ProductDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:product-list')
     template_name = 'dashboard/base/index.html'
 
-
+#Authenticate
 class LoginView(FormView):
     template_name = 'dashboard/auth/login.html'
     form_class = StaffLoginForm
-    success_url = reverse_lazy('dashboard:admin- dashboard')
+    success_url = reverse_lazy('dashboard:admin-dashboard')
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
@@ -179,3 +207,26 @@ class PasswordsChangeView(PasswordChangeView):
         form = super().get_form()
         form.set_user(self.request.user)
         return form
+
+
+#brand
+class BrandListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/brand/list.html'
+    model = Brands
+
+class BrandCreateView(CreateView):
+    template_name = 'dashboard/brand/create.html'
+    form_class = BrandForm
+    success_url = reverse_lazy('dashboard:brand-list')
+
+class BrandUpdateView(UpdateView):
+    template_name = 'dashboard/brand/create.html'
+    model = Brands
+    form_class = BrandForm
+    success_url = reverse_lazy('dashboard:brand-list')
+
+
+class BrandDeleteView( DeleteMixin, DeleteView):
+    model = Brands
+    success_url = reverse_lazy('dashboard:brand-list')
+    
