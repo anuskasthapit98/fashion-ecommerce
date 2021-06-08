@@ -3,4 +3,4 @@ from .models import*
 # Register your models here.
 
 
-admin.site.register([Account, Category, Brands, Products, ProductImage, Coupon, Order])
+admin.site.register([Account,Customer, Category, Brands, Products, ProductImage, Coupon, Order, Size])
