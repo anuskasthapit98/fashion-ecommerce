@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import *
 from .mixin import *
 from django.contrib.auth.forms import PasswordChangeForm
@@ -13,8 +14,13 @@ class CategoryForm(FormControlMixin, forms.ModelForm):
         fields = "__all__"
 
 
-     
-
+    def clean_slug(self):
+        slug = self.cleaned_data['slug']
+        
+        if Category.objects.filter(slug = slug).exists():
+            raise forms.ValidationError('This ID is not available')
+        else:
+            pass 
        
 
 

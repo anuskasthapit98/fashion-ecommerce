@@ -18,6 +18,7 @@ Django==3.2.3
 django-active-link==0.1.8
 django-ckeditor==6.1.0
 django-js-asset==1.2.2
+<<<<<<< HEAD
 django-password-reset==2.0
 django-restframework==0.0.1
 djangorestframework==3.12.4
@@ -76,6 +77,10 @@ pyparsing==2.4.7
 pypiwin32==223
 pyrsistent==0.17.3
 python-dateutil==2.8.1
+=======
+djangorestframework==3.12.4
+Pillow==8.2.0
+>>>>>>> 903f3748b9dcc8be66a25fcb016adeb8a22ed150
 pytz==2021.1
 pywin32==300
 pywin32-ctypes==0.2.0
@@ -85,6 +90,7 @@ requests==2.25.1
 Send2Trash==1.5.0
 six==1.15.0
 sqlparse==0.4.1
+<<<<<<< HEAD
 terminado==0.9.1
 testpath==0.4.4
 toml==0.10.1
@@ -96,3 +102,10 @@ virtualenv-clone==0.5.4
 wcwidth==0.2.5
 webencodings==0.5.1
 wrapt==1.12.1
+=======
+<<<<<<< HEAD
+=======
+Pillow==8.2.0
+djangorestframework==3.12.4
+>>>>>>> 066290033fae186f33289c1f54962e5a13a0ad8f
+>>>>>>> 903f3748b9dcc8be66a25fcb016adeb8a22ed150
