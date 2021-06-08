@@ -16,8 +16,78 @@ from .mixin import *
 from .forms import *
 
 # Create your views here.
+# login view starts here
 
 
+class LoginView(FormView):
+    template_name = 'dashboard/auth/login.html'
+    form_class = StaffLoginForm
+    success_url = reverse_lazy('dashboard:admin-dashboard')
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        pword = form.cleaned_data['password']
+        user = authenticate(username=username, password=pword)
+
+        if user is not None:
+            login(self.request, user)
+            user.is_active = True
+
+        else:
+            return render(self.request, self.template_name,
+                          {
+                              'error': 'Invalid Username or password',
+                              'form': form
+                          })
+
+        return super().form_valid(form)
+
+
+# logout view
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('/login/')
+
+
+# password reset view
+class RecoverPasswordView(FormView):
+    template_name = 'dashboard/auth/recover-password.html'
+    form_class = PasswordResetForm
+    success_url = reverse_lazy('dashboard:admin_login')
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        user = User.objects.filter(email=email).first()
+        password = get_random_string(8)
+        user.set_password(password)
+        user.save(update_fields=['password'])
+
+        text_content = 'Your password has been changed. {} '.format(password)
+        send_mail(
+            'Password Reset | Sleek',
+            text_content,
+            conf_settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+        messages.success(self.request, "Password reset code is sent")
+        return super().form_valid(form)
+
+
+# password change view
+class PasswordsChangeView(PasswordChangeView):
+    template_name = 'dashboard/auth/password_change.html'
+    form_class = ChangePasswordForm
+    success_url = reverse_lazy('dashboard:admin_login')
+
+    def get_form(self):
+        form = super().get_form()
+        form.set_user(self.request.user)
+        return form
+
+
+# dashboard views
 class AdminDashboardView(AdminRequiredMixin, TemplateView):
     template_name = 'dashboard/base/index.html'
 
@@ -104,75 +174,6 @@ class ProductDeleteView(DeleteMixin, DeleteView):
     model = Products
     success_url = reverse_lazy('dashboard:product-list')
     template_name = 'dashboard/base/index.html'
-
-
-# login view starts here
-class LoginView(FormView):
-    template_name = 'dashboard/auth/login.html'
-    form_class = StaffLoginForm
-    success_url = reverse_lazy('dashboard:admin-dashboard')
-
-    def form_valid(self, form):
-        username = form.cleaned_data['username']
-        pword = form.cleaned_data['password']
-        user = authenticate(username=username, password=pword)
-
-        if user is not None:
-            login(self.request, user)
-            user.is_active = True
-
-        else:
-            return render(self.request, self.template_name,
-                          {
-                              'error': 'Invalid Username or password',
-                              'form': form
-                          })
-
-        return super().form_valid(form)
-
-
-# logout view
-class LogoutView(View):
-    def get(self, request):
-        logout(request)
-        return redirect('/login/')
-
-
-# password reset view
-class RecoverPasswordView(FormView):
-    template_name = 'dashboard/auth/recover-password.html'
-    form_class = PasswordResetForm
-    success_url = reverse_lazy('dashboard:admin_login')
-
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-        user = User.objects.filter(email=email).first()
-        password = get_random_string(8)
-        user.set_password(password)
-        user.save(update_fields=['password'])
-
-        text_content = 'Your password has been changed. {} '.format(password)
-        send_mail(
-            'Password Reset | Sleek',
-            text_content,
-            conf_settings.EMAIL_HOST_USER,
-            [email],
-            fail_silently=False,
-        )
-        messages.success(self.request, "Password reset code is sent")
-        return super().form_valid(form)
-
-
-# password change view
-class PasswordsChangeView(PasswordChangeView):
-    template_name = 'dashboard/auth/password_change.html'
-    form_class = ChangePasswordForm
-    success_url = reverse_lazy('dashboard:admin_login')
-
-    def get_form(self):
-        form = super().get_form()
-        form.set_user(self.request.user)
-        return form
 
 
 # brand's views starts here
