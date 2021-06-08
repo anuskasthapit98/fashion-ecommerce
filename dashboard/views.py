@@ -10,10 +10,10 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 
+
 from .models import *
 from .mixin import *
 from .forms import *
-
 
 # Create your views here.
 
@@ -55,6 +55,8 @@ class CategoryDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:category')
 
 
+# Product
+
 class ProductImageCreateView(CreateView):
     model = ProductImage
     form_class = ProductImageForm
@@ -91,7 +93,7 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('dashboard:product-list')
 
 
-class PrductUpdateView(UpdateView):
+class ProductUpdateView(UpdateView):
     template_name = 'dashboard/product/create.html'
     model = Products
     form_class = ProductForm
@@ -174,6 +176,8 @@ class PasswordsChangeView(PasswordChangeView):
 
 
 # brand's views starts here
+
+
 class BrandListView(NonDeletedItemMixin, ListView):
     template_name = 'dashboard/brand/list.html'
     model = Brands

@@ -24,7 +24,6 @@ urlpatterns = [
     path('dashboard/category/<slug:slug>/delete/',
          CategoryDeleteView.as_view(), name="category_delete"),
 
-
     # image create
     path('dashboard/product/image/create/',
          ProductImageCreateView.as_view(), name='product-image-create'),
@@ -35,7 +34,7 @@ urlpatterns = [
     path('dashboard/product/create/',
          ProductCreateView.as_view(), name='product-create'),
     path('dashboard/product/<slug:slug>/update/',
-         PrductUpdateView.as_view(), name='product-update'),
+         ProductUpdateView.as_view(), name='product-update'),
 
     path('dashboard/product/<slug:slug>/delete,',
          ProductDeleteView.as_view(), name='product-delete'),

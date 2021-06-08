@@ -6,3 +6,8 @@ djangorestframework==3.12.4
 Pillow==8.2.0
 pytz==2021.1
 sqlparse==0.4.1
+<<<<<<< HEAD
+=======
+Pillow==8.2.0
+djangorestframework==3.12.4
+>>>>>>> 066290033fae186f33289c1f54962e5a13a0ad8f
