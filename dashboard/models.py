@@ -52,7 +52,7 @@ class Account(User):
     class Meta:
         verbose_name = ('Account')
         verbose_name_plural = ('Accounts')
-        ordering = ['-username']
+        ordering = ['username']
 
     def __str__(self):
         return self.username
@@ -69,7 +69,7 @@ class Customer(DateTimeModel):
     class Meta:
         verbose_name = ('Customer')
         verbose_name_plural = ('Customers')
-        ordering = ['-username']
+        ordering = ['username']
 
     def __str__(self):
         return self.username
@@ -88,7 +88,7 @@ class Category(DateTimeModel):
     class Meta:
         verbose_name = ('Category')
         verbose_name_plural = ('Categories')
-        ordering = ['-slug']
+        ordering = ['slug']
 
     def __str__(self):
 
@@ -122,7 +122,7 @@ class Size(DateTimeModel):
     class Meta:
         verbose_name = ('Size')
         verbose_name_plural = ('Sizes')
-        ordering = ['-name']
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -161,7 +161,7 @@ class Products(DateTimeModel):
     class Meta:
         verbose_name = ('Product')
         verbose_name_plural = ('Products')
-        ordering = ['-name']
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -186,7 +186,7 @@ class Coupon(DateTimeModel):
     class Meta:
         verbose_name = ('Coupon')
         verbose_name_plural = ('Coupons')
-        ordering = ['-title']
+        ordering = ['title']
 
     def __str__(self):
         return "Coupon code: " + self.code
@@ -210,7 +210,7 @@ class Order(DateTimeModel):
     class Meta:
         verbose_name = ('Order')
         verbose_name_plural = ('Orders')
-        ordering = ['-status']
+        ordering = ['status']
         
     def __str__(self):
         return "Order: " + self.code
