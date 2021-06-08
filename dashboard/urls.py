@@ -7,19 +7,19 @@ urlpatterns = [
     path('dashboard/', AdminDashboardView.as_view(), name="admin-dashboard"),
 
      #authenticate
-    path('login/', LoginView.as_view(), name="admin_login"),
-    path('logout/', LogoutView.as_view(), name="admin_logout"),
+    path('login/', LoginView.as_view(), name="admin-login"),
+    path('logout/', LogoutView.as_view(), name="admin-logout"),
     path('recoverpassword/', RecoverPasswordView.as_view(), name="recoverpassword"),
-    path('changepassword/', PasswordsChangeView.as_view(), name="change_password"),
+    path('changepassword/', PasswordsChangeView.as_view(), name="change-password"),
     
     # Category
     path('dashboard/category/', CategoryListView.as_view(), name="category"),
     path('dashboard/category/create/',
-         CategoryCreateView.as_view(), name="category_create"),
+         CategoryCreateView.as_view(), name="category-create"),
     path('dashboard/category/<slug:slug>/update/',
-         CategoryUpdateView.as_view(), name="category_update"),
+         CategoryUpdateView.as_view(), name="category-update"),
     path('dashboard/category/<slug:slug>/delete/',
-         CategoryDeleteView.as_view(), name="category_delete"),
+         CategoryDeleteView.as_view(), name="category-delete"),
 
      #category  API
      
