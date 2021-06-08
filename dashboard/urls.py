@@ -42,10 +42,19 @@ urlpatterns = [
     # brand urls
     path('dashboard/brand/list/', BrandListView.as_view(), name='brand-list'),
     path('dashboard/brand/create/', BrandCreateView.as_view(), name='brand-create'),
-    path('dashboard/brand/<int:pk>/update/',
-         BrandUpdateView.as_view(), name='brand-update'),
-    path('dashboard/brand/<int:pk>/delete/',
-         BrandDeleteView.as_view(), name='brand-delete'),
+    path('dashboard/brand/<int:pk>/update/', BrandUpdateView.as_view(), name='brand-update'),
+    path('dashboard/brand/<int:pk>/delete/', BrandDeleteView.as_view(), name='brand-delete'),
+    path('dashboard/', AdminDashboardView.as_view(), name="admin-dashboard"),
+    path('login/', LoginView.as_view(), name="admin_login"),
+    path('logout/', LogoutView.as_view(), name="admin_logout"),
+    path('recoverpassword/', RecoverPasswordView.as_view(), name="recoverpassword"),
+    path('changepassword/', PasswordsChangeView.as_view(), name="change_password"),
 
 
+ 
+
+    # user list 
+    path('user/create', UserCreateView.as_view(), name='user-create'),
+    path('user/list', UsersListView.as_view(), name="user_list"),
+    path('userdisable/<int:pk>/', UserToggleStatusView.as_view(), name='user_disable'),
 ]

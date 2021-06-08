@@ -4,9 +4,12 @@
 <div class="content-wrapper">
     <div class="content">							
         <div class="breadcrumb-wrapper">
+        
+        <div>
             <h1>Product</h1>
             <a href="{% url 'dashboard:brand-create' %}" style="float: right;" type="button" class="mb-1 btn btn-outline-success">Add Brand</a>
-
+           
+        </div>  
                           
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb p-0">
@@ -22,6 +25,7 @@
                 </ol>
 
             </nav>
+            
 
         </div>
 
@@ -31,7 +35,29 @@
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom">
                         <h2>Brands List</h2>
+               <div class="col-8 float-right">
+                <div class="card-tools">
+                  <div class="input-group input-group-sm">
+                    <form action="{% url 'dashboard:brand-list' %}" method="GET" class="form-inline">
+                      <input
+                        type="text"
+                        name="name"
+                        class="form-control float-right searchInput"
+                        id="SearchBrand"
+                        placeholder="Brand name"
+                      />
+                      <div class="input-group-append">
+                         <button type="button" class="mb-1 btn btn-success">
+                          <span class="mdi mdi-magnify"></span>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
                     </div>
+                    
+                    
                     <div class="card-body">
                         <table class="table table-striped">
                             <thead>
