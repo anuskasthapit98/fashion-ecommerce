@@ -53,6 +53,11 @@
                                     <td scope="row">{{ forloop.counter }}</td>
                                     <td>{{ product.name }}</td>
                                     <td>{{ product.brands }}</td>
+                                    <td>
+                                        {% for img in product.image.all|slice:1 %}
+                                        <img width="100px" height="100px" src="{{ img.image.url}}" alt="">
+                                        {% endfor %}
+                                    </td>
                                     <td>{{ product.categories }}</td>
                                     <td>Subcategory</td>
                                     <td>{{ product.price }}</td>

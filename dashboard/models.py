@@ -26,17 +26,18 @@ class TimeStamp(models.Model):
 class Category(TimeStamp):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
-    parent = models.ForeignKey('self', related_name="sub_Category", on_delete=models.CASCADE, null=True , blank= True, ) 
-    slug = models.SlugField(unique= True, primary_key= True)
+    parent = models.ForeignKey('self', related_name="sub_Category",
+                               on_delete=models.CASCADE, null=True, blank=True, )
+    slug = models.SlugField(unique=True, primary_key=True)
     description = RichTextField()
-    
+
     class Meta:
         verbose_name = ('Category')
         verbose_name_plural = ('Categories')
 
     def __str__(self):
-                                   
-        full_path = [self.name]            
+
+        full_path = [self.name]
         k = self.parent
         while k is not None:
             full_path.append(k.name)
@@ -44,7 +45,7 @@ class Category(TimeStamp):
 
         return ' -> '.join(full_path[::-1])
 
-    
+
 class Brands(TimeStamp):
     name = models.CharField(max_length=250)
     logo = models.ImageField(upload_to="brands")
@@ -71,10 +72,13 @@ class Products(TimeStamp):
     status = models.BooleanField(default=True)
     slug = models.SlugField(unique=True, primary_key=True)
     vat_incl = models.BooleanField(default=False)
-    vat_percent = models.DecimalField(null=True, max_digits=12, decimal_places=2)
+    vat_percent = models.DecimalField(
+        null=True, max_digits=12, decimal_places=2)
     vat_amt = models.DecimalField(null=True, max_digits=12, decimal_places=2)
-    discount_percent=models.DecimalField(null=True, max_digits=12, decimal_places=2)
-    discount_amt =  models.DecimalField(null=True, max_digits=12, decimal_places=2)
+    discount_percent = models.DecimalField(
+        null=True, max_digits=12, decimal_places=2)
+    discount_amt = models.DecimalField(
+        null=True, max_digits=12, decimal_places=2)
     view_count = models.PositiveIntegerField(default=0, null=True, blank=True)
 
     class Meta:
@@ -93,11 +97,14 @@ class Account(User):
     def __str__(self):
         return self.username
 
+
 class Coupon(TimeStamp):
     valid_date = models.DateTimeField(null=True, blank=True)
     code = models.CharField(max_length=50, unique=True)
-    discount_percent=models.DecimalField(null=True, max_digits=12, decimal_places=2)
-    discount_amt =  models.DecimalField(null=True, max_digits=12, decimal_places=2)
+    discount_percent = models.DecimalField(
+        null=True, max_digits=12, decimal_places=2)
+    discount_amt = models.DecimalField(
+        null=True, max_digits=12, decimal_places=2)
     discount_type = models.CharField(null=True, max_length=40)
 
 
@@ -108,7 +115,8 @@ ORDER_STATUS = (
     ("Order Completed", "Order Completed"),
     ("Order Canceled", "Order Canceled"),
 )
-      
+
+
 class Order(TimeStamp):
     product = models.ManyToManyField(Products)
     shipping_address = models.CharField(max_length=200)
