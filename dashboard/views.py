@@ -90,24 +90,6 @@ class ProductListView(NonDeletedItemMixin, ListView):
     template_name = 'dashboard/product/list.html'
     model = Products
 
-
-class ProductCreateView(CreateView):
-    template_name = 'dashboard/product/create.html'
-    form_class = ProductForm
-    success_url = reverse_lazy('dashboard:product-list')
-
-
-class ProductUpdateView(UpdateView):
-    template_name = 'dashboard/product/create.html'
-    model = Products
-    form_class = ProductForm
-    success_url = reverse_lazy('dashboard:product-list')
-
-
-class ProductListView(NonDeletedItemMixin, ListView):
-    template_name = 'dashboard/product/list.html'
-    model = Products
-    
     def get_queryset(self):
         queryset = super().get_queryset()
         if "name" in self.request.GET:
@@ -124,6 +106,19 @@ class ProductListView(NonDeletedItemMixin, ListView):
                     categories__name__contains = self.request.GET.get("categories"))
         return queryset
 
+
+
+class ProductCreateView(CreateView):
+    template_name = 'dashboard/product/create.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('dashboard:product-list')
+
+
+class ProductUpdateView(UpdateView):
+    template_name = 'dashboard/product/create.html'
+    model = Products
+    form_class = ProductForm
+    success_url = reverse_lazy('dashboard:product-list')
 
 
 class ProductDeleteView(DeleteMixin, DeleteView):

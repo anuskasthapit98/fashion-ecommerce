@@ -22,5 +22,15 @@ class CategoryListCreate(generics.ListCreateAPIView):
 
 
 class CategoryUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
+    queryset = Brands.objects.all()
     serializer_class = CategorySerialize
+
+
+class BrandListCreate(generics.ListCreateAPIView):
+    queryset = Brands.objects.all()
+    serializer_class = BrandSerializers
+
+
+class BrandUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Brands.objects.all()
+    serializer_class = BrandSerializers
