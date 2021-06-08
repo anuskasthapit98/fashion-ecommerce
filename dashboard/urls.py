@@ -34,4 +34,14 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name="admin_logout"),
     path('recoverpassword/', RecoverPasswordView.as_view(), name="recoverpassword"),
     path('changepassword/', PasswordsChangeView.as_view(), name="change_password"),
+
+
+    # brands api
+    path('brands/', BrandList.as_view()),
+    path('brands/<int:pk>/', BrandUpdateDelete.as_view()),
+
+    # user list 
+    path('user/create', UserCreateView.as_view(), name='user-create'),
+    path('user/list', UsersListView.as_view(), name="user_list"),
+    path('userdisable/<int:pk>/', UserToggleStatusView.as_view(), name='user_disable'),
 ]

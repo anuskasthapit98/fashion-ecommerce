@@ -1,6 +1,9 @@
-
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import  redirect
 from django.contrib.auth.models import User, Group
+
+
+
 
 class AdminRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -35,3 +38,19 @@ class FormControlMixin:
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
+
+
+class SuperAdminRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_superuser:
+            pass
+        else:
+            raise PermissionDenied
+
+        return super().dispatch(request, *args, *kwargs)
+
+
+class QuerysetMixin(object):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at__isnull=True)

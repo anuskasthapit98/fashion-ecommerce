@@ -31,6 +31,41 @@
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom">
                         <h2>Product List</h2>
+                <div class="col-8" float-right>
+                 <div class="card-tools">
+                  <div class="input-group input-group-sm">
+                    <form action="{% url 'dashboard:product-list' %}" method="GET" class="form-inline">
+                       <input
+                            type="text"
+                            name="name"
+                            class="form-control float-right searchInput"
+                            id="Search"
+                            placeholder="name"
+                          />
+                        <input
+                            type="text"
+                            name="brands"
+                            class="form-control float-right searchInput"
+                            id="Search"
+                            placeholder="brands"
+                          />
+                        <input
+                            type="text"
+                            name="categories"
+                            class="form-control float-right searchInput"
+                            id="Search"
+                            placeholder="category"
+                          />
+
+                      <div class="input-group-append">
+                        <button type="button" class="mb-1 btn btn-success">
+                          <span class="mdi mdi-magnify"></span>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">

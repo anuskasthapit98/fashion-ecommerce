@@ -1,0 +1,123 @@
+{% extends 'dashboard/base/index.html' %} 
+{% block style %}
+	<style>
+		.select2-selection__choice__display{
+			color: black;
+		}
+
+    #image_preview.img {
+      display: inline;
+    }
+	</style>
+{% endblock %}
+{% block content %}
+<div class="wrapper">
+  <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2"> 
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-left">
+              <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:admin-dashboard' %}">Home</a>
+              </li>
+              <li class="breadcrumb-item active">User</li>
+            </ol>
+          </div>
+          <div class="col-sm-6">
+            <button class="btn btn-primary float-sm-right">
+              <a class="text-white" href="{% url 'dashboard:user_list' %}"
+                >Cancel</a
+              >
+            </button>
+          </div>
+         
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-10 mx-auto">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Add User</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div  class="row">
+                        <div class="form-group col-md-6  col-sm-12">
+                            <label for="username">Username</label>
+                            {{ form.username }}
+                            <span class="form-error">{{ form.errors.username }}</span>
+                        </div>
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label for="password">Email</label>
+                            {{ form.email }}
+                            <span class="form-error">{{ form.errors.email }}</span>
+                        </div>
+
+                    </div>
+                    <div  class="row">
+                        <div class="form-group col-md-6 col-sm-12" >
+                            <label for="join_date">Address </label>
+                            {{ form.address }}
+                        </div>
+                        <div class="form-group col-md-6 col-sm-12" >
+                            <label for="password">Contact No.</label>
+                            {{ form.mobile }}
+                            <span class="form-error">{{ form.errors.mobile }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-6 col-sm-12">
+                          <label for="image">Image</label>
+                          {{ form.image }}
+                      </div>
+                      <div class="form-group col-md-6 col-sm-12">
+                          <img src="" id="frame" alt="" width="100px" height="100px">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-6 col-sm-12">
+                        <label for="">Group</label>
+                        {{ form.groups }}
+                      </div>
+
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %} 
+{% block script %}
+<script>
+function preview() {
+  frame.src=URL.createObjectURL(event.target.files[0]);
+}
+</script>
+<script>
+	$(document).ready(function() {
+    	$('.feature-select').select2();
+}	);
+  </script>
+{% endblock %}
+

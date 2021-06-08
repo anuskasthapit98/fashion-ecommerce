@@ -1,9 +1,9 @@
 
 
 from django.db.models.base import Model
-from dashboard.models import Category
+
 from .forms import *
-from .models import Category
+from .models import *
 from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
 from django.contrib import messages
@@ -13,7 +13,6 @@ from .mixin import *
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth import authenticate, login, logout
-from django.views import generic
 from .forms import *
 from django.shortcuts import render, redirect
 from .mixin import *
@@ -23,13 +22,10 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.views import PasswordChangeView
 from django.http import JsonResponse
-# Create your views here.
-
-class AdminDashboardView(AdminRequiredMixin,TemplateView):
-	template_name = 'dashboard/base/index.html'
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
-from django.shortcuts import render
+from .serializers import *
+from rest_framework import generics
+# Create your views here.
 
 class AdminDashboardView(TemplateView):
 	template_name = 'dashboard/base/index.html'
@@ -43,7 +39,12 @@ class CategoryListView(NonDeletedItemMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(parent__isnull=True)
+        if "name" in self.request.GET:
+            if self.request.GET.get('name') != '':
+                queryset = queryset.filter(
+                    name=self.request.GET.get("name"))
         return queryset
+    
     
 class CategoryCreateView(CreateView):
     template_name = 'dashboard/Category/form.html'
@@ -64,9 +65,6 @@ class CategoryDeleteView( DeleteMixin, DeleteView):
     
     
     
-   
-
-
 class ProductImageCreateView(CreateView):
     model = ProductImage
     form_class = ProductImageForm
@@ -107,6 +105,23 @@ class PrductUpdateView(UpdateView):
 class ProductListView(NonDeletedItemMixin, ListView):
     template_name = 'dashboard/product/list.html'
     model = Products
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "name" in self.request.GET:
+            if self.request.GET.get('name') != '':
+                queryset = queryset.filter(
+                    name__contains = self.request.GET.get("name"))
+        if "brands" in self.request.GET:
+            if self.request.GET.get('brands') != '':
+                queryset = queryset.filter(
+                    brands__name__contains = self.request.GET.get("brands"))
+        if "categories" in self.request.GET:
+            if self.request.GET.get('categories') != '':
+                queryset = queryset.filter(
+                    categories__name__contains = self.request.GET.get("categories"))
+        return queryset
+
 
 
 class ProductDeleteView(DeleteMixin, DeleteView):
@@ -179,10 +194,18 @@ class PasswordsChangeView(PasswordChangeView):
         form.set_user(self.request.user)
         return form
 
-
-class BrandListView(NonDeletedItemMixin, ListView):
+# brands
+class BrandListView(NonDeletedItemMixin, ListView, QuerysetMixin):
     template_name = 'dashboard/brand/list.html'
     model = Brands
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "name" in self.request.GET:
+            if self.request.GET.get('name') != '':
+                queryset = queryset.filter(
+                    name__contains = self.request.GET.get("name"))
+        return queryset
 
 class BrandCreateView(CreateView):
     template_name = 'dashboard/brand/create.html'
@@ -200,3 +223,45 @@ class BrandDeleteView( DeleteMixin, DeleteView):
     model = Brands
     success_url = reverse_lazy('dashboard:brand-list')
     
+
+
+
+# brands api
+
+class BrandList(generics.ListCreateAPIView):
+    queryset = Brands.objects.all()
+    serializer_class = BrandSerializer
+    
+class BrandUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Brands.objects.all()
+    serializer_class = BrandSerializer
+
+
+# user
+
+class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, CreateView):
+    template_name = 'dashboard/users/usercreate.html'
+    form_class = UserForm
+    success_url = reverse_lazy('dashboard:user_list')
+
+    def get_success_url(self):
+        return reverse('dashboard:recoverpassword', kwargs={'pk': self.object.pk})
+
+
+class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, ListView):
+    template_name = 'dashboard/users/userlist.html'
+    model = Account
+    success_url = reverse_lazy('dashboard:user_list')
+    paginate_by = 5
+
+class UserToggleStatusView(View):
+    success_url = reverse_lazy('dashboard:user_list')
+    def get(self, request, *args, **kwargs):    
+        account = User.objects.filter(pk = self.kwargs.get("pk")).first() 
+        if account.is_active == True:
+            account.is_active = False
+        else:
+            account.is_active = True
+        account.save(update_fields = ['is_active'])
+
+        return redirect(self.success_url)
