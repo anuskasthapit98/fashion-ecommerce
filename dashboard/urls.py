@@ -18,11 +18,11 @@ urlpatterns = [
     # Category
     path('dashboard/category/', CategoryListView.as_view(), name="category"),
     path('dashboard/category/create/',
-         CategoryCreateView.as_view(), name="category_create"),
+         CategoryCreateView.as_view(), name="category-create"),
     path('dashboard/category/<slug:slug>/update/',
-         CategoryUpdateView.as_view(), name="category_update"),
+         CategoryUpdateView.as_view(), name="category-update"),
     path('dashboard/category/<slug:slug>/delete/',
-         CategoryDeleteView.as_view(), name="category_delete"),
+         CategoryDeleteView.as_view(), name="category-delete"),
 
     # image create
     path('dashboard/product/image/create/',

@@ -23,6 +23,17 @@ class TimeStamp(models.Model):
             return super().delete()
 
 
+class Account(User):
+    mobile = models.CharField(max_length=250)
+    address = models.CharField(max_length=250)
+    image = models.ImageField(upload_to='user')
+
+    def __str__(self):
+        return self.username
+    
+
+
+
 class Category(TimeStamp):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
@@ -72,13 +83,10 @@ class Products(TimeStamp):
     status = models.BooleanField(default=True)
     slug = models.SlugField(unique=True, primary_key=True)
     vat_incl = models.BooleanField(default=False)
-    vat_percent = models.DecimalField(
-        null=True, max_digits=12, decimal_places=2)
-    vat_amt = models.DecimalField(null=True, max_digits=12, decimal_places=2)
-    discount_percent = models.DecimalField(
-        null=True, max_digits=12, decimal_places=2)
-    discount_amt = models.DecimalField(
-        null=True, max_digits=12, decimal_places=2)
+    vat_percent = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
+    vat_amt = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
+    discount_percent=models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
+    discount_amt =  models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
     view_count = models.PositiveIntegerField(default=0, null=True, blank=True)
 
     class Meta:
@@ -87,15 +95,7 @@ class Products(TimeStamp):
 
     def __str__(self):
         return self.name
-
-
-class Account(User):
-    mobile = models.CharField(max_length=250)
-    address = models.CharField(max_length=250)
-    image = models.ImageField(upload_to='user')
-
-    def __str__(self):
-        return self.username
+    
 
 
 class Coupon(TimeStamp):
@@ -107,6 +107,13 @@ class Coupon(TimeStamp):
         null=True, max_digits=12, decimal_places=2)
     discount_type = models.CharField(null=True, max_length=40)
 
+    class Meta:
+        verbose_name = ('Coupon')
+        verbose_name_plural = ('Coupons')
+
+    def __str__(self):
+        return "Coupon code: " + self.code
+
 
 ORDER_STATUS = (
     ("Order Received", "Order Received"),
@@ -116,15 +123,26 @@ ORDER_STATUS = (
     ("Order Canceled", "Order Canceled"),
 )
 
+METHOD = (
+    ("Cash On Delivery", "Cash On Delivery"),
+    ("Khalti", "Khalti"),
+    ("Esewa", "Esewa"),
+)
 
+      
 class Order(TimeStamp):
+    code = models.CharField(max_length=50, unique=True )
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, blank=True, null=True)
     product = models.ManyToManyField(Products)
     shipping_address = models.CharField(max_length=200)
+    billing_address = models.CharField(max_length=200)
     mobile = models.CharField(max_length=10)
     email = models.EmailField(null=True, blank=True)
     subtotal = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS)
+    payment_method = models.CharField(max_length=20, choices=METHOD, default="Cash On Delivery")
+    payment_completed = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
-        return "Order: " + str(self.id)
+        return "Order: " + self.code

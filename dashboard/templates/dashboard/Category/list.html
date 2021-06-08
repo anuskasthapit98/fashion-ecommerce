@@ -27,7 +27,7 @@
                       <a
                   class="btn btn-primary btn-pill"
                   id="add-task"
-                  href="{% url 'dashboard:category_create' %}"
+                  href="{% url 'dashboard:category-create' %}"
                   role="button">
                   Add new
                 </a>
@@ -54,8 +54,8 @@
 														<td>{{category.description|safe}}</td>
 														<td><img src="{{ category.img.url }}" alt="" /></td>
                             <td>
-                             <span ><a class="btn btn-outline-success" href="{% url 'dashboard:category_update' category.slug %}"><span class="mdi mdi-circle-edit-outline"> Edit</span></a></span>
-                        <span><a class="btn btn-outline-danger delete" href="{% url 'dashboard:category_delete' category.slug %}"><span class="mdi mdi-trash-can"> Delete</span></a></span>
+                             <span ><a class="btn btn-outline-success" href="{% url 'dashboard:category-update' category.slug %}"><span class="mdi mdi-circle-edit-outline"> Edit</span></a></span>
+                        <span><a class="btn btn-outline-danger delete" href="{% url 'dashboard:category-delete' category.slug %}"><span class="mdi mdi-trash-can"> Delete</span></a></span>
 
 
                         
