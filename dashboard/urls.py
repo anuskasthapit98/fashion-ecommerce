@@ -5,15 +5,15 @@ app_name = 'dashboard'
 urlpatterns = [
 
     # login
-    path('login/', LoginView.as_view(), name="admin_login"),
+    path('login/', LoginView.as_view(), name="login"),
     # logout
-    path('logout/', LogoutView.as_view(), name="admin_logout"),
+    path('logout/', LogoutView.as_view(), name="logout"),
     # password reset
-    path('recoverpassword/', RecoverPasswordView.as_view(), name="recoverpassword"),
+    path('recoverpassword/', RecoverPasswordView.as_view(), name="recover-password"),
     # password change
-    path('changepassword/', PasswordsChangeView.as_view(), name="change_password"),
+    path('changepassword/', PasswordsChangeView.as_view(), name="change-password"),
     # dashboard view
-    path('dashboard/', AdminDashboardView.as_view(), name="admin-dashboard"),
+    path('dashboard/', AdminDashboardView.as_view(), name="dashboard"),
 
     # Category
     path('dashboard/category/', CategoryListView.as_view(), name="category"),
@@ -44,15 +44,8 @@ urlpatterns = [
     path('dashboard/brand/create/', BrandCreateView.as_view(), name='brand-create'),
     path('dashboard/brand/<int:pk>/update/', BrandUpdateView.as_view(), name='brand-update'),
     path('dashboard/brand/<int:pk>/delete/', BrandDeleteView.as_view(), name='brand-delete'),
-    path('dashboard/', AdminDashboardView.as_view(), name="admin-dashboard"),
-    path('login/', LoginView.as_view(), name="admin_login"),
-    path('logout/', LogoutView.as_view(), name="admin_logout"),
-    path('recoverpassword/', RecoverPasswordView.as_view(), name="recoverpassword"),
-    path('changepassword/', PasswordsChangeView.as_view(), name="change_password"),
-
-
- 
-
+   
+   
     # user list 
     path('user/create', UserCreateView.as_view(), name='user-create'),
     path('user/list', UsersListView.as_view(), name="user_list"),

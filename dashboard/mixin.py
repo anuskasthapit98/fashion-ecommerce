@@ -13,8 +13,25 @@ class AdminRequiredMixin(object):
             pass
         else:
             return redirect('/login/')
-          
+        return super().dispatch(request, *args, *kwargs)
 
+class StaffRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_staff and user.is_active:
+            pass
+        else:
+            return redirect('/login/')
+        return super().dispatch(request, *args, *kwargs)
+
+
+class CustomLoginRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_superuser and user.is_staff:
+            pass
+        else:
+            return redirect('/login/')
         return super().dispatch(request, *args, *kwargs)
 
 
