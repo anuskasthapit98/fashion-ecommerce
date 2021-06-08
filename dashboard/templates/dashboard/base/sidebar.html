@@ -1,4 +1,5 @@
 {% load static %}
+{% load active_link_tags %}
 <aside class="left-sidebar bg-sidebar">
     <div id="sidebar" class="sidebar sidebar-with-footer">
       <!-- Aplication Brand -->
@@ -52,12 +53,25 @@
                 </div>
               </ul>
             </li>
+          
+            
             <li  class="has-sub active expand" >
-              <a href="{% url 'dashboard:brand-list' %}">Brands
+              <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
+                aria-expanded="false" aria-controls="dashboard">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Brands</span> <b class="caret"></b>
               </a>
-              
+              <ul  class="collapse show"  id="dashboard"
+                data-parent="#sidebar-menu">
+                <div class="sub-menu">
+                      <li  class="active" >
+                        <a class="sidenav-item-link" href="{% url 'dashboard:brand-list' %}">
+                          <span class="nav-text">List</span>
+                        </a>
+                      </li>
+                </div>
+              </ul>
             </li>
-
             
            <li  class="has-sub" >
                     <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#icons"
@@ -76,6 +90,25 @@
                       </div>
                     </ul>
                   </li>
+            {% if request.user.is_superuser %}
+                      <li  class="has-sub active expand" >
+                        <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
+                          aria-expanded="false" aria-controls="dashboard">
+                          <i class="mdi mdi-view-dashboard-outline"></i>
+                          <span class="nav-text">Admin</span> <b class="caret"></b>
+                        </a>
+                        <ul  class="collapse show"  id="dashboard"
+                          data-parent="#sidebar-menu">
+                          <div class="sub-menu">
+                                <li  class="active" >
+                                  <a class="sidenav-item-link" href="{% url 'dashboard:user_list' %}">
+                                    <span class="nav-text">Users</span>
+                                  </a>
+                                </li>
+                          </div>
+                        </ul>
+                      </li>
+                   {% endif %}
             <li  class="has-sub" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#ui-elements"
                 aria-expanded="false" aria-controls="ui-elements">
@@ -263,6 +296,7 @@
                       </div>
                     </ul>
                   </li>
+                    
                 </div>
               </ul>
             </li>
@@ -445,9 +479,10 @@
               </ul>
             </li>
         </ul>
+        
     
       </div>
-    
+      
       <hr class="separator" />
     
       <div class="sidebar-footer">
