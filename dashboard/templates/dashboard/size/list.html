@@ -1,0 +1,114 @@
+{% extends 'dashboard/base/base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="breadcrumb-wrapper">
+        
+        <div>
+            <h1>Product</h1>
+            <a href="{% url 'dashboard:size-create' %}" style="float: right;" type="button" class="mb-1 btn btn-outline-success">Add Size</a>
+           
+        </div>  
+                          
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb p-0">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard:dashboard' %}">
+                    <span class="mdi mdi-home"></span>                
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    Our
+                </li>
+                <li class="breadcrumb-item" aria-current="page">Sizes</li>
+                </ol>
+
+            </nav>
+            
+
+        </div>
+
+        <div class="row mx-auto">
+            
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Sizes List</h2>
+               <div class="col-8 float-right">
+                <div class="card-tools">
+                  <div class="input-group input-group-sm">
+                    <form action="{% url 'dashboard:size-list' %}" method="GET" class="form-inline">
+                      <input type="text" name="name" class="form-control float-right searchInput"
+                        id="SearchBrand"
+                        placeholder="size"
+                      />
+                      <div class="input-group-append">
+                         <button type="button" class="mb-1 btn btn-success">
+                          <span class="mdi mdi-magnify"></span>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+                    </div>
+                    
+                    
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S.N</th>
+                                    <th scope="col">Size</th>
+                                    <th width="25%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for size in object_list %}
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ size.name }}</td>
+                                    <td>
+                                        <span><a class="btn btn-warning mr-2"
+                                                href="{% url 'dashboard:size-update' size.pk %}">
+                                              <span class="mdi mdi-circle-edit-outline"></span>Edit</a></span>
+                                         <span><a class="btn btn-outline-danger delete" 
+                                                href="{% url 'dashboard:size-delete' size.pk %}">
+                                                <span class="mdi mdi-trash-can"> Delete</span></a></span
+                        >
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>				
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+$('.delete').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will permanently deleted !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'Your file has been deleted.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+</script>
+{% endblock %}
