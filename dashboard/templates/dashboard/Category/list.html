@@ -72,7 +72,7 @@
                            
 														<td>{{category.name}}</td>
 														<td>{{category.description|safe}}</td>
-														<td><img src="{{ category.img.url }}" alt="" /></td>
+														<td><img width="100px" height="100px" src="{{ category.img.url }}" alt="" /></td>
                             <td>
                              <span ><a class="btn btn-outline-success" href="{% url 'dashboard:category-update' category.slug %}"><span class="mdi mdi-circle-edit-outline"> Edit</span></a></span>
                         <span><a class="btn btn-outline-danger delete" href="{% url 'dashboard:category-delete' category.slug %}"><span class="mdi mdi-trash-can"> Delete</span></a></span>

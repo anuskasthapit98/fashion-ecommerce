@@ -33,28 +33,48 @@
                                     {{ form.categories }}
                                 </div>
                                 <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlPassword">Sucategory</label>
-                                    {{ form.categories }}
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlInput1">Brand </label>
+                                    <label for="exampleFormControlPassword">Brand</label>
                                     {{ form.brands }}
                                 </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlPassword">Status</label>
-                                    {{ form.status }} <span>available</span>
-                                </div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-4 col-sm-12">
                                     <label for="exampleFormControlInput1">Price </label>
                                     {{ form.price }}
                                 </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <label for="exampleFormControlPassword">discount percent</label>
+                                    {{ form.discount_percent }}
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <label for="exampleFormControlPassword">discount </label>
+                                    {{ form.discount_amt }}
+                                </div>
+                            </div>
+                            
+                            <div class="row form-group">
+                                <div class="col-md-4 col-sm-12">
+                                    <label for="exampleFormControlInput1">Size</label>
+                                    {{ form.size }}
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <label for="exampleFormControlInput1">Status </label>
+                                    {{ form.status }} <span>Available</span>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <label for="exampleFormControlPassword">VAT Inclusive</label>
+                                    {{ form.vat_incl }} <span>Yes</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row form-group">
                                 <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlPassword">discount</label>
-                                    {{ form.discount }}
+                                    <label for="exampleFormControlInput1">VAt Percent </label>
+                                    {{ form.vat_percent }}
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">VAT amount</label>
+                                    {{ form.vat_amt }}
                                 </div>
                             </div>
                             <div class="form-group">
