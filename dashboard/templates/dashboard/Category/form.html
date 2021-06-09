@@ -15,10 +15,10 @@
                          {% csrf_token %}
                          {{form.media}}
                          <div class="form-group">
-                                <label for="exampleFormControlInput1">ID</label>
+                                <label for="exampleFormControlInput1">Slug</label>
                                 {{form.slug}}
                             </div>
-                             <span class= 'form-error'>{{form.errors.slug}}</span>
+                             <span class= 'form-error'>{{ form.errors.slug }}</span>
                             <div class="row form-group">
                              
                                 <div class="col-md-12 col-sm-12">

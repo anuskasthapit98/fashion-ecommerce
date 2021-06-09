@@ -74,6 +74,7 @@
                                     <th scope="col">S.N</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Brand</th>
+                                    <th scope="col">Image</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Subcategory</th>
                                     <th scope="col">Price</th>
@@ -94,7 +95,7 @@
                                         {% endfor %}
                                     </td>
                                     <td>{{ product.categories }}</td>
-                                    <td>Subcategory</td>
+                                    <td>{{ product.categories.parent }}</td>
                                     <td>{{ product.price }}</td>
                                     <td>{{ product.price }}</td>
                                     <td>

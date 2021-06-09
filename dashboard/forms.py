@@ -6,25 +6,22 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
 
 
-
-
 class CategoryForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Category
         fields = "__all__"
 
-
     def clean_slug(self):
         slug = self.cleaned_data['slug']
-        
-        if Category.objects.filter(slug = slug).exists():
+
+        if Category.objects.filter(slug=slug).exists():
             raise forms.ValidationError('This ID is not available')
         else:
-            pass 
-       
+            pass
+
+        return slug
 
 
-    
 class ProductForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Products
@@ -34,6 +31,12 @@ class ProductForm(FormControlMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['status'].widget.attrs.update({
             'class': "control outlined control-checkbox checkbox-success"
+        })
+        self.fields['vat_incl'].widget.attrs.update({
+            'class': "control outlined control-checkbox checkbox-success"
+        })
+        self.fields['size'].widget.attrs.update({
+            'class': 'form-control select2'
         })
 
 
@@ -102,7 +105,6 @@ class ChangePasswordForm(PasswordChangeForm):
         return self.cleaned_data
 
 
-
 class BrandForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Brands
@@ -113,6 +115,7 @@ class BrandForm(FormControlMixin, forms.ModelForm):
                 'placeholder': 'choose image'
             })
         }
+
 
 class UserForm(FormControlMixin, forms.ModelForm):
     class Meta:

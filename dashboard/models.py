@@ -5,7 +5,6 @@ from django.db import models
 from django.utils import timezone
 
 
-
 ORDER_STATUS = (
     ("Order Received", "Order Received"),
     ("Order Processing", "Order Processing"),
@@ -26,7 +25,7 @@ TYPE = (
 )
 
 
-#Datetime Model
+# Datetime Model
 class DateTimeModel(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -42,13 +41,14 @@ class DateTimeModel(models.Model):
         else:
             return super().delete()
 
-#Account Model
+# Account Model
+
 
 class Account(User):
     mobile = models.CharField(max_length=250)
     address = models.CharField(max_length=250)
     image = models.ImageField(upload_to='user')
-    
+
     class Meta:
         verbose_name = ('Account')
         verbose_name_plural = ('Accounts')
@@ -56,16 +56,17 @@ class Account(User):
 
     def __str__(self):
         return self.username
- 
-#Customer Model
-   
+
+# Customer Model
+
+
 class Customer(DateTimeModel):
-    first_name =  models.CharField(max_length=50, default="New User")
-    last_name =  models.CharField(max_length=50, default="New User")
+    first_name = models.CharField(max_length=50, default="New User")
+    last_name = models.CharField(max_length=50, default="New User")
     username = models.CharField(max_length=50)
     email = models.CharField(max_length=100)
     mobile = models.CharField(max_length=10)
-    
+
     class Meta:
         verbose_name = ('Customer')
         verbose_name_plural = ('Customers')
@@ -74,8 +75,8 @@ class Customer(DateTimeModel):
     def __str__(self):
         return self.username
 
-    
-#Category Model
+
+# Category Model
 
 class Category(DateTimeModel):
     name = models.CharField(max_length=250)
@@ -100,7 +101,8 @@ class Category(DateTimeModel):
 
         return ' -> '.join(full_path[::-1])
 
-#Brand Model
+# Brand Model
+
 
 class Brands(DateTimeModel):
     name = models.CharField(max_length=250)
@@ -114,11 +116,12 @@ class Brands(DateTimeModel):
     def __str__(self):
         return self.name
 
-#Size Model
+# Size Model
+
 
 class Size(DateTimeModel):
     name = models.CharField(max_length=250)
-    
+
     class Meta:
         verbose_name = ('Size')
         verbose_name_plural = ('Sizes')
@@ -127,11 +130,12 @@ class Size(DateTimeModel):
     def __str__(self):
         return self.name
 
-#Product Image Model
+# Product Image Model
+
 
 class ProductImage(DateTimeModel):
     image = models.ImageField(upload_to="products")
-    
+
     # class Meta:
     #     verbose_name = ('ProductImage')
     #     verbose_name_plural = ('ProductImages')
@@ -139,7 +143,8 @@ class ProductImage(DateTimeModel):
     # def __str__(self):
     #     return self.name
 
-#Product Model
+# Product Model
+
 
 class Products(DateTimeModel):
     categories = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -147,15 +152,19 @@ class Products(DateTimeModel):
     name = models.CharField(max_length=250)
     image = models.ManyToManyField(ProductImage)
     description = RichTextField()
-    size= models.ManyToManyField(Size)
+    size = models.ManyToManyField(Size)
     price = models.PositiveIntegerField()
     status = models.BooleanField(default=True)
     slug = models.SlugField(unique=True, primary_key=True)
     vat_incl = models.BooleanField(default=False)
-    vat_percent = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
-    vat_amt = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
-    discount_percent=models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
-    discount_amt =  models.DecimalField(max_digits=12, decimal_places=2, null=True, blank= True)
+    vat_percent = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True)
+    vat_amt = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True)
+    discount_percent = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True)
+    discount_amt = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True)
     view_count = models.PositiveIntegerField(default=0, null=True, blank=True)
 
     class Meta:
@@ -165,9 +174,9 @@ class Products(DateTimeModel):
 
     def __str__(self):
         return self.name
-    
 
-#Coupon Model
+
+# Coupon Model
 
 class Coupon(DateTimeModel):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -180,8 +189,8 @@ class Coupon(DateTimeModel):
     discount_amt = models.DecimalField(
         null=True, max_digits=12, decimal_places=2)
     discount_type = models.CharField(null=True, max_length=40, choices=TYPE)
-    is_used = models.BooleanField(default=False, null=True, blank= True)
-    validity_count = models.PositiveIntegerField(default= 1)
+    is_used = models.BooleanField(default=False, null=True, blank=True)
+    validity_count = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = ('Coupon')
@@ -191,11 +200,13 @@ class Coupon(DateTimeModel):
     def __str__(self):
         return "Coupon code: " + self.code
 
-#Order Model
- 
+# Order Model
+
+
 class Order(DateTimeModel):
-    code = models.CharField(max_length=50, unique=True )
-    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, blank=True, null=True)
+    code = models.CharField(max_length=50, unique=True)
+    coupon = models.ForeignKey(
+        Coupon, on_delete=models.CASCADE, blank=True, null=True)
     product = models.ManyToManyField(Products)
     shipping_address = models.CharField(max_length=200)
     billing_address = models.CharField(max_length=200)
@@ -204,13 +215,15 @@ class Order(DateTimeModel):
     subtotal = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
     status = models.CharField(max_length=50, choices=ORDER_STATUS)
-    payment_method = models.CharField(max_length=20, choices=METHOD, default="Cash On Delivery")
-    payment_completed = models.BooleanField(default=False, null=True, blank=True)
-    
+    payment_method = models.CharField(
+        max_length=20, choices=METHOD, default="Cash On Delivery")
+    payment_completed = models.BooleanField(
+        default=False, null=True, blank=True)
+
     class Meta:
         verbose_name = ('Order')
         verbose_name_plural = ('Orders')
         ordering = ['status']
-        
+
     def __str__(self):
         return "Order: " + self.code
