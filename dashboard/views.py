@@ -1,19 +1,18 @@
 
 from django.conf import settings as conf_settings
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
-from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
-from django.urls import reverse_lazy
 from django.http import JsonResponse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.urls import reverse_lazy
+from django.utils.crypto import get_random_string
+from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 
-
+from .forms import *
 from .models import *
 from .mixin import *
-from .forms import *
 
 # Create your views here.
 # login view starts here
@@ -253,3 +252,28 @@ class UserToggleStatusView(View):
         account.save(update_fields=['is_active'])
 
         return redirect(self.success_url)
+
+# size view starts here
+
+
+class SizeListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/size/list.html'
+    model = Size
+
+
+class SizeCreateView(CreateView):
+    template_name = 'dashboard/size/form.html'
+    form_class = SizeCreateForm
+    success_url = reverse_lazy('dashboard:size-list')
+
+
+class SizeUpdateView(UpdateView):
+    template_name = 'dashboard/size/form.html'
+    model = Size
+    form_class = SizeCreateForm
+    success_url = reverse_lazy('dashboard:size-list')
+
+
+class SizeDeleteView(DeleteMixin, DeleteView):
+    model = Size
+    success_url = reverse_lazy('dashboard:size-list')
