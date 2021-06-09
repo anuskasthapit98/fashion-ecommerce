@@ -1,0 +1,186 @@
+{% extends 'dashboard/base/index.html' %} {% block content %}
+<script>
+  M.toast({html:" toasted!", classes: "blue rounded",displayLength:2000});
+</script>
+
+<div class="wrapper">
+  <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-left">
+              <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:admin-dashboard' %}">Home</a>
+              </li>
+              <li class="breadcrumb-item active">Users</li>
+            </ol>
+          </div>
+          <div class="col-sm-6">
+            <button class="btn btn-primary float-sm-right">
+              <a class="text-white" href="{% url 'dashboard:user-create' %}"
+                >Add User</a
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              
+              <div class="card-header">
+              <div class="row">
+              <div class="col-4">
+                <h3 class="card-title">Users List</h3>
+              </div>
+              <div class="col-8">
+                <div class="card-tools">
+                  <div class="input-group input-group-sm">
+                    
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap" id="rooms">
+                  <thead>
+                    <tr>
+                      <th>SN</th>
+                      <th>Users</th>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for user in object_list %}
+                      <tr>
+                      <td>{{forloop.counter}}</td>
+                      <td>{{user.username }}</td>
+                      <td>{{user.email}}</td>
+                      <td>
+                      {% if user.is_active %}
+                      <span class="badge badge-success p-2">Active</span>
+                      {%else%}
+                      <span class="badge badge-danger p-2">Inactive</span>
+                       {%endif%}
+                      </td>
+                      <td>
+                      <span>
+                      <a href="{% url 'dashboard:recoverpassword' %}" class="btn btn-info mr-2 reset">Reset Password</a>
+                      </span>
+                      {% if user.is_active %}
+                      <a href="{% url 'dashboard:user_disable' user.pk %}" class="toggle-inactive"><button class="btn btn-danger"><span class="mdi mdi-block-helper"></span></button></a>
+                      {%else%}
+                      <a href="{% url 'dashboard:user_disable' user.pk %}" class="toggle-active"><button class="btn btn-success"><span class="mdi mdi-check-circle"></span></button></a>
+                      {%endif%}
+                      </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                
+                </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="pagination">
+                <span>
+                  {% if page_obj.has_previous %}
+                    {% if page_obj.previous_page_number != 1 %}
+                        <a class="btn btn-primary" href="?page1">1</a>
+                    {% endif %}
+                    <a class="btn btn-primary" href="?page={{page_obj.previous_page_number}}">
+                        {{ page_obj.previous_page_number }}
+                    </a>
+                  {% endif %}
+                  <span>
+                      {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                  </span>
+                  {% if page_obj.has_next %}
+                  <a class="btn btn-primary" href="?page={{page_obj.next_page_number}}">
+                      {{ page_obj.next_page_number }}
+                  </a>
+                  {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+                  <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                      {{ page_obj.paginator.num_pages }}
+                  </a>
+                  {% endif %}
+                  {% endif %}
+                </span>
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+$('.reset').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will send a tempoprary password !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willSend) => {
+                if (willSend) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'Reset Password has been sent.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+
+$('.toggle-active').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure ?",
+                text: "It will activate the user !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willChange) => {
+                if (willChange) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'User has been activated.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+$('.toggle-inactive').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will disable the user!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willChange) => {
+                if (willChange) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'User has been disabled.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+</script>
+{% endblock %}
+

@@ -6,6 +6,8 @@
     <div class="content-wrapper">
       <div class="content">
         <div class="breadcrumb-wrapper">
+        <a href="{% url 'dashboard:category_create' %}" style="float: right;" type="button" class="mb-1 btn btn-outline-success">Add Category</a>
+
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb p-0">
               <li class="breadcrumb-item">
@@ -15,22 +17,40 @@
               </li>
               <li class="breadcrumb-item">components</li>
               <li class="breadcrumb-item" aria-current="page">table</li>
+              
             </ol>
           </nav>
+        
         </div>
+        
+
         
 
     <div class="col-lg-12">
 									<div class="card card-default">
 										<div class="card-header justify-content-between">
 											<h2>CATEGORIES</h2>
-                      <a
-                  class="btn btn-primary btn-pill"
-                  id="add-task"
-                  href="{% url 'dashboard:category_create' %}"
-                  role="button">
-                  Add new
-                </a>
+                    <div class="col-8">
+                    <div class="card-tools">
+                      <div class="input-group input-group-sm">
+                        <form action="{% url 'dashboard:category' %}" method="GET" class="form-inline">
+                          <input
+                            type="text"
+                            name="name"
+                            class="form-control float-right searchInput"
+                            id="SearchCategory"
+                            placeholder="Category name"
+                          />
+                          <div class="input-group-append">
+                            <button type="button" class="mb-1 btn btn-success">
+                              <span class="mdi mdi-magnify"></span>
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                </div>
+                     
 										</div>
 										<div class="card-body">
 											{% comment %} <p class="mb-5">Similar to tables and dark tables, use the modifier classes <code>.thead-light</code> or <code>.thead-dark</code> to make &lt;thead&gt;s appear light or dark gray. Read bootstrap documentation for <a href="http://getbootstrap.com/docs/4.1/content/tables/#table-head-options" target="_blank"> more details.</a></p> {% endcomment %}
@@ -54,8 +74,8 @@
 														<td>{{category.description|safe}}</td>
 														<td><img src="{{ category.img.url }}" alt="" /></td>
                             <td>
-                             <span ><a class="btn btn-outline-success" href="{% url 'dashboard:category_update' category.slug %}"><span class="mdi mdi-circle-edit-outline"> Edit</span></a></span>
-                        <span><a class="btn btn-outline-danger delete" href="{% url 'dashboard:category_delete' category.slug %}"><span class="mdi mdi-trash-can"> Delete</span></a></span>
+                             <span ><a class="btn btn-outline-success" href="{% url 'dashboard:category-update' category.slug %}"><span class="mdi mdi-circle-edit-outline"> Edit</span></a></span>
+                        <span><a class="btn btn-outline-danger delete" href="{% url 'dashboard:category-delete' category.slug %}"><span class="mdi mdi-trash-can"> Delete</span></a></span>
 
 
                         

@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from .models import *
 from .mixin import *
 from django.contrib.auth.forms import PasswordChangeForm
-
+from django.core.exceptions import ValidationError
 
 
 
@@ -114,3 +114,39 @@ class BrandForm(FormControlMixin, forms.ModelForm):
             })
         }
 
+class UserForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['username', 'email', 'address', 'image', 'mobile', 'groups']
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={
+                'onchange': 'preview()'
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['groups'].widget.attrs.update(
+            {'class': 'form-control select2 feature-select'})
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
+        mobile = self.cleaned_data['mobile']
+        if Account.objects.filter(username=username).exists():
+            raise ValidationError({
+                'username': 'this username is not available'
+            })
+        if Account.objects.filter(email=email).exists():
+            raise ValidationError({
+                'email': 'user with this email already exists'
+            })
+        if Account.objects.filter(mobile=mobile):
+            raise ValidationError({
+                'mobile': 'user with this mobile no. already exists'
+            })
+        if len(mobile) < 10:
+            raise ValidationError({
+                'mobile': 'Invalid mobile no.'
+            })
