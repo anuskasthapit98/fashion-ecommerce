@@ -1,22 +1,21 @@
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import  redirect
+from django.shortcuts import redirect
 from django.contrib.auth.models import User, Group
 from django.views.generic.base import TemplateView
 
 from dashboard.models import Category
 
 
-
-
 class AdminRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         user = request.user
         if user.is_authenticated and user.is_superuser:
-        # if user.is_authenticated and user.groups.filter(name="Admin").exists():
+            # if user.is_authenticated and user.groups.filter(name="Admin").exists():
             pass
         else:
             return redirect('/login/')
         return super().dispatch(request, *args, *kwargs)
+
 
 class StaffRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -71,6 +70,10 @@ class SuperAdminRequiredMixin(object):
         return super().dispatch(request, *args, *kwargs)
 
 
-class QuerysetMixin(object):
-    def get_queryset(self):
-        return super().get_queryset().filter(deleted_at__isnull=True)
+class SidebarMixin():
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sidebar_categories'] = Category.objects.filter(
+            deleted_at__isnull=True)
+
+        return context

@@ -48,9 +48,9 @@
                           <span class="nav-text">All Products</span>
                         </a>
                       </li>
-                      {% for cat in categories %}
+                      {% for cat in sidebar_categories %}
                       <li  class="active" >
-                        <a class="sidenav-item-link" href="">
+                        <a class="sidenav-item-link" href="{% url 'dashboard:specific-product-list' %}?category={{ cat.name }}">
                           <span class="nav-text">{{ cat.name }}</span>
                         </a>
                       </li>

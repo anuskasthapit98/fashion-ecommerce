@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
+from django.db.models.query_utils import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
@@ -88,7 +89,7 @@ class PasswordsChangeView(PasswordChangeView):
 # user
 
 
-class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, CreateView):
+class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, CreateView):
     template_name = 'dashboard/users/usercreate.html'
     form_class = UserForm
     success_url = reverse_lazy('dashboard:user-list')
@@ -97,7 +98,7 @@ class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, CreateView):
         return reverse('dashboard:recover-password', kwargs={'pk': self.object.pk})
 
 
-class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, ListView):
+class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, ListView):
     template_name = 'dashboard/users/userlist.html'
     model = Account
     success_url = reverse_lazy('dashboard:user-list')
@@ -120,16 +121,14 @@ class UserToggleStatusView(View):
 # dashboard views
 
 
-class AdminDashboardView(AdminRequiredMixin, TemplateView):
-    template_name = 'dashboard/base/index.html'
-
-
-class AdminDashboardView(TemplateView):
+class AdminDashboardView(AdminRequiredMixin, SidebarMixin, TemplateView):
     template_name = 'dashboard/base/index.html'
 
 
 # category's view starts here
-class CategoryListView(NonDeletedItemMixin, ListView):
+
+
+class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/Category/list.html'
     model = Category
 
@@ -142,13 +141,13 @@ class CategoryListView(NonDeletedItemMixin, ListView):
         return queryset
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/Category/form.html'
     form_class = CategoryForm
     success_url = reverse_lazy('dashboard:category')
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/Category/form.html'
     model = Category
     form_class = CategoryForm
@@ -161,8 +160,35 @@ class CategoryDeleteView(DeleteMixin, DeleteView):
 
 
 # Product
+class SpecificProductList(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/product/specific-list.html'
+    model = Products
 
-class ProductImageCreateView(CreateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.request.GET.get('category')
+        context['category'] = category
+
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category = self.request.GET.get('category')
+        if category != '':
+            queryset = queryset.filter(categories__name=category)
+        if "name" in self.request.GET:
+            if self.request.GET.get('name') != '':
+                queryset = queryset.filter(
+                    name__contains=self.request.GET.get("name"))
+        if "brands" in self.request.GET:
+            if self.request.GET.get('brands') != '':
+                queryset = queryset.filter(
+                    brands__name__contains=self.request.GET.get("brands"))
+
+        return queryset
+
+
+class ProductImageCreateView(CreateView, SidebarMixin):
     model = ProductImage
     form_class = ProductImageForm
     template_name = "dashboard/product/imageform.html"
@@ -187,7 +213,7 @@ class ProductImageCreateView(CreateView):
 
 
 # products view starts here
-class ProductListView(NonDeletedItemMixin, ListView):
+class ProductListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/product/list.html'
     model = Products
 
@@ -208,13 +234,13 @@ class ProductListView(NonDeletedItemMixin, ListView):
         return queryset
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/product/create.html'
     form_class = ProductForm
     success_url = reverse_lazy('dashboard:product-list')
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/product/create.html'
     model = Products
     form_class = ProductForm
@@ -230,7 +256,7 @@ class ProductDeleteView(DeleteMixin, DeleteView):
 # brand's views starts here
 
 
-class BrandListView(NonDeletedItemMixin, ListView):
+class BrandListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/brand/list.html'
     model = Brands
 
@@ -243,13 +269,13 @@ class BrandListView(NonDeletedItemMixin, ListView):
         return queryset
 
 
-class BrandCreateView(CreateView):
+class BrandCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/brand/create.html'
     form_class = BrandForm
     success_url = reverse_lazy('dashboard:brand-list')
 
 
-class BrandUpdateView(UpdateView):
+class BrandUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/brand/create.html'
     model = Brands
     form_class = BrandForm
@@ -264,18 +290,18 @@ class BrandDeleteView(DeleteMixin, DeleteView):
 # size view starts here
 
 
-class SizeListView(NonDeletedItemMixin, ListView):
+class SizeListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/size/list.html'
     model = Size
 
 
-class SizeCreateView(CreateView):
+class SizeCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/size/form.html'
     form_class = SizeCreateForm
     success_url = reverse_lazy('dashboard:size-list')
 
 
-class SizeUpdateView(UpdateView):
+class SizeUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/size/form.html'
     model = Size
     form_class = SizeCreateForm
@@ -287,10 +313,9 @@ class SizeDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:size-list')
 
 
-
 # customer view starts here
 
-class CustomerListView(NonDeletedItemMixin, ListView):
+class CustomerListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/customer/list.html'
     model = Customer
 
@@ -303,13 +328,13 @@ class CustomerListView(NonDeletedItemMixin, ListView):
         return queryset
 
 
-class CustomerCreateView(CreateView):
+class CustomerCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/customer/create.html'
     form_class = CustomerCreateForm
     success_url = reverse_lazy('dashboard:customer-list')
 
 
-class CustomerUpdateView(UpdateView):
+class CustomerUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/customer/create.html'
     model = Customer
     form_class = CustomerCreateForm
