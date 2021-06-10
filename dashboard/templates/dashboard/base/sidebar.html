@@ -29,7 +29,14 @@
       <div class="sidebar-scrollbar">
     
         <!-- sidebar menu -->
+          
         <ul class="nav sidebar-inner" id="sidebar-menu">
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:size-list' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Sizes</span>
+              </a>
+            </li>
             <li  class="has-sub active expand" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
                 aria-expanded="false" aria-controls="dashboard">
@@ -44,18 +51,11 @@
                           <span class="nav-text">List</span>
                         </a>
                       </li>
-                      <li >
-                        <a class="sidenav-item-link" href="analytics.html">
-                          <span class="nav-text">Analytics</span>
-                          <span class="badge badge-success">new</span>
-                        </a>
-                      </li>
                 </div>
               </ul>
             </li>
-          
             
-            <li  class="has-sub active expand" >
+            <li  class="has-sub active " >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
                 aria-expanded="false" aria-controls="dashboard">
                 <i class="mdi mdi-view-dashboard-outline"></i>
@@ -73,7 +73,7 @@
               </ul>
             </li>
             
-           <li  class="has-sub" >
+            <li  class="has-sub" >
                     <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#icons"
                       aria-expanded="false" aria-controls="icons">
                       <span class="nav-text">Category</span> <b class="caret"></b>
@@ -89,7 +89,7 @@
                         
                       </div>
                     </ul>
-                  </li>
+            </li>
             {% if request.user.is_superuser %}
                       <li  class="has-sub active expand" >
                         <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
@@ -101,13 +101,13 @@
                           data-parent="#sidebar-menu">
                           <div class="sub-menu">
                                 <li  class="active" >
-                                  <a class="sidenav-item-link" href="{% url 'dashboard:user_list' %}">
+                                  <a class="sidenav-item-link" href="{% url 'dashboard:user-list' %}">
                                     <span class="nav-text">Users</span>
                                   </a>
                                 </li>
                           </div>
                         </ul>
-                      </li>
+              </li>
                    {% endif %}
             <li  class="has-sub" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#ui-elements"

@@ -27,3 +27,8 @@ class CouponSerializers(serializers.ModelSerializer):
     class Meta:
         model = Coupon
         fields = '__all__'
+
+class SizeSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Size
+        fields = ['name']

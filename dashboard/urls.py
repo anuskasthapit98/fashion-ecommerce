@@ -12,6 +12,12 @@ urlpatterns = [
     path('recoverpassword/', RecoverPasswordView.as_view(), name="recover-password"),
     # password change
     path('changepassword/', PasswordsChangeView.as_view(), name="change-password"),
+
+    # user list
+    path('user/create', UserCreateView.as_view(), name='user-create'),
+    path('user/list', UsersListView.as_view(), name="user-list"),
+    path('userdisable/<int:pk>/',
+         UserToggleStatusView.as_view(), name='user-disable'),
     # dashboard view
     path('dashboard/', AdminDashboardView.as_view(), name="dashboard"),
 
@@ -42,12 +48,19 @@ urlpatterns = [
     # brand urls
     path('dashboard/brand/list/', BrandListView.as_view(), name='brand-list'),
     path('dashboard/brand/create/', BrandCreateView.as_view(), name='brand-create'),
-    path('dashboard/brand/<int:pk>/update/', BrandUpdateView.as_view(), name='brand-update'),
-    path('dashboard/brand/<int:pk>/delete/', BrandDeleteView.as_view(), name='brand-delete'),
-   
-   
-    # user list 
-    path('user/create', UserCreateView.as_view(), name='user-create'),
-    path('user/list', UsersListView.as_view(), name="user_list"),
-    path('userdisable/<int:pk>/', UserToggleStatusView.as_view(), name='user_disable'),
+    path('dashboard/brand/<int:pk>/update/',
+         BrandUpdateView.as_view(), name='brand-update'),
+    path('dashboard/brand/<int:pk>/delete/',
+         BrandDeleteView.as_view(), name='brand-delete'),
+
+
+    # size urls
+    path('dashboard/size/list/', SizeListView.as_view(), name='size-list'),
+    path('dashboard/size/create/', SizeCreateView.as_view(), name='size-create'),
+    path('dashboard/size/<int:pk>/update/',
+         SizeUpdateView.as_view(), name='size-update'),
+    path('dashboard/size/<int:pk>/delete/',
+         SizeDeleteView.as_view(), name='size-delete'),
+
+
 ]
