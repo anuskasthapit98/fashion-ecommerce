@@ -1,6 +1,9 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.contrib.auth.models import User, Group
+from django.views.generic.base import TemplateView
+
+from dashboard.models import Category
 
 
 class AdminRequiredMixin(object):

@@ -48,9 +48,16 @@
                 <div class="sub-menu">
                       <li  class="active" >
                         <a class="sidenav-item-link" href="{% url 'dashboard:product-list' %}">
-                          <span class="nav-text">List</span>
+                          <span class="nav-text">All Products</span>
                         </a>
                       </li>
+                      {% for cat in categories %}
+                      <li  class="active" >
+                        <a class="sidenav-item-link" href="">
+                          <span class="nav-text">{{ cat.name }}</span>
+                        </a>
+                      </li>
+                      {% endfor %}
                 </div>
               </ul>
             </li>
