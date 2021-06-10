@@ -15,9 +15,9 @@ urlpatterns = [
 
     # user list
     path('user/create', UserCreateView.as_view(), name='user-create'),
-    path('user/list', UsersListView.as_view(), name="user_list"),
+    path('user/list', UsersListView.as_view(), name="user-list"),
     path('userdisable/<int:pk>/',
-         UserToggleStatusView.as_view(), name='user_disable'),
+         UserToggleStatusView.as_view(), name='user-disable'),
     # dashboard view
     path('dashboard/', AdminDashboardView.as_view(), name="dashboard"),
 
