@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.exceptions import ValidationError
 
 from .mixin import *
 from .models import *
