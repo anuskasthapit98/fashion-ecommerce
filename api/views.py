@@ -1,9 +1,14 @@
-from django.shortcuts import render
+from django.views import generic
 from rest_framework import generics
 
+from django.shortcuts import render
+
 from dashboard.models import *
+from dashboard.mixin import NonDeletedItemMixin
 from .serializers import *
 # Create your views here.
+
+# product api
 
 
 class ProductListCreate(generics.ListCreateAPIView):
@@ -11,9 +16,11 @@ class ProductListCreate(generics.ListCreateAPIView):
     serializer_class = ProductSerializers
 
 
-class ProductUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializers
+# class ProductUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializers
+
+# category api
 
 
 class CategoryListCreate(generics.ListCreateAPIView):
@@ -22,15 +29,38 @@ class CategoryListCreate(generics.ListCreateAPIView):
 
 
 class CategoryUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Brands.objects.all()
+    queryset = Category.objects.all()
     serializer_class = CategorySerialize
 
+# brand api
 
-class BrandListCreate(generics.ListCreateAPIView):
+
+class BrandListCreate(NonDeletedItemMixin, generics.ListCreateAPIView):
     queryset = Brands.objects.all()
     serializer_class = BrandSerializers
 
 
-class BrandUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+class BrandUpdateDelete(NonDeletedItemMixin, generics.RetrieveUpdateDestroyAPIView):
     queryset = Brands.objects.all()
     serializer_class = BrandSerializers
+
+
+class CouponListCreate(generics.ListCreateAPIView):
+    queryset = Coupon.objects.all()
+    serializer_class = CouponSerializers
+
+
+class CouponUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Coupon.objects.all()
+    serializer_class = CouponSerializers
+# size api
+
+
+class SizeListCreate(NonDeletedItemMixin, generics.ListCreateAPIView):
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializers
+
+
+class SizeUpdateDelete(NonDeletedItemMixin, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializers

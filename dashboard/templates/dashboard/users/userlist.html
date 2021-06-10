@@ -75,12 +75,12 @@
                       </td>
                       <td>
                       <span>
-                      <a href="{% url 'dashboard:recoverpassword' %}" class="btn btn-info mr-2 reset">Reset Password</a>
+                      <a href="{% url 'dashboard:recover-password' %}" class="btn btn-info mr-2 reset">Reset Password</a>
                       </span>
                       {% if user.is_active %}
-                      <a href="{% url 'dashboard:user_disable' user.pk %}" class="toggle-inactive"><button class="btn btn-danger"><span class="mdi mdi-block-helper"></span></button></a>
+                      <a href="{% url 'dashboard:user-disable' user.pk %}" class="toggle-inactive"><button class="btn btn-danger"><span class="mdi mdi-block-helper"></span></button></a>
                       {%else%}
-                      <a href="{% url 'dashboard:user_disable' user.pk %}" class="toggle-active"><button class="btn btn-success"><span class="mdi mdi-check-circle"></span></button></a>
+                      <a href="{% url 'dashboard:user-disable' user.pk %}" class="toggle-active"><button class="btn btn-success"><span class="mdi mdi-check-circle"></span></button></a>
                       {%endif%}
                       </td>
                       </tr>
