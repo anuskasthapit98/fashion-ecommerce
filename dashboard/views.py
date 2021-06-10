@@ -285,3 +285,37 @@ class SizeUpdateView(UpdateView):
 class SizeDeleteView(DeleteMixin, DeleteView):
     model = Size
     success_url = reverse_lazy('dashboard:size-list')
+
+
+
+# customer view starts here
+
+class CustomerListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/customer/list.html'
+    model = Customer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "username" in self.request.GET:
+            if self.request.GET.get('username') != '':
+                queryset = queryset.filter(
+                    username__contains=self.request.GET.get("username"))
+        return queryset
+
+
+class CustomerCreateView(CreateView):
+    template_name = 'dashboard/customer/create.html'
+    form_class = CustomerCreateForm
+    success_url = reverse_lazy('dashboard:customer-list')
+
+
+class CustomerUpdateView(UpdateView):
+    template_name = 'dashboard/customer/create.html'
+    model = Customer
+    form_class = CustomerCreateForm
+    success_url = reverse_lazy('dashboard:customer-list')
+
+
+class CustomerDeleteView(DeleteMixin, DeleteView):
+    model = Customer
+    success_url = reverse_lazy('dashboard:customer-list')
