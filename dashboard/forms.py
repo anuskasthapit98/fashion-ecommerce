@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from .models import *
 from .mixin import *
@@ -21,7 +22,8 @@ class CategoryForm(FormControlMixin, forms.ModelForm):
             raise forms.ValidationError('This ID is not available')
         else:
             pass 
-       
+            
+        return slug
 
 
     
@@ -52,6 +54,25 @@ class StaffLoginForm(forms.Form):
         'class': 'form-control',
         'placeholder': 'Password'
     }))
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=username,password=password)
+        
+        if user is not None:
+            pass
+
+        else:
+            raise ValidationError(
+                          {
+                              'username': 'Invalid Username',
+                             
+                          })
+
+        
+        return self.cleaned_data
+
 
 
 class PasswordResetForm(forms.Form):

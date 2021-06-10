@@ -22,7 +22,7 @@ class CategoryListCreate(generics.ListCreateAPIView):
 
 
 class CategoryUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Brands.objects.all()
+    queryset = Category.objects.all()
     serializer_class = CategorySerialize
 
 
@@ -34,3 +34,13 @@ class BrandListCreate(generics.ListCreateAPIView):
 class BrandUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Brands.objects.all()
     serializer_class = BrandSerializers
+
+
+class CouponListCreate(generics.ListCreateAPIView):
+    queryset = Coupon.objects.all()
+    serializer_class = CouponSerializers
+
+
+class CouponUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Coupon.objects.all()
+    serializer_class = CouponSerializers
