@@ -5,7 +5,6 @@
     <div class="content">							
         <div class="breadcrumb-wrapper">
             <h1>Product</h1>
-            <a href="{% url 'dashboard:product-create' %}" style="float: right;" type="button" class="mb-1 btn btn-outline-success">Add Product</a>
 
                           
             <nav aria-label="breadcrumb">
@@ -22,18 +21,7 @@
                 </ol>
 
             </nav>
-
-        </div>
-
-        <div class="row mx-auto">
-            
-            <div class="col-12">
-                <div class="card card-default">
-                    <div class="card-header card-header-border-bottom">
-                        <h2>Product List</h2>
-                <div class="col-8" float-right>
-                 <div class="card-tools">
-                  <div class="input-group input-group-sm">
+               <div class="input-group input-group-sm justify-content-end">
                     <form action="{% url 'dashboard:product-list' %}" method="GET" class="form-inline">
                        <input
                             type="text"
@@ -63,10 +51,22 @@
                         </button>
                       </div>
                     </form>
-                  </div>
-                </div>
-              </div>
+            </div>
+           
+        </div>
+              
+        <div class="row">
+            
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom justify-content-between">
+
+                        <h2>Product List</h2>
+                        <div class ="float-right">
+                        <a href="{% url 'dashboard:product-create' %}"  type="button" class="mb-1 btn btn-outline-success ">Add Product</a>
                     </div>
+                    </div>
+        
                     <div class="card-body">
                         <table class="table table-striped">
                             <thead>
@@ -74,6 +74,7 @@
                                     <th scope="col">S.N</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Brand</th>
+                                    <th scope="col">Image</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Subcategory</th>
                                     <th scope="col">Price</th>
@@ -94,7 +95,7 @@
                                         {% endfor %}
                                     </td>
                                     <td>{{ product.categories }}</td>
-                                    <td>Subcategory</td>
+                                    <td>{{ product.categories.parent }}</td>
                                     <td>{{ product.price }}</td>
                                     <td>{{ product.price }}</td>
                                     <td>

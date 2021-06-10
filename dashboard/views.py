@@ -1,19 +1,18 @@
 
 from django.conf import settings as conf_settings
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
-from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
-from django.urls import reverse_lazy
 from django.http import JsonResponse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.urls import reverse_lazy
+from django.utils.crypto import get_random_string
+from django.views.generic import TemplateView, FormView, View, CreateView, UpdateView, DeleteView, ListView
 
-
+from .forms import *
 from .models import *
 from .mixin import *
-from .forms import *
 
 # Create your views here.
 # login view starts here
@@ -22,7 +21,7 @@ from .forms import *
 class LoginView(FormView):
     template_name = 'dashboard/auth/login.html'
     form_class = StaffLoginForm
-    success_url = reverse_lazy('dashboard:admin-dashboard')
+    success_url = reverse_lazy('dashboard:dashboard')
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
@@ -32,13 +31,6 @@ class LoginView(FormView):
         if user is not None:
             login(self.request, user)
             user.is_active = True
-
-        else:
-            return render(self.request, self.template_name,
-                          {
-                              'error': 'Invalid Username or password',
-                              'form': form
-                          })
 
         return super().form_valid(form)
 
@@ -164,17 +156,16 @@ class ProductListView(NonDeletedItemMixin, ListView):
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
-                    name__contains = self.request.GET.get("name"))
+                    name__contains=self.request.GET.get("name"))
         if "brands" in self.request.GET:
             if self.request.GET.get('brands') != '':
                 queryset = queryset.filter(
-                    brands__name__contains = self.request.GET.get("brands"))
+                    brands__name__contains=self.request.GET.get("brands"))
         if "categories" in self.request.GET:
             if self.request.GET.get('categories') != '':
                 queryset = queryset.filter(
-                    categories__name__contains = self.request.GET.get("categories"))
+                    categories__name__contains=self.request.GET.get("categories"))
         return queryset
-
 
 
 class ProductCreateView(CreateView):
@@ -208,8 +199,9 @@ class BrandListView(NonDeletedItemMixin, ListView, QuerysetMixin):
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
-                    name__contains = self.request.GET.get("name"))
+                    name__contains=self.request.GET.get("name"))
         return queryset
+
 
 class BrandCreateView(CreateView):
     template_name = 'dashboard/brand/create.html'
@@ -227,11 +219,6 @@ class BrandUpdateView(UpdateView):
 class BrandDeleteView(DeleteMixin, DeleteView):
     model = Brands
     success_url = reverse_lazy('dashboard:brand-list')
-    
-
-
-
-
 
 
 # user
@@ -251,14 +238,41 @@ class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, ListView):
     success_url = reverse_lazy('dashboard:user_list')
     paginate_by = 5
 
+
 class UserToggleStatusView(View):
     success_url = reverse_lazy('dashboard:user_list')
-    def get(self, request, *args, **kwargs):    
-        account = User.objects.filter(pk = self.kwargs.get("pk")).first() 
+
+    def get(self, request, *args, **kwargs):
+        account = User.objects.filter(pk=self.kwargs.get("pk")).first()
         if account.is_active == True:
             account.is_active = False
         else:
             account.is_active = True
-        account.save(update_fields = ['is_active'])
+        account.save(update_fields=['is_active'])
 
         return redirect(self.success_url)
+
+# size view starts here
+
+
+class SizeListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/size/list.html'
+    model = Size
+
+
+class SizeCreateView(CreateView):
+    template_name = 'dashboard/size/form.html'
+    form_class = SizeCreateForm
+    success_url = reverse_lazy('dashboard:size-list')
+
+
+class SizeUpdateView(UpdateView):
+    template_name = 'dashboard/size/form.html'
+    model = Size
+    form_class = SizeCreateForm
+    success_url = reverse_lazy('dashboard:size-list')
+
+
+class SizeDeleteView(DeleteMixin, DeleteView):
+    model = Size
+    success_url = reverse_lazy('dashboard:size-list')
