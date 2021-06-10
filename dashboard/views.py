@@ -23,16 +23,23 @@ class LoginView(FormView):
     form_class = StaffLoginForm
     success_url = reverse_lazy('dashboard:dashboard')
 
-    def form_valid(self, form):
-        username = form.cleaned_data['username']
-        pword = form.cleaned_data['password']
-        user = authenticate(username=username, password=pword)
+    # def form_valid(self, form):
+    #     username = form.cleaned_data['username']
+    #     pword = form.cleaned_data['password']
+    #     user = authenticate(username=username, password=pword)
 
-        if user is not None:
-            login(self.request, user)
-            user.is_active = True
+    #     if user is not None:
+    #         login(self.request, user)
+    #         user.is_active = True
 
-        return super().form_valid(form)
+    #     else:
+    #         return render(self.request, self.template_name,
+    #                       {
+    #                           'error': 'Invalid Username or password',
+    #                           'form': form
+    #                       })
+
+    #     return super().form_valid(form)
 
 
 # logout view
@@ -128,7 +135,6 @@ class CategoryListView(NonDeletedItemMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(parent__isnull=True)
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
@@ -279,3 +285,37 @@ class SizeUpdateView(UpdateView):
 class SizeDeleteView(DeleteMixin, DeleteView):
     model = Size
     success_url = reverse_lazy('dashboard:size-list')
+
+
+
+# customer view starts here
+
+class CustomerListView(NonDeletedItemMixin, ListView):
+    template_name = 'dashboard/customer/list.html'
+    model = Customer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "username" in self.request.GET:
+            if self.request.GET.get('username') != '':
+                queryset = queryset.filter(
+                    username__contains=self.request.GET.get("username"))
+        return queryset
+
+
+class CustomerCreateView(CreateView):
+    template_name = 'dashboard/customer/create.html'
+    form_class = CustomerCreateForm
+    success_url = reverse_lazy('dashboard:customer-list')
+
+
+class CustomerUpdateView(UpdateView):
+    template_name = 'dashboard/customer/create.html'
+    model = Customer
+    form_class = CustomerCreateForm
+    success_url = reverse_lazy('dashboard:customer-list')
+
+
+class CustomerDeleteView(DeleteMixin, DeleteView):
+    model = Customer
+    success_url = reverse_lazy('dashboard:customer-list')

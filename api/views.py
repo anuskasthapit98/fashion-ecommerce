@@ -29,7 +29,7 @@ class CategoryListCreate(generics.ListCreateAPIView):
 
 
 class CategoryUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Brands.objects.all()
+    queryset = Category.objects.all()
     serializer_class = CategorySerialize
 
 # brand api
@@ -44,8 +44,17 @@ class BrandUpdateDelete(NonDeletedItemMixin, generics.RetrieveUpdateDestroyAPIVi
     queryset = Brands.objects.all()
     serializer_class = BrandSerializers
 
-# size api
+# coupon api
+class CouponListCreate(generics.ListCreateAPIView):
+    queryset = Coupon.objects.all()
+    serializer_class = CouponSerializers
 
+
+class CouponUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Coupon.objects.all()
+    serializer_class = CouponSerializers
+
+# size api
 
 class SizeListCreate(NonDeletedItemMixin, generics.ListCreateAPIView):
     queryset = Size.objects.all()
@@ -55,3 +64,14 @@ class SizeListCreate(NonDeletedItemMixin, generics.ListCreateAPIView):
 class SizeUpdateDelete(NonDeletedItemMixin, generics.RetrieveUpdateDestroyAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializers
+
+
+# customer api
+class CustomerListCreate(generics.ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializers
+
+
+class CustomerUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializers

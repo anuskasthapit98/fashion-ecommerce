@@ -11,103 +11,76 @@
 	</style>
 {% endblock %}
 {% block content %}
-<div class="wrapper">
-  <div class="content-wrapper">
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2"> 
-        <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-left">
-              <li class="breadcrumb-item">
-                <a href="{% url 'dashboard:admin-dashboard' %}">Home</a>
-              </li>
-              <li class="breadcrumb-item active">User</li>
-            </ol>
-          </div>
-          <div class="col-sm-6">
-            <button class="btn btn-primary float-sm-right">
-              <a class="text-white" href="{% url 'dashboard:user-list' %}"
-                >Cancel</a
-              >
-            </button>
-          </div>
-         
-        </div>
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
+
+<div class="content-wrapper">
+    <div class="content">							
         <div class="row">
-          <!-- left column -->
-          <div class="col-md-10 mx-auto">
-            <!-- general form elements -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Add User</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="card-body">
-                    <div  class="row">
-                        <div class="form-group col-md-6  col-sm-12">
-                            <label for="username">Username</label>
-                            {{ form.username }}
-                            <span class="form-error">{{ form.errors.username }}</span>
-                        </div>
-                        <div class="form-group col-md-6 col-sm-12">
-                            <label for="password">Email</label>
-                            {{ form.email }}
-                            <span class="form-error">{{ form.errors.email }}</span>
-                        </div>
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Add New User Form</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.media }}
+  
 
-                    </div>
-                    <div  class="row">
-                        <div class="form-group col-md-6 col-sm-12" >
-                            <label for="join_date">Address </label>
-                            {{ form.address }}
-                        </div>
-                        <div class="form-group col-md-6 col-sm-12" >
-                            <label for="password">Contact No.</label>
-                            {{ form.mobile }}
-                            <span class="form-error">{{ form.errors.mobile }}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                      <div class="form-group col-md-6 col-sm-12">
-                          <label for="image">Image</label>
-                          {{ form.image }}
-                      </div>
-                      <div class="form-group col-md-6 col-sm-12">
+
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Username</label>
+                                    {{ form.username }}
+                                     <span class="form-error">{{ form.errors.username }}</span>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">Email</label>
+                                    {{ form.email}}
+                                     <span class="form-error">{{ form.errors.email }}</span>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Address</label>
+                                    {{ form.address }}
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">Contact No.</label>
+                                    {{ form.mobile }}
+                                     <span class="form-error">{{ form.errors.mobile }}</span>
+                                </div>
+                            </div>
+                        
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Image</label>
+                                    {{ form.image}}
+
+                                 <div class="form-group col-md-6 col-sm-12">
                           <img src="" id="frame" alt="" width="100px" height="100px">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="form-group col-md-6 col-sm-12">
-                        <label for="">Group</label>
-                        {{ form.groups }}
-                      </div>
+                      </div> 
+                                </div>
+                                
+                      <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Group</label>
+                                    {{ form.groups}}
+                                </div>
 
-                    </div>
+                      </div>
+                            <div class="form-footer pt-4 pt-5 mt-4 border-top">
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                                <a href="{% url 'dashboard:user-list' %}" class="btn btn-secondary btn-default">Cancel</a>
+                            </div>
+                        </form>
+                    </di>
                 </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
             </div>
-            <!-- /.card -->
-          </div>
         </div>
-      </div>
-    </section>
+    </div>
   </div>
-</div>
-{% endblock %} 
+
+{% endblock %}
+
 {% block script %}
 <script>
 function preview() {

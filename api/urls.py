@@ -7,6 +7,12 @@ urlpatterns = [
     path('product/api/', ProductListCreate.as_view()),
     # path('product/<slug:pk>/api/', ProductUpdateDelete.as_view()),
 
+    
+    # coupon api
+    path('coupon/', CouponListCreate.as_view()),
+    path('coupon/<int:pk>/', CouponUpdateDelete.as_view()),
+    # path('product/<slug:pk>/api/', ProductUpdateDelete.as_view()),
+
     # category api
     path('category/', CategoryListCreate.as_view()),
     path('category/<int:pk>/', CategoryUpdateDelete.as_view()),
@@ -18,4 +24,8 @@ urlpatterns = [
     # size api
     path('size/', SizeListCreate.as_view()),
     path('size/<int:pk>/', SizeUpdateDelete.as_view()),
+
+    # customer api
+    path('customers/', CustomerListCreate.as_view()),
+    path('customers/<int:pk>/', CustomerUpdateDelete.as_view()),
 ]

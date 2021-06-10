@@ -3,7 +3,183 @@
   M.toast({html:" toasted!", classes: "blue rounded",displayLength:2000});
 </script>
 
-<div class="wrapper">
+<div class="content-wrapper">
+    <div class="content">					        
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb p-0">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard:dashboard' %}">
+                    <span class="mdi mdi-home"></span>                
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    Out
+                </li>
+                <li class="breadcrumb-item" aria-current="page">Users</li>
+                </ol>
+
+            </nav>
+               {% comment %} <div class="input-group justify-content-end">
+                    <form action="{% url 'dashboard:product-list' %}" method="GET" class="form-inline">
+                       <input
+                            type="text"
+                            name="name"
+                            class="form-control float-right searchInput"
+                            id="Search"
+                            placeholder="name"
+                          />
+                        <input
+                            type="text"
+                            name="brands"
+                            class="form-control float-right searchInput"
+                            id="Search"
+                            placeholder="brands"
+                          />
+                        <input
+                            type="text"
+                            name="categories"
+                            class="form-control float-right searchInput"
+                            id="Search"
+                            placeholder="category"
+                          />
+
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-secondary">
+                          <span class="mdi mdi-magnify"></span>
+                        </button>
+                      </div>
+                    </form>
+            </div> {% endcomment %}
+           
+        
+              
+        <div class="row">
+            
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom justify-content-between">
+
+                        <h2>Users List</h2>
+                       
+                        <a href="{% url 'dashboard:user-create' %}" type="button" class="mb-1 btn btn-outline-primary ">Add User</a>
+              
+                    </div>
+        
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                  <th scope="col">SN</th>
+                                  <th scope="col">Users</th>
+                                  <th scope="col">Email</th>
+                                  <th scope="col">Status</th>
+                                  <th scope="col">Action</th>
+                  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in object_list %}
+                                <tr>
+                                  <td>{{forloop.counter}}</td>
+                                  <td>{{user.username }}</td>
+                                  <td>{{user.email}}</td>
+                                  <td>
+                                  {% if user.is_active %}
+                                  <span class="badge badge-success p-2">Active</span>
+                                  {%else%}
+                                  <span class="badge badge-danger p-2">Inactive</span>
+                                  {%endif%}
+                                  </td>
+                                  <td>
+                                  <span>
+                                  <a href="{% url 'dashboard:recover-password' %}" class="btn btn-info mr-2 reset">Reset Password</a>
+                                  </span>
+                                  {% if user.is_active %}
+                                  <a href="{% url 'dashboard:user-disable' user.pk %}" class="toggle-inactive"><button class="btn btn-danger"><span class="mdi mdi-block-helper"></span></button></a>
+                                  {%else%}
+                                  <a href="{% url 'dashboard:user-disable' user.pk %}" class="toggle-active"><button class="btn btn-success"><span class="mdi mdi-check-circle"></span></button></a>
+                                  {%endif%}
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>				
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+$('.reset').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will send a tempoprary password !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willSend) => {
+                if (willSend) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'Reset Password has been sent.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+
+$('.toggle-active').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure ?",
+                text: "It will activate the user !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willChange) => {
+                if (willChange) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'User has been activated.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+$('.toggle-inactive').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will disable the user!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willChange) => {
+                if (willChange) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'User has been disabled.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+{% comment %} <div class="wrapper">
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
@@ -75,7 +251,7 @@
                       </td>
                       <td>
                       <span>
-                      <a href="{% url 'dashboard:recoverpassword' %}" class="btn btn-info mr-2 reset">Reset Password</a>
+                      <a href="{% url 'dashboard:recover-password' %}" class="btn btn-info mr-2 reset">Reset Password</a>
                       </span>
                       {% if user.is_active %}
                       <a href="{% url 'dashboard:user-disable' user.pk %}" class="toggle-inactive"><button class="btn btn-danger"><span class="mdi mdi-block-helper"></span></button></a>
@@ -182,5 +358,5 @@ $('.toggle-inactive').click(function(e) {
             });
     })
 </script>
-{% endblock %}
+{% endblock %} {% endcomment %}
 

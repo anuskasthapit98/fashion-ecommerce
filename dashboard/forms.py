@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import PasswordChangeForm
 
 from .mixin import *
 from .models import *
@@ -195,3 +195,34 @@ class SizeCreateForm(FormControlMixin, forms.ModelForm):
     #         raise ValidationError('This Size already exists')
 
     #     return size
+
+
+# customer create form
+
+class CustomerCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+        
+        def clean(self):
+            cleaned_data = super().clean()
+            username = self.cleaned_data['username']
+            email = self.cleaned_data['email']
+            mobile = self.cleaned_data['mobile']
+            
+            if Customer.objects.filter(username=username).exists():
+                raise ValidationError({
+                    'username': 'this username is not available'
+                })
+            if Customer.objects.filter(email=email).exists():
+                raise ValidationError({
+                    'email': 'user with this email already exists'
+                })
+            if Customer.objects.filter(mobile=mobile):
+                raise ValidationError({
+                    'mobile': 'user with this mobile no. already exists'
+                })
+            if len(mobile) < 10:
+                raise ValidationError({
+                    'mobile': 'Invalid mobile no.'
+                })
