@@ -103,7 +103,6 @@ class CategoryListView(NonDeletedItemMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(parent__isnull=True)
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(

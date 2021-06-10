@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from .models import *
 from .mixin import *
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.exceptions import ValidationError
 
 
 
@@ -18,9 +17,10 @@ class CategoryForm(FormControlMixin, forms.ModelForm):
         slug = self.cleaned_data['slug']
         
         if Category.objects.filter(slug = slug).exists():
-            raise forms.ValidationError('This ID is not available')
+            raise ValidationError('This ID is not available')
         else:
-            pass 
+            pass
+        return slug
        
 
 
