@@ -90,6 +90,23 @@
                       </div>
                     </ul>
             </li>
+            <li  class="has-sub active " >
+              <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
+                aria-expanded="false" aria-controls="dashboard">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Customer</span> <b class="caret"></b>
+              </a>
+              <ul  class="collapse show"  id="dashboard"
+                data-parent="#sidebar-menu">
+                <div class="sub-menu">
+                      <li  class="active" >
+                        <a class="sidenav-item-link" href="{% url 'dashboard:customer-list' %}">
+                          <span class="nav-text">List</span>
+                        </a>
+                      </li>
+                </div>
+              </ul>
+            </li>
             {% if request.user.is_superuser %}
                       <li  class="has-sub active expand" >
                         <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
