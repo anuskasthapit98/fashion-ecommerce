@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from dashboard.models import *
-
+import datetime
 
 class CategorySerialize(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,14 @@ class BrandSerializers(serializers.ModelSerializer):
         model = Brands
         fields = '__all__'
 
+class CouponSerializers(serializers.ModelSerializer):
+
+    valid_to = serializers.DateField
+    valid_from = serializers.DateField
+    
+    class Meta:
+        model = Coupon
+        fields = '__all__'
 
 class SizeSerializers(serializers.ModelSerializer):
     class Meta:

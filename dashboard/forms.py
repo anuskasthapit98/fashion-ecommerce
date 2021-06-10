@@ -1,5 +1,11 @@
 from django import forms
 from django.contrib.auth import authenticate
+<<<<<<< HEAD
+from django.core.exceptions import ValidationError
+from .models import *
+from .mixin import *
+=======
+>>>>>>> aded6a23d6ef9374e2066fedb58df428604b1200
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
 

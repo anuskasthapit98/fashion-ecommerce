@@ -7,6 +7,12 @@ urlpatterns = [
     path('product/api/', ProductListCreate.as_view()),
     # path('product/<slug:pk>/api/', ProductUpdateDelete.as_view()),
 
+    
+    # coupon api
+    path('coupon/', CouponListCreate.as_view()),
+    path('coupon/<int:pk>/', CouponUpdateDelete.as_view()),
+    # path('product/<slug:pk>/api/', ProductUpdateDelete.as_view()),
+
     # category api
     path('category/', CategoryListCreate.as_view()),
     path('category/<int:pk>/', CategoryUpdateDelete.as_view()),
