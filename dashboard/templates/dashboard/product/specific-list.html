@@ -11,14 +11,14 @@
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    Our
+                    {{ category }}
                 </li>
                 <li class="breadcrumb-item" aria-current="page">Products</li>
                 </ol>
 
             </nav>
                <div class="input-group justify-content-end">
-                    <form action="{% url 'dashboard:product-list' %}" method="GET" class="form-inline">
+                    <form action="{% url 'dashboard:specific-product-list' %}" method="GET" class="form-inline">
                        <input
                             type="text"
                             name="name"
@@ -33,16 +33,9 @@
                             id="Search"
                             placeholder="brands"
                           />
-                        <input
-                            type="text"
-                            name="categories"
-                            class="form-control float-right searchInput"
-                            id="Search"
-                            placeholder="category"
-                          />
 
                       <div class="input-group-append">
-                        <button type="submit" class="mb-1 btn btn-success">
+                        <button type="submit" class="btn btn-secondary">
                           <span class="mdi mdi-magnify"></span>
                         </button>
                       </div>
@@ -57,7 +50,7 @@
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom justify-content-between">
 
-                        <h2>Product List</h2>
+                        <h2>{{ category }} Product List</h2>
                        
                         <a href="{% url 'dashboard:product-create' %}"  type="button" class="mb-1 btn btn-outline-primary ">Add Product</a>
               
