@@ -5,15 +5,15 @@ from django.contrib.auth.models import User, Group
 
 
 
-# class AdminRequiredMixin(object):
-#     def dispatch(self, request, *args, **kwargs):
-#         user = request.user
-#         if user.is_authenticated and user.is_superuser:
-#         # if user.is_authenticated and user.groups.filter(name="Admin").exists():
-#             pass
-#         else:
-#             return redirect('/login/')
-#         return super().dispatch(request, *args, *kwargs)
+class AdminRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated and user.is_superuser:
+        # if user.is_authenticated and user.groups.filter(name="Admin").exists():
+            pass
+        else:
+            return redirect('/login/')
+        return super().dispatch(request, *args, *kwargs)
 
 class StaffRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -57,15 +57,15 @@ class FormControlMixin:
             })
 
 
-# class SuperAdminRequiredMixin(object):
-#     def dispatch(self, request, *args, **kwargs):
-#         user = request.user
-#         if user.is_superuser:
-#             pass
-#         else:
-#             raise PermissionDenied
+class SuperAdminRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_superuser:
+            pass
+        else:
+            raise PermissionDenied
 
-#         return super().dispatch(request, *args, *kwargs)
+        return super().dispatch(request, *args, *kwargs)
 
 
 class QuerysetMixin(object):

@@ -25,25 +25,22 @@
           <span class="brand-name">Sleek Dashboard</span>
         </a>
       </div>
-      <!-- begin sidebar scrollbar -->
+
+
+
+ <!-- begin sidebar scrollbar -->
       <div class="sidebar-scrollbar">
     
         <!-- sidebar menu -->
           
         <ul class="nav sidebar-inner" id="sidebar-menu">
-            <li  class="has-sub" >
-              <a class="sidenav-item-link" href="{% url 'dashboard:size-list' %}">
-                <i class="mdi mdi-view-dashboard-outline"></i>
-                <span class="nav-text">Sizes</span>
-              </a>
-            </li>
             <li  class="has-sub active expand" >
-              <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
-                aria-expanded="false" aria-controls="dashboard">
+              <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#product"
+                aria-expanded="false" aria-controls="product">
                 <i class="mdi mdi-view-dashboard-outline"></i>
                 <span class="nav-text">Products</span> <b class="caret"></b>
               </a>
-              <ul  class="collapse show"  id="dashboard"
+              <ul  class="collapse show"  id="product"
                 data-parent="#sidebar-menu">
                 <div class="sub-menu">
                       <li  class="active" >
@@ -55,30 +52,33 @@
               </ul>
             </li>
             
-            <li  class="has-sub active " >
-              <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
-                aria-expanded="false" aria-controls="dashboard">
-                <i class="mdi mdi-view-dashboard-outline"></i>
-                <span class="nav-text">Brands</span> <b class="caret"></b>
-              </a>
-              <ul  class="collapse show"  id="dashboard"
-                data-parent="#sidebar-menu">
-                <div class="sub-menu">
-                      <li  class="active" >
-                        <a class="sidenav-item-link" href="{% url 'dashboard:brand-list' %}">
-                          <span class="nav-text">List</span>
-                        </a>
-                      </li>
-                </div>
-              </ul>
+            <li  class="has-sub" >
+                    <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#brands"
+                      aria-expanded="false" aria-controls="brands">
+                       <i class="mdi mdi-view-dashboard-outline"></i>
+                      <span class="nav-text">Brands</span> <b class="caret"></b>
+                    </a>
+                    <ul  class="collapse"  id="brands">
+                      <div class="sub-menu">
+                        
+                        <li >
+                          <a href="{% url 'dashboard:brand-list' %}">List</a>
+                        </li>
+                        
+                    
+                        
+                      </div>
+                    </ul>
             </li>
             
+            
             <li  class="has-sub" >
-                    <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#icons"
-                      aria-expanded="false" aria-controls="icons">
+                    <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#category"
+                      aria-expanded="false" aria-controls="category">
+                       <i class="mdi mdi-view-dashboard-outline"></i>
                       <span class="nav-text">Category</span> <b class="caret"></b>
                     </a>
-                    <ul  class="collapse"  id="icons">
+                    <ul  class="collapse"  id="category">
                       <div class="sub-menu">
                         
                         <li >
@@ -90,17 +90,23 @@
                       </div>
                     </ul>
             </li>
+               <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:size-list' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Sizes</span>
+              </a>
+            </li>
             {% if request.user.is_superuser %}
-                      <li  class="has-sub active expand" >
-                        <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#dashboard"
-                          aria-expanded="false" aria-controls="dashboard">
+                      <li  class="has-sub " >
+                        <a class="sidenav-item-link" href="javascript:void(1)" data-toggle="collapse" data-target="#admin"
+                          aria-expanded="false" aria-controls="admin">
                           <i class="mdi mdi-view-dashboard-outline"></i>
                           <span class="nav-text">Admin</span> <b class="caret"></b>
                         </a>
-                        <ul  class="collapse show"  id="dashboard"
+                        <ul  class="collapse"  id="admin"
                           data-parent="#sidebar-menu">
                           <div class="sub-menu">
-                                <li  class="active" >
+                                <li  class="#" >
                                   <a class="sidenav-item-link" href="{% url 'dashboard:user-list' %}">
                                     <span class="nav-text">Users</span>
                                   </a>
@@ -108,8 +114,8 @@
                           </div>
                         </ul>
               </li>
-                   {% endif %}
-            <li  class="has-sub" >
+                   {% endif %} 
+            {% comment %} <li  class="has-sub" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#ui-elements"
                 aria-expanded="false" aria-controls="ui-elements">
                 <i class="mdi mdi-folder-multiple-outline"></i>
@@ -477,7 +483,7 @@
                       </li>
                 </div>
               </ul>
-            </li>
+            </li> {% endcomment %}
         </ul>
         
     
@@ -486,7 +492,7 @@
       <hr class="separator" />
     
       <div class="sidebar-footer">
-        <div class="sidebar-footer-content">
+      <div class="sidebar-footer-content">
           <h6 class="text-uppercase">
             Cpu Uses <span class="float-right">40%</span>
           </h6>
@@ -507,7 +513,7 @@
               role="progressbar"
             ></div>
           </div>
-        </div>
+        </div> 
       </div>
     </div>
     </aside>

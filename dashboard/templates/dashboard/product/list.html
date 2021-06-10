@@ -2,11 +2,7 @@
 
 {% block content %}
 <div class="content-wrapper">
-    <div class="content">							
-        <div class="breadcrumb-wrapper">
-            <h1>Product</h1>
-
-                          
+    <div class="content">					        
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb p-0">
                 <li class="breadcrumb-item">
@@ -21,7 +17,7 @@
                 </ol>
 
             </nav>
-               <div class="input-group input-group-sm justify-content-end">
+               <div class="input-group justify-content-end">
                     <form action="{% url 'dashboard:product-list' %}" method="GET" class="form-inline">
                        <input
                             type="text"
@@ -46,14 +42,14 @@
                           />
 
                       <div class="input-group-append">
-                        <button type="button" class="mb-1 btn btn-success">
+                        <button type="button" class="btn btn-secondary">
                           <span class="mdi mdi-magnify"></span>
                         </button>
                       </div>
                     </form>
             </div>
            
-        </div>
+        
               
         <div class="row">
             
@@ -62,9 +58,9 @@
                     <div class="card-header card-header-border-bottom justify-content-between">
 
                         <h2>Product List</h2>
-                        <div class ="float-right">
-                        <a href="{% url 'dashboard:product-create' %}"  type="button" class="mb-1 btn btn-outline-success ">Add Product</a>
-                    </div>
+                       
+                        <a href="{% url 'dashboard:product-create' %}"  type="button" class="mb-1 btn btn-outline-primary ">Add Product</a>
+              
                     </div>
         
                     <div class="card-body">
@@ -107,10 +103,10 @@
                                     </td>
                                     <td>
                                         <span>
-                                            <a href="{% url 'dashboard:product-update' product.slug %}" class="btn btn-sm btn-primary">Edit</a>
+                                            <a href="{% url 'dashboard:product-update' product.slug %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
                                         </span>
                                         <span>
-                                            <a href="{% url 'dashboard:product-delete' product.slug %}" class="btn btn-sm btn-danger delete">Delete</a>
+                                            <a href="{% url 'dashboard:product-delete' product.slug %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
                                         </span>
                                     </td>
                                 </tr>
