@@ -62,5 +62,12 @@ urlpatterns = [
     path('dashboard/size/<int:pk>/delete/',
          SizeDeleteView.as_view(), name='size-delete'),
 
+    # customer urls
+    path('dashboard/customer/list/', CustomerListView.as_view(), name='customer-list'),
+    path('dashboard/customer/create/', CustomerCreateView.as_view(), name='customer-create'),
+    path('dashboard/customer/<int:pk>/update/',
+         CustomerUpdateView.as_view(), name='customer-update'),
+    path('dashboard/customer/<int:pk>/delete/',
+         CustomerDeleteView.as_view(), name='customer-delete'),
 
 ]

@@ -1,0 +1,61 @@
+{% extends 'dashboard/base/base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Basic Form Controls</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                           
+                           
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Customer's First Name</label>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Customer's Last Name </label>
+                                    {{ form.last_name }}
+                                </div>   
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Customer's username</label>
+                                    {{ form.username }}
+                                </div>   
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Customer's email</label>
+                                    {{ form.email }}
+                                </div>   
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Customer's mobile</label>
+                                    {{ form.mobile }}
+                                </div>   
+                            </div>
+                            
+                            
+                            <div class="form-footer pt-4 pt-5 mt-4 border-top">
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                                <a href="{% url 'dashboard:customer-list' %}" class="btn btn-secondary btn-default">Cancel</a>
+                            </div>
+                        </form>
+                    </di>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}

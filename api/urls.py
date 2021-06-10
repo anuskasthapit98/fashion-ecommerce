@@ -24,4 +24,8 @@ urlpatterns = [
     # size api
     path('size/', SizeListCreate.as_view()),
     path('size/<int:pk>/', SizeUpdateDelete.as_view()),
+
+    # customer api
+    path('customers/', CustomerListCreate.as_view()),
+    path('customers/<int:pk>/', CustomerUpdateDelete.as_view()),
 ]
