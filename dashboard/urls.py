@@ -35,6 +35,8 @@ urlpatterns = [
          ProductImageCreateView.as_view(), name='product-image-create'),
 
     # product urls here
+    path('dashboard/product/specific-list/',
+         SpecificProductList.as_view(), name='specific-product-list'),
     path('dashboard/product/list/',
          ProductListView.as_view(), name='product-list'),
     path('dashboard/product/create/',
@@ -63,8 +65,10 @@ urlpatterns = [
          SizeDeleteView.as_view(), name='size-delete'),
 
     # customer urls
-    path('dashboard/customer/list/', CustomerListView.as_view(), name='customer-list'),
-    path('dashboard/customer/create/', CustomerCreateView.as_view(), name='customer-create'),
+    path('dashboard/customer/list/',
+         CustomerListView.as_view(), name='customer-list'),
+    path('dashboard/customer/create/',
+         CustomerCreateView.as_view(), name='customer-create'),
     path('dashboard/customer/<int:pk>/update/',
          CustomerUpdateView.as_view(), name='customer-update'),
     path('dashboard/customer/<int:pk>/delete/',
