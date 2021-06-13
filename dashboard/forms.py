@@ -167,6 +167,9 @@ class ProductForm(FormControlMixin, forms.ModelForm):
         self.fields['size'].widget.attrs.update({
             'class': 'form-control select2'
         })
+        self.fields['color'].widget.attrs.update({
+            'class': 'form-control select2'
+        })
 
 # brand create form
 
@@ -203,13 +206,13 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
-        
+
         def clean(self):
             cleaned_data = super().clean()
             username = self.cleaned_data['username']
             email = self.cleaned_data['email']
             mobile = self.cleaned_data['mobile']
-            
+
             if Customer.objects.filter(username=username).exists():
                 raise ValidationError({
                     'username': 'this username is not available'
@@ -226,3 +229,40 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
                 raise ValidationError({
                     'mobile': 'Invalid mobile no.'
                 })
+
+# contact
+
+
+class ContactForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
+        def clean_email(self):
+            email = self.cleaned_data['email']
+            if '@' not in email:
+                raise forms.ValidationError({
+                    'email': 'Enter valid email'})
+            return email
+
+
+# service
+
+class ServiceForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = service
+        fields = '__all__'
+
+
+# message
+class MessageForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = '__all__'
+
+        def clean_email(self):
+            email = self.cleaned_data['email']
+            if '@' not in email:
+                raise forms.ValidationError({
+                    'email': 'Enter valid email'})
+            return email

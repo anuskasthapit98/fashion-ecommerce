@@ -1,0 +1,397 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block content %}
+<section class="bg-light">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="h2 mb-0">Product Detail</h1>
+        </div>
+        <div class="col-md-6 mt-3 mt-md-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-md-end bg-transparent p-0 m-0">
+              <li class="breadcrumb-item"><a class="text-dark" href="{% url 'home:home' %}"><i class="las la-home mr-1"></i>Home</a>
+              </li>
+              <li class="breadcrumb-item">Shop</li>
+              <li class="breadcrumb-item active text-primary" aria-current="page">Product Detail</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <!-- / .row -->
+    </div>
+    <!-- / .container -->
+  </section>
+  <div class="page-content">
+
+    <!--product details start-->
+    
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <ul id="imageGallery">
+                {% for img in product_detail.image.all %}
+              <li data-thumb="{{ img.image.url }}" data-src="{{ img.image.url }}">
+                <img class="img-fluid w-100" src="{{ img.image.url }}" alt="" />
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col-lg-6 col-12 mt-5 mt-lg-0">
+            <div class="product-details">
+              <h3 class="mb-0">
+            {{ product_detail.name }}
+            </h3>
+              <div class="star-rating mb-4"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+              </div> <span class="product-price h4">Nrs. {{ product_detail.price }}<del class="text-muted h6">$35.00</del></span>
+              <ul class="list-unstyled my-4">
+                <li class="mb-2">Availibility:{% if product_detail.status %} <span class="text-muted"> In Stock</span> {% else %}<span class="text-muted"> Out of Stock</span>{% endif %}
+                </li>
+                <li>Categories :<span class="text-muted"> {{ product_detail.categories }}</span>
+                </li>
+              </ul>
+              <p class="mb-4">{{ product_detail.description|safe }}</p>
+              <div class="d-sm-flex align-items-center mb-5">
+                <div class="d-flex align-items-center mr-sm-4">
+                  <button class="btn-product btn-product-up"> <i class="las la-minus"></i>
+                  </button>
+                  <input class="form-product" type="number" name="form-product" value="1">
+                  <button class="btn-product btn-product-down"> <i class="las la-plus"></i>
+                  </button>
+                </div>
+                <select class="custom-select mt-3 mt-sm-0" id="inputGroupSelect02">
+                  <option selected>Size</option>
+                  {% for size in product_detail.size.all %}
+                  <option value="{{ size.id }}">{{ size.name }}</option>
+                  {% endfor %}
+                </select>
+                <div class="d-flex text-center ml-sm-4 mt-3 mt-sm-0">
+                    {% for color in product_detail.color.all %}
+                  <div class="form-check pl-0 mr-3">
+                    <input type="radio" class="form-check-input" id="color-filter{{ forloop.counter }}" name="Radios">
+                    <label class="form-check-label" for="color-filter1" data-bg-color="#3cb371"></label>
+                  </div>
+                  {% endfor %}
+                  <div class="form-check pl-0 mr-3">
+                    <input type="radio" class="form-check-input" id="color-filter2" name="Radios" checked>
+                    <label class="form-check-label" for="color-filter2" data-bg-color="#4876ff"></label>
+                  </div>
+                  <div class="form-check pl-0 mr-3">
+                    <input type="radio" class="form-check-input" id="color-filter3" name="Radios">
+                    <label class="form-check-label" for="color-filter3" data-bg-color="#0a1b2b"></label>
+                  </div>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter4" name="Radios">
+                    <label class="form-check-label" for="color-filter4" data-bg-color="#f94f15"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="d-sm-flex align-items-center mt-5">
+                <button class="btn btn-primary btn-animated mr-sm-4 mb-3 mb-sm-0"><i class="las la-shopping-cart mr-1"></i>Add To Cart</button>
+                <a class="btn btn-animated btn-dark" href="#"> <i class="lar la-heart mr-1"></i>Add To Wishlist
+                </a>
+              </div>
+              <div class="d-flex align-items-center border-top border-bottom py-4 mt-5">
+                <h6 class="mb-0 mr-4">Share It:</h6>
+                <ul class="list-inline">
+              <li class="list-inline-item"><a class="bg-white shadow-sm rounded p-2" href="#"><i class="la la-facebook"></i></a>
+              </li>
+              <li class="list-inline-item"><a class="bg-white shadow-sm rounded p-2" href="#"><i class="la la-dribbble"></i></a>
+              </li>
+              <li class="list-inline-item"><a class="bg-white shadow-sm rounded p-2" href="#"><i class="la la-instagram"></i></a>
+              </li>
+              <li class="list-inline-item"><a class="bg-white shadow-sm rounded p-2" href="#"><i class="la la-twitter"></i></a>
+              </li>
+              <li class="list-inline-item"><a class="bg-white shadow-sm rounded p-2" href="#"><i class="la la-linkedin"></i></a>
+              </li>
+            </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!--product details end-->
+    
+    
+    <!--tab start-->
+    
+    <section class="p-0">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="tab">
+              <!-- Nav tabs -->
+              <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist"> <a class="nav-item nav-link active ml-0" id="nav-tab1" data-toggle="tab" href="#tab3-1" role="tab" aria-selected="true">Description</a>
+                  <a class="nav-item nav-link" id="nav-tab2" data-toggle="tab" href="#tab3-2" role="tab" aria-selected="false">Specification</a>
+                  <a class="nav-item nav-link" id="nav-tab3" data-toggle="tab" href="#tab3-3" role="tab" aria-selected="false">Ratings and Reviews</a>
+                </div>
+              </nav>
+              <!-- Tab panes -->
+              <div class="tab-content pt-5 p-0">
+                <div role="tabpanel" class="tab-pane fade show active" id="tab3-1">
+                  <div class="row align-items-center">
+                    <div class="col-md-5">
+                        {% for img in product_detail.image.all|slice:1 %}
+                        <img class="img-fluid w-100" src="{{ img.image.url }}" alt="">
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-7 mt-5 mt-lg-0">
+                      <h3 class="mb-3">{{ product_detail.name }}</h3>
+                      <p>{{ product_detail.description|safe }}</p> <a class="btn btn-primary btn-animated" href="#"><i class="las la-long-arrow-alt-right mr-1"></i>Read More</a>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="tab3-2">
+                  <table class="table table-bordered mb-0">
+                    <tbody>
+                      <tr>
+                        <td>Size</td>
+                        <td>
+                        {% for size in product_detail.size.all %}
+                            <span>{{ size.name }},</span>
+                        {% endfor %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Color</td>
+                        <td>
+                            {% for color in product_detail.color.all %}
+                            <span>{{ color.title }},</span>
+                            {% endfor %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Chest</td>
+                        <td>38 inches</td>
+                      </tr>
+                      <tr>
+                        <td>Waist</td>
+                        <td>20 cm</td>
+                      </tr>
+                      <tr>
+                        <td>Length</td>
+                        <td>35 cm</td>
+                      </tr>
+                      <tr>
+                        <td>Fabric</td>
+                        <td>Cotton, Silk &amp; Synthetic</td>
+                      </tr>
+                      <tr>
+                        <td>Warranty</td>
+                        <td>6 Months</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="tab3-3">
+                  <div class="row align-items-center">
+                    <div class="col-md-6">
+                      <div class="shadow-sm text-center p-5">
+                        <h4>Based on 3 Reviews</h4>
+                        <h5>Average</h5>
+                        <h4>4.0</h4>
+                        <h6>(03 Reviews)</h6>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mt-3 mt-lg-0">
+                      <div class="rating-list">
+                        <div class="d-flex align-items-center mb-2">
+                          <div class="text-nowrap mr-3">5 Star</div>
+                          <div class="w-100">
+                            <div class="progress" style="height: 5px;">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div><span class="text-muted ml-3">90%</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                          <div class="text-nowrap mr-3">4 Star</div>
+                          <div class="w-100">
+                            <div class="progress" style="height: 5px;">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div><span class="text-muted ml-3">60%</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                          <div class="text-nowrap mr-3">3 Star</div>
+                          <div class="w-100">
+                            <div class="progress" style="height: 5px;">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div><span class="text-muted ml-3">40%</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                          <div class="text-nowrap mr-3">2 Star</div>
+                          <div class="w-100">
+                            <div class="progress" style="height: 5px;">
+                              <div class="progress-bar bg-warning" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div><span class="text-muted ml-3">20%</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                          <div class="text-nowrap mr-3">1 Star</div>
+                          <div class="w-100">
+                            <div class="progress" style="height: 5px;">
+                              <div class="progress-bar bg-danger" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div><span class="text-muted ml-3">10%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="media-holder mt-5">
+                    <div class="media d-block d-md-flex">
+                      <img class="img-fluid align-self-center rounded mr-md-3 mb-3 mb-md-0" alt="image" src="assets/images/thumbnail/01.jpg">
+                      <div class="media-body">
+                        <div class="d-flex align-items-center">
+                          <h6 class="mb-0">Ember Lana</h6>
+                          <small class="mx-3 text-muted">April 09, 2020</small>
+                          <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                          </div>
+                        </div>
+                        <p class="mb-0 mt-3">Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="media-holder review-list mt-5">
+                    <div class="media d-block d-md-flex">
+                      <img class="img-fluid align-self-center rounded mr-md-3 mb-3 mb-md-0" alt="image" src="assets/images/thumbnail/02.jpg">
+                      <div class="media-body">
+                        <div class="d-flex align-items-center">
+                          <h6 class="mb-0">Scott Jones</h6>
+                          <small class="mx-3 text-muted">March 15, 2020</small>
+                          <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                          </div>
+                        </div>
+                        <p class="mb-0 mt-3">Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="media-holder review-list mt-5">
+                    <div class="media d-block d-md-flex">
+                      <img class="img-fluid align-self-center rounded mr-md-3 mb-3 mb-md-0" alt="image" src="assets/images/thumbnail/03.jpg">
+                      <div class="media-body">
+                        <div class="d-flex align-items-center">
+                          <h6 class="mb-0">Amber Holmes</h6>
+                          <small class="mx-3 text-muted">February 26, 2020</small>
+                          <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                          </div>
+                        </div>
+                        <p class="mb-0 mt-3">Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-8 shadow p-5">
+                    <div class="section-title mb-3">
+                      <h4>Add a review</h4>
+                    </div>
+                    <form id="contact-form" class="row" method="post" action="http://themeht.com/ekocart/html/contact.php">
+                      <div class="messages"></div>
+                      <div class="form-group col-sm-6">
+                        <input id="form_name" type="text" name="name" class="form-control" placeholder="Your Name" required="required" data-error="Name is required.">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group col-sm-6">
+                        <input id="form_email" type="email" name="email" class="form-control" placeholder="Your Email Address" required="required" data-error="Valid email is required.">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group clearfix col-12">
+                        <select class="custom-select form-control">
+                          <option value="">Rating -- Select</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-12">
+                        <textarea id="form_message" name="message" class="form-control" placeholder="Write Your Review" rows="4" required="required" data-error="Please,leave us a review."></textarea>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="col-12">
+                        <button class="btn btn-primary btn-animated mt-3">Post Review</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!--tab end-->
+    
+    
+    <!--recent product start-->
+    
+    <section>
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-8 col-md-10">
+            <div class="mb-5">
+              <h6 class="text-primary mb-1">
+                      — You may also like
+                  </h6>
+              <h2 class="mb-0">Related Products</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="owl-carousel no-pb owl-2" data-dots="false" data-nav="true" data-items="3" data-md-items="2" data-sm-items="1">
+                {% if similar_product %}
+                {% for related in similar_product %}
+              <div class="item">
+                <div class="card product-card">
+                  <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="lar la-heart"></i>
+                  </button>
+                  <a class="card-img-hover d-block" href="{% url 'home:product-detail' related.slug %}">
+                        {% for img in related.image.all|slice:1 %}
+                        <img class="card-img-top card-img-back" src="{{ img.image.url }}" alt="{{ related.name }}">
+                        {% endfor %}
+                        {% for img in related.image.all|slice:1 %}
+                        <img class="card-img-top card-img-front" src="{{ img.image.url }}" alt="{{ related.name}}">
+                        {% endfor %}
+                  </a>
+                  <div class="card-info">
+                    <div class="card-body">
+                      <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' related.slug %}">{{ related.name }}</a>
+                      </div>
+                      <div class="mt-1"> <span class="product-price"><del class="text-muted">Nrs. {{ related.price }}</del> $25.00</span>
+                        <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                      <div class="product-link d-flex align-items-center justify-content-center">
+                        <button class="btn btn-compare" data-toggle="tooltip" data-placement="top" title="Compare" type="button"><i class="las la-random"></i> 
+                        </button>
+                        <button class="btn-cart btn btn-primary btn-animated mx-3" type="button"><i class="las la-shopping-cart mr-1"></i>
+                        </button>
+                        <button class="btn btn-view" data-toggle="tooltip" data-placement="top" title="Quick View"><span data-target="#quick-view" data-toggle="modal"><i class="las la-eye"></i></span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              {% else %}
+              <p>Oops!! No similar Items</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!--recent product end-->
+    
+    </div>
+{% endblock %}

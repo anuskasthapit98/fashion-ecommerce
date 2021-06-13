@@ -77,7 +77,6 @@ class Customer(DateTimeModel):
 
 
 # Category Model
-
 class Category(DateTimeModel):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
@@ -136,14 +135,21 @@ class Size(DateTimeModel):
 class ProductImage(DateTimeModel):
     image = models.ImageField(upload_to="products")
 
-    # class Meta:
-    #     verbose_name = ('ProductImage')
-    #     verbose_name_plural = ('ProductImages')
 
-    # def __str__(self):
-    #     return self.name
+# color Model
+class Color(DateTimeModel):
+    image = models.ImageField(upload_to="color")
+    title = models.CharField(max_length=200)
 
-# Product Model
+    class Meta:
+        verbose_name = ('Color')
+        verbose_name_plural = ('Sizes')
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
+# products model
 
 
 class Products(DateTimeModel):
@@ -156,6 +162,7 @@ class Products(DateTimeModel):
     price = models.PositiveIntegerField()
     status = models.BooleanField(default=True)
     slug = models.SlugField(unique=True, primary_key=True)
+    color = models.ManyToManyField(Color)
     vat_incl = models.BooleanField(default=False)
     vat_percent = models.DecimalField(
         max_digits=12, decimal_places=2, null=True, blank=True)
@@ -200,7 +207,42 @@ class Coupon(DateTimeModel):
     def __str__(self):
         return "Coupon code: " + self.code
 
-# Order Model
+# billingadress model
+
+
+class BillingAddress(DateTimeModel):
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=200)
+    company_name = models.CharField(max_length=200, null=True, blank=True)
+    province = models.CharField(max_length=200)
+    address_one = models.CharField(max_length=200)
+    address_two = models.CharField(max_length=200, blank=True, null=True)
+    zip_code = models.PositiveIntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = ('Address')
+        verbose_name_plural = ('Addresses')
+        ordering = ['first_name']
+
+    def __str__(self):
+        return self.first_name
+
+
+# cart model
+class Cart(DateTimeModel):
+    products = models.ManyToManyField(Products)
+    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        verbose_name = ('Cart')
+        verbose_name_plural = ('Carts')
+
+        def __str__(self):
+            return "Product: " + str(self.products.slug)
+
+# order model
 
 
 class Order(DateTimeModel):
@@ -208,10 +250,7 @@ class Order(DateTimeModel):
     coupon = models.ForeignKey(
         Coupon, on_delete=models.CASCADE, blank=True, null=True)
     product = models.ManyToManyField(Products)
-    shipping_address = models.CharField(max_length=200)
-    billing_address = models.CharField(max_length=200)
-    mobile = models.CharField(max_length=10)
-    email = models.EmailField(null=True, blank=True)
+    address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE)
     subtotal = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
     status = models.CharField(max_length=50, choices=ORDER_STATUS)
@@ -219,6 +258,7 @@ class Order(DateTimeModel):
         max_length=20, choices=METHOD, default="Cash On Delivery")
     payment_completed = models.BooleanField(
         default=False, null=True, blank=True)
+    carts = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = ('Order')
@@ -227,3 +267,140 @@ class Order(DateTimeModel):
 
     def __str__(self):
         return "Order: " + self.code
+
+
+# wishlist model
+
+class Wishlist(DateTimeModel):
+    products = models.ForeignKey(Products, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = ('Wishlist')
+        verbose_name_plural = ('Wishlists')
+
+        def __str__(self):
+            return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
+
+# cartproduct model
+
+
+class CartProduct(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    rate = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField()
+    subtotal = models.PositiveIntegerField()
+
+    def str(self):
+        return "Cart: " + str(self.cart.id) + " CartProduct: " + str(self.id)
+
+# testimonials model
+
+
+class Testimonials(DateTimeModel):
+    image = models.ImageField(upload_to="testimonials")
+    name = models.CharField(max_length=200)
+    description = models.TextField(max_length=400)
+    designation = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = ('Testimonial')
+        verbose_name_plural = ('Testimonials')
+        ordering = ['name']
+
+        def __str__(self):
+            return self.name
+
+# blog model
+
+
+class Blog(DateTimeModel):
+    title = models.CharField(max_length=200)
+    sub_title = models.CharField(max_length=200)
+    description = RichTextField()
+    image = models.ImageField(upload_to="blog")
+    quotes = models.TextField(max_length=400)
+    quotes_by = models.CharField(max_length=200)
+    date = models.DateField()
+
+    class Meta:
+        verbose_name = ('Blog')
+        verbose_name_plural = ('Blogs')
+        ordering = ['title']
+
+        def __str__(self):
+            return self.title
+
+
+# service model
+
+class service(DateTimeModel):
+    image = models.ImageField(upload_to="service")
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = ('Service')
+        verbose_name_plural = ('Services')
+        ordering = ['title']
+
+        def __str__(self):
+            return self.title
+
+# contact model
+
+
+class Contact(DateTimeModel):
+    address = models.CharField(max_length=200)
+    email = models.EmailField(max_length=200)
+    phone = models.CharField(max_length=200)
+    working_hours = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = ('Contact')
+        verbose_name_plural = ('Contacts')
+        ordering = ['email']
+
+        def __str__(self):
+            return self.email
+
+# ads model
+
+
+class Ads(DateTimeModel):
+    image = models.ImageField(upload_to="ads")
+    title = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = ('Ads')
+        verbose_name_plural = ('Ads')
+        ordering = ['title']
+
+        def __str__(self):
+            return self.title
+
+# newsletter model
+
+
+class Subscription(DateTimeModel):
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.email
+
+# message model
+
+
+class Message(DateTimeModel):
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=200)
+    message = models.TextField(max_length=400)
+
+    class Meta:
+        verbose_name = ('Message')
+        verbose_name_plural = ('Message')
+
+        def __str__(self):
+            return self.first_name
