@@ -9,7 +9,8 @@ urlpatterns = [
     # logout
     path('logout/', LogoutView.as_view(), name="logout"),
     # password reset
-#     path('recoverpassword/', PasswordResetView.as_view(), name="recover-password"),
+    path('recoverpassword/<int:pk>', PasswordResetView.as_view(), name="reset-password"),
+    path('password-forgot/', ForgotPasswordView.as_view(), name='forgot-password'),
     # password change
     path('changepassword/', PasswordsChangeView.as_view(), name="change-password"),
 
