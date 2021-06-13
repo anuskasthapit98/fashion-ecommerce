@@ -9,7 +9,7 @@ urlpatterns = [
     # logout
     path('logout/', LogoutView.as_view(), name="logout"),
     # password reset
-    path('recoverpassword/', RecoverPasswordView.as_view(), name="recover-password"),
+#     path('recoverpassword/', PasswordResetView.as_view(), name="recover-password"),
     # password change
     path('changepassword/', PasswordsChangeView.as_view(), name="change-password"),
 
@@ -99,4 +99,8 @@ urlpatterns = [
          MessageUpdateView.as_view(), name='message-update'),
     path('dashboard/message/<int:pk>/delete/',
          MessageDeleteView.as_view(), name='message-delete'),
+
+     # newsletter
+     path('dashboard/newsletter/list/', NewsletterListView.as_view(), name='newsletter-list'),
+     path('dashboard/newsletter/delete/', NewsletterDeleteView.as_view(), name='newsletter-delete'),
 ]

@@ -51,28 +51,50 @@ class LogoutView(View):
 
 
 # password reset view
-class RecoverPasswordView(FormView):
-    template_name = 'dashboard/auth/recover-password.html'
-    form_class = PasswordResetForm
-    success_url = reverse_lazy('dashboard:login')
 
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-        user = User.objects.filter(email=email).first()
-        password = get_random_string(8)
-        user.set_password(password)
-        user.save(update_fields=['password'])
+# class ForgotPasswordView(FormView):
+#     template_name = 'dashboard/auth/reset-password.html'
+#     form_class = PasswordResetForm
+#     success_url = reverse_lazy('dashboard:login')
 
-        text_content = 'Your password has been changed. {} '.format(password)
-        send_mail(
-            'Password Reset | Sleek',
-            text_content,
-            conf_settings.EMAIL_HOST_USER,
-            [email],
-            fail_silently=False,
-        )
-        messages.success(self.request, "Password reset code is sent")
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         email = form.cleaned_data['email']
+#         user = User.objects.filter(email=email).first()
+#         password = get_random_string(8)
+#         user.set_password(password)
+#         user.save(update_fields=['password'])
+
+#         text_content = 'Your password has been changed. {} '.format(password)
+#         send_mail(
+#             'Password Reset | Ekocart',
+#             text_content,
+#             conf_settings.EMAIL_HOST_USER,
+#             [email],
+#             fail_silently=False,
+#         )
+#         messages.success(self.request, "Password reset code is sent")
+#         return super().form_valid(form)
+
+
+# class PasswordResetView(View):
+#     def get(self, request, *args, **kwargs):
+#         account = Account.objects.filter(pk=self.kwargs.get("pk")).first()
+#         password = get_random_string(8)
+#         account.set_password(password)
+#         account.save(update_fields=['password'])
+
+#         text_content = 'Your password has been changed. {} '.format(password)
+#         send_mail(
+#             'Password Reset | Ekocart',
+#             text_content,
+#             conf_settings.EMAIL_HOST_USER,
+#             [account.email],
+#             fail_silently=False,
+#         )
+#         messages.success(
+#             self.request, "Password reset code is sent")
+
+#         return redirect(reverse_lazy('dashboard:user-list'))
 
 
 # password change view
@@ -89,13 +111,13 @@ class PasswordsChangeView(PasswordChangeView):
 # user
 
 
-class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, CreateView):
+class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, CreateView):
     template_name = 'dashboard/users/usercreate.html'
     form_class = UserForm
     success_url = reverse_lazy('dashboard:user-list')
 
     def get_success_url(self):
-        return reverse('dashboard:recover-password', kwargs={'pk': self.object.pk})
+        return reverse('dashboard:passwordreset', kwargs={'pk': self.object.pk})
 
 
 class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, ListView):
@@ -438,3 +460,22 @@ class MessageUpdateView(UpdateView, SidebarMixin):
 class MessageDeleteView(DeleteMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('dashboard:message-list')
+
+# newsletter
+
+class NewsletterListView(NonDeletedItemMixin, SidebarMixin,ListView):
+    template_name = 'dashboard/newsletter/list.html'
+    model = Subscription
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "email" in self.request.GET:
+            if self.request.GET.get('email') != '':
+                queryset = queryset.filter(
+                    email__contains=self.request.GET.get("email"))
+        return queryset
+
+
+class NewsletterDeleteView(DeleteMixin, DeleteView):
+    model = Subscription
+    success_url = reverse_lazy('dashboard:newsletter-list')
