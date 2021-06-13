@@ -46,7 +46,6 @@ class UserForm(FormControlMixin, forms.ModelForm):
                 'mobile': 'Invalid mobile no.'
             })
 
-
 # login form
 class StaffLoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={

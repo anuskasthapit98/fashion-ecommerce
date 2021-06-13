@@ -814,6 +814,8 @@
 <!--multi sec start-->
 
 <section class="bg-light">
+
+ {% csrf_token %}
   <div class="container">
     <div class="row justify-content-center text-center mb-8">
       <div class="col-lg-6 col-md-10">
@@ -824,18 +826,20 @@
           <h2 class="mb-0">Subscribe Our Newsletter</h2>
         </div>
         <div class="subscribe-form">
-          <form id="mc-form" class="row align-items-center no-gutters mb-3">
+          <form id="mc-form" class="row align-items-center no-gutters mb-3" action="{% url 'newsletter' %}" method="POST">
+            {% csrf_token %}
             <div class="col">
-              <input value="" name="EMAIL" class="email form-control input-2 bg-white" id="mc-email" placeholder="Email Address" required="" type="email">
+              <input name="email" class="email form-control input-2 bg-white" id="mc-email" placeholder="Email Address" required="" type="email">
             </div>
             <div class="col-auto">
-              <input class="btn btn-primary overflow-auto" name="subscribe" value="Subscribe" type="submit">
+              <input class="btn btn-primary overflow-auto" type="submit">
             </div>
           </form> <small>Get started for 1 Month free trial No Purchace required.</small>
         </div>
       </div>
     </div>
   </div>
+  
 </section>
 <section class="p-0 mt-n11">
   <div class="container">

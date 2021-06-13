@@ -14,18 +14,18 @@
                 <li class="breadcrumb-item">
                     Our
                 </li>
-                <li class="breadcrumb-item" aria-current="page">Messages</li>
+                <li class="breadcrumb-item" aria-current="page">Newsletter</li>
                 </ol>
 
             </nav>
           <div class="input-group justify-content-end">
-                    <form action="{% url 'dashboard:message-list' %}" method="GET" class="form-inline">
+                    <form action="{% url 'dashboard:newsletter-list' %}" method="GET" class="form-inline">
                       <input
                         type="text"
-                        name="first_name"
+                        name="email"
                         class="form-control float-right searchInput"
-                        id="Searchname"
-                        placeholder=" name"
+                        id="Searchemail"
+                        placeholder=" email"
                       />
                       <div class="input-group-append">
                          <button type="submit" class="mb-1 btn btn-success">
@@ -42,8 +42,8 @@
             <div class="col-12">
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom justify-content-between">
-                        <h2>Messages List</h2>
-                                    <a href="{% url 'dashboard:message-create' %}" type="button" class="mb-1 btn btn-outline-primary">Add Message</a>
+                        <h2>Newsletter List</h2>
+                                   
 
                 </div>
         
@@ -52,29 +52,18 @@
                             <thead>
                                 <tr>
                                     <th scope="col">S.N</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Phone</th>
-                                    <th scope="col">Message</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for message in object_list %}
+                                {% for newsletter in object_list %}
                                 <tr>
                                     <td scope="row">{{ forloop.counter }}</td>
-                                    <td>{{ message.first_name }}</td>
-                                    <td>{{ message.last_name }}</td>
-                                    <td>{{ message.email }}</td>
-                                    <td>{{ message.phone }}</td>
-                                    <td>{{ message.message }}</td>
+                                    <td>{{ newsletter.email }}</td>
                                     <td>
-                                    <span>
-                                            <a href="{% url 'dashboard:message-update' message.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
-                                        </span>
                                         <span>
-                                            <a href="{% url 'dashboard:message-delete' message.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
+                                            <a href="{% url 'dashboard:newsletter-delete' newsletter.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
                                         </span>
                                         
                                     </td>
