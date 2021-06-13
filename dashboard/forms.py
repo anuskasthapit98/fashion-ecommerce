@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordChangeForm
+from django.forms import widgets
 
 from .mixin import *
 from .models import *
@@ -45,7 +46,6 @@ class UserForm(FormControlMixin, forms.ModelForm):
             raise ValidationError({
                 'mobile': 'Invalid mobile no.'
             })
-
 
 # login form
 class StaffLoginForm(forms.Form):
@@ -230,6 +230,50 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
                     'mobile': 'Invalid mobile no.'
                 })
 
+#Testimonial create form
+
+class TestimonialCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Testimonials
+        fields = '__all__'
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={
+                'class': "form-control",
+                'placeholder': 'choose image'
+            }),
+        }
+        
+#Tags create form
+
+class TagCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+        
+#Blog create form
+
+class BlogCreateForm(FormControlMixin,forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = '__all__'
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={
+                'class': "form-control",
+                'placeholder': 'choose image'
+            }),
+            'date': forms.DateInput(attrs={
+                'class': 'form-control check-date',
+                'placeholder': datetime.date.today()
+            }),
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tags'].widget.attrs.update({
+            'class': 'form-control select2 feature-select',
+            'multiple': 'multiple'
+        })
 # contact
 
 

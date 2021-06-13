@@ -66,7 +66,6 @@ class SuperAdminRequiredMixin(object):
             pass
         else:
             raise PermissionDenied
-
         return super().dispatch(request, *args, *kwargs)
 
 
