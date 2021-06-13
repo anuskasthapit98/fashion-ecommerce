@@ -226,3 +226,39 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
                 raise ValidationError({
                     'mobile': 'Invalid mobile no.'
                 })
+
+# contact
+
+class ContactForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
+        def clean_email(self):
+            email = self.cleaned_data['email']
+            if '@' not in email:
+                raise forms.ValidationError({
+                    'email': 'Enter valid email'})
+            return email
+
+
+# service
+
+class ServiceForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = service
+        fields = '__all__'
+
+        
+# message
+class MessageForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = '__all__'
+
+        def clean_email(self):
+            email = self.cleaned_data['email']
+            if '@' not in email:
+                raise forms.ValidationError({
+                    'email': 'Enter valid email'})
+            return email

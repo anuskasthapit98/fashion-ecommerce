@@ -6,5 +6,5 @@ from .views import *
 
 urlpatterns = [
     path('', HomeTemplateView.as_view(), name="home"),
-
+    path('contact/', ContactView.as_view(), name="contact"),
 ]

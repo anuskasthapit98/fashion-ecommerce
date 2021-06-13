@@ -74,4 +74,29 @@ urlpatterns = [
     path('dashboard/customer/<int:pk>/delete/',
          CustomerDeleteView.as_view(), name='customer-delete'),
 
+    
+    # contact urls
+    path('dashboard/contact/list/', ContactListView.as_view(), name='contact-list'),
+    path('dashboard/contact/create/', ContactCreateView.as_view(), name='contact-create'),
+    path('dashboard/contact/<int:pk>/update/',
+         ContactUpdateView.as_view(), name='contact-update'),
+    path('dashboard/contact/<int:pk>/delete/',
+         ContactDeleteView.as_view(), name='contact-delete'),
+
+     # service urls
+    path('dashboard/service/list/', ServiceListView.as_view(), name='service-list'),
+    path('dashboard/service/create/', ServiceCreateView.as_view(), name='service-create'),
+    path('dashboard/service/<int:pk>/update/',
+         ServiceUpdateView.as_view(), name='service-update'),
+    path('dashboard/service/<int:pk>/delete/',
+         ServiceDeleteView.as_view(), name='service-delete'),
+
+   
+     # message urls
+    path('dashboard/message/list/', MessageListView.as_view(), name='message-list'),
+    path('dashboard/message/create/', MessageCreateView.as_view(), name='message-create'),
+    path('dashboard/message/<int:pk>/update/',
+         MessageUpdateView.as_view(), name='message-update'),
+    path('dashboard/message/<int:pk>/delete/',
+         MessageDeleteView.as_view(), name='message-delete'),
 ]
