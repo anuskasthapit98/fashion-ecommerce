@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 
+
 ORDER_STATUS = (
     ("Order Received", "Order Received"),
     ("Order Processing", "Order Processing"),
@@ -219,8 +220,8 @@ class Cart(DateTimeModel):
         verbose_name_plural = ('Carts')
         
         
-        def __str__(self):
-            return "Product: " + str(self.products.slug)
+    def __str__(self):
+        return "Product: " + str(self.products.slug)
 
 # order model
 
@@ -258,8 +259,8 @@ class Wishlist(DateTimeModel):
         verbose_name_plural = ('Wishlists')
         
         
-        def __str__(self):
-            return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
+    def __str__(self):
+        return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
 
 # cartproduct model
 
@@ -286,27 +287,42 @@ class Testimonials(DateTimeModel):
         verbose_name_plural = ('Testimonials')
         ordering = ['name']
         
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
+
+# Tag model
+class Tag(DateTimeModel):
+    title = models.CharField(max_length=200, unique= True)
+
+    class Meta:
+        verbose_name = ('Tags')
+        verbose_name_plural = ('Tags')
+        ordering = ['-created_at']
+
+        
+    def __str__(self):
+        return self.title
+    
 
 # blog model
 
 class Blog(DateTimeModel):
     title = models.CharField(max_length=200)
-    sub_title = models.CharField(max_length=200)
+    tags = models.ManyToManyField(Tag)
     description = RichTextField()
     image = models.ImageField(upload_to="blog")
-    quotes =  models.TextField(max_length=400)
-    quotes_by = models.CharField(max_length=200)
+    quotes =  models.TextField(max_length=400, null= True, blank= True)
+    quotes_by = models.CharField(max_length=200, null= True, blank= True)
     date = models.DateField()
 
     class Meta:
         verbose_name = ('Blog')
         verbose_name_plural = ('Blogs')
-        ordering = ['title']
-        
-        def __str__(self):
-            return self.title
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
 
 
 # service model
@@ -321,8 +337,8 @@ class service(DateTimeModel):
         verbose_name_plural = ('Services')
         ordering = ['title']
         
-        def __str__(self):
-            return self.title
+    def __str__(self):
+        return self.title
 
 # contact model
 
@@ -338,8 +354,8 @@ class Contact(DateTimeModel):
         verbose_name_plural = ('Contacts')
         ordering = ['email']
         
-        def __str__(self):
-            return self.email
+    def __str__(self):
+        return self.email
 
 # ads model
 
@@ -352,8 +368,8 @@ class Ads(DateTimeModel):
         verbose_name_plural = ('Ads')
         ordering = ['title']
         
-        def __str__(self):
-            return self.title
+    def __str__(self):
+        return self.title
 
 # newsletter model 
 
@@ -377,5 +393,5 @@ class Message(DateTimeModel):
         verbose_name_plural = ('Message')
         
         
-        def __str__(self):
-            return self.first_name
+    def __str__(self):
+        return self.first_name

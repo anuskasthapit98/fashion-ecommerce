@@ -36,7 +36,9 @@
   <!-- SLEEK CSS -->
   <link id="sleek-css" rel="stylesheet" href="{% static 'dashboard/assets/css/sleek.css' %}" />
 
-  
+   <!-- flatpickr   -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
 
   <!-- FAVICON -->
   <link href="{% static 'dashboard/assets/img/favicon.png' %} " rel="shortcut icon" />
@@ -127,6 +129,7 @@
 <script src="{% static 'dashboard/assets/js/date-range.js' %}"></script>
 <script src="{% static 'dashboard/assets/js/map.js' %}"></script>
 <script src="{% static 'dashboard/assets/js/custom.js' %}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
   $(".select2").select2({ 
         width: '100%',
