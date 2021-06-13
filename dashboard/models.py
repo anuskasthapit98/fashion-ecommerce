@@ -393,5 +393,5 @@ class Message(DateTimeModel):
         verbose_name_plural = ('Message')
         
         
-        def __str__(self):
-            return self.first_name
+    def __str__(self):
+        return self.first_name

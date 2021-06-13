@@ -1,11 +1,17 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, response
-from django.views.generic import ListView, TemplateView, DetailView, CreateView
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView, CreateView
+from django.views.generic.base import View
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.conf import settings
+from django.contrib import messages
 
 from dashboard.forms import MessageForm
 from dashboard.models import *
+
 
 # Create your views here.
 
@@ -29,7 +35,7 @@ class ContactView(CreateView):
         context = super().get_context_data(**kwargs)
         context['contact'] = Contact.objects.filter(deleted_at__isnull=True)
         form = MessageForm(self.request.POST or None)
-        # context['form'] = MessageForm()
+        context['form'] = MessageForm()
 
         return context
 
@@ -41,7 +47,7 @@ class ContactView(CreateView):
         message = request.POST.get('message')
         obj = Message.objects.create(
             first_name=first_name, last_name=last_name, email=email, phone=phone, message=message)
-        
+      
         return redirect('contact')
 
     def form_valid(self, form):
@@ -56,3 +62,5 @@ class ContactView(CreateView):
         else:
             pass
         return super().form_valid(form)
+
+
