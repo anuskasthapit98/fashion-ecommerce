@@ -919,27 +919,34 @@
       </div>
     </div>
     <!-- / .row -->
+   
     <div class="row">
+     {% for blog in blogs|slice:3 %}
       <div class="col-12 col-lg-4">
         <!-- Blog Card -->
+        
         <div class="card border-0 bg-transparent">
           <div class="position-relative rounded overflow-hidden">
-            <div class="position-absolute z-index-1 bottom-0 bg-white text-primary shadow-primary text-center py-1 px-2 rounded ml-3 mb-3">20 Apr</div>
-            <img class="card-img-top hover-zoom" src="{% static 'home/assets/images/blog/01.jpg' %}" alt="Image">
+            <div class="position-absolute z-index-1 bottom-0 bg-white text-primary shadow-primary text-center py-1 px-2 rounded ml-3 mb-3">{{blog.date|date:"d M"}}</div>
+            <img class="card-img-top hover-zoom" src="{{blog.image.url}}" alt="Image">
           </div>
+           
           <div class="card-body px-0 pb-0">
-            <div> <a class="d-inline-block link-title btn-link text-small mr-2" href="#">Cloth,</a>
-              <a class="d-inline-block link-title btn-link text-small" href="#">Fashion</a>
+           
+            <div> {% for tags in blog.tags.all %}<a class="d-inline-block link-title btn-link text-small mr-2" href="#"> {{tags.title}}         </a>  {% endfor %}
             </div>
+ 
             <h2 class="h5 font-w-6 mt-2 mb-0">
-                <a class="link-title" href="blog-single.html">Spring summer fashion trends new high collection</a>
+                <a class="link-title" href="blog-single.html">{{blog.title}}</a>
               </h2>
           </div>
           <div></div>
         </div>
+     
         <!-- End Blog Card -->
       </div>
-      <div class="col-12 col-lg-4 mt-5 mt-lg-0">
+         {% endfor %}
+      {% comment %} <div class="col-12 col-lg-4 mt-5 mt-lg-0">
         <!-- Blog Card -->
         <div class="card border-0 bg-transparent">
           <div class="position-relative rounded overflow-hidden">
@@ -976,7 +983,7 @@
           <div></div>
         </div>
         <!-- End Blog Card -->
-      </div>
+      </div> {% endcomment %}
     </div>
     <div class="row justify-content-center text-center mt-5">
       <div class="col"> <a class="btn btn-dark" href="blog-card.html">View All Blog</a>

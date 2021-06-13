@@ -22,7 +22,7 @@
 
             </nav>
              <div class="input-group input-group-sm justify-content-end">
-                    <form action="{% url 'dashboard:customer-list' %}" method="GET" class="form-inline">
+                    <form action="{% url 'dashboard:customers' %}" method="GET" class="form-inline">
                       <input
                         type="text"
                         name="username"
@@ -31,11 +31,7 @@
                         placeholder="username"
                       />
                       <div class="input-group-append">
-<<<<<<< HEAD
                          <button type="submit" class="mb-1 btn btn-success">
-=======
-                         <button type="button" class=" btn btn-secondary">
->>>>>>> 333f41975233b1482a275159da154875c9c4a1af
                           <span class="mdi mdi-magnify"></span>
                         </button>
                       </div>
@@ -57,7 +53,7 @@
                     
                     
                     <div class="card-body">
-                        <table class="table table-striped">
+                        <table class="table table-hover ">
                             <thead>
                                 <tr>
                                     <th scope="col">S.N</th>

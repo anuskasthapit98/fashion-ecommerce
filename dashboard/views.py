@@ -90,23 +90,23 @@ class PasswordsChangeView(PasswordChangeView):
 
 
 class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, CreateView):
-    template_name = 'dashboard/users/usercreate.html'
+    template_name = 'dashboard/user/form.html'
     form_class = UserForm
-    success_url = reverse_lazy('dashboard:user-list')
+    success_url = reverse_lazy('dashboard:users')
 
     def get_success_url(self):
         return reverse('dashboard:recover-password', kwargs={'pk': self.object.pk})
 
 
 class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, ListView):
-    template_name = 'dashboard/users/userlist.html'
+    template_name = 'dashboard/user/list.html'
     model = Account
-    success_url = reverse_lazy('dashboard:user-list')
+    success_url = reverse_lazy('dashboard:users')
     paginate_by = 5
 
 
 class UserToggleStatusView(View):
-    success_url = reverse_lazy('dashboard:user-list')
+    success_url = reverse_lazy('dashboard:users')
 
     def get(self, request, *args, **kwargs):
         account = User.objects.filter(pk=self.kwargs.get("pk")).first()
@@ -121,7 +121,7 @@ class UserToggleStatusView(View):
 # dashboard views
 
 
-class AdminDashboardView(AdminRequiredMixin, SidebarMixin, TemplateView):
+class AdminDashboardView(SidebarMixin, TemplateView):
     template_name = 'dashboard/base/index.html'
 
 
@@ -129,7 +129,7 @@ class AdminDashboardView(AdminRequiredMixin, SidebarMixin, TemplateView):
 
 
 class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
-    template_name = 'dashboard/Category/list.html'
+    template_name = 'dashboard/category/list.html'
     model = Category
 
     def get_queryset(self):
@@ -142,21 +142,21 @@ class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
 
 class CategoryCreateView(CreateView, SidebarMixin):
-    template_name = 'dashboard/Category/form.html'
+    template_name = 'dashboard/category/form.html'
     form_class = CategoryForm
-    success_url = reverse_lazy('dashboard:category')
+    success_url = reverse_lazy('dashboard:categories')
 
 
 class CategoryUpdateView(UpdateView, SidebarMixin):
-    template_name = 'dashboard/Category/form.html'
+    template_name = 'dashboard/category/form.html'
     model = Category
     form_class = CategoryForm
-    success_url = reverse_lazy('dashboard:category')
+    success_url = reverse_lazy('dashboard:categories')
 
 
 class CategoryDeleteView(DeleteMixin, DeleteView):
     model = Category
-    success_url = reverse_lazy('dashboard:category')
+    success_url = reverse_lazy('dashboard:categories')
 
 
 # Product
@@ -235,21 +235,21 @@ class ProductListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
 
 class ProductCreateView(CreateView, SidebarMixin):
-    template_name = 'dashboard/product/create.html'
+    template_name = 'dashboard/product/form.html'
     form_class = ProductForm
-    success_url = reverse_lazy('dashboard:product-list')
+    success_url = reverse_lazy('dashboard:products')
 
 
 class ProductUpdateView(UpdateView, SidebarMixin):
-    template_name = 'dashboard/product/create.html'
+    template_name = 'dashboard/product/form.html'
     model = Products
     form_class = ProductForm
-    success_url = reverse_lazy('dashboard:product-list')
+    success_url = reverse_lazy('dashboard:products')
 
 
 class ProductDeleteView(DeleteMixin, DeleteView):
     model = Products
-    success_url = reverse_lazy('dashboard:product-list')
+    success_url = reverse_lazy('dashboard:products')
     template_name = 'dashboard/base/index.html'
 
 
@@ -270,21 +270,21 @@ class BrandListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
 
 class BrandCreateView(CreateView, SidebarMixin):
-    template_name = 'dashboard/brand/create.html'
+    template_name = 'dashboard/brand/form.html'
     form_class = BrandForm
-    success_url = reverse_lazy('dashboard:brand-list')
+    success_url = reverse_lazy('dashboard:brands')
 
 
 class BrandUpdateView(UpdateView, SidebarMixin):
-    template_name = 'dashboard/brand/create.html'
+    template_name = 'dashboard/brand/form.html'
     model = Brands
     form_class = BrandForm
-    success_url = reverse_lazy('dashboard:brand-list')
+    success_url = reverse_lazy('dashboard:brands')
 
 
 class BrandDeleteView(DeleteMixin, DeleteView):
     model = Brands
-    success_url = reverse_lazy('dashboard:brand-list')
+    success_url = reverse_lazy('dashboard:brands')
 
 
 # size view starts here
@@ -298,19 +298,19 @@ class SizeListView(NonDeletedItemMixin, SidebarMixin, ListView):
 class SizeCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/size/form.html'
     form_class = SizeCreateForm
-    success_url = reverse_lazy('dashboard:size-list')
+    success_url = reverse_lazy('dashboard:sizes')
 
 
 class SizeUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/size/form.html'
     model = Size
     form_class = SizeCreateForm
-    success_url = reverse_lazy('dashboard:size-list')
+    success_url = reverse_lazy('dashboard:sizes')
 
 
 class SizeDeleteView(DeleteMixin, DeleteView):
     model = Size
-    success_url = reverse_lazy('dashboard:size-list')
+    success_url = reverse_lazy('dashboard:sizes')
 
 
 # customer view starts here
@@ -329,18 +329,114 @@ class CustomerListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
 
 class CustomerCreateView(CreateView, SidebarMixin):
-    template_name = 'dashboard/customer/create.html'
+    template_name = 'dashboard/customer/form.html'
     form_class = CustomerCreateForm
-    success_url = reverse_lazy('dashboard:customer-list')
+    success_url = reverse_lazy('dashboard:customers')
 
 
 class CustomerUpdateView(UpdateView, SidebarMixin):
-    template_name = 'dashboard/customer/create.html'
+    template_name = 'dashboard/customer/form.html'
     model = Customer
     form_class = CustomerCreateForm
-    success_url = reverse_lazy('dashboard:customer-list')
+    success_url = reverse_lazy('dashboard:customers')
 
 
 class CustomerDeleteView(DeleteMixin, DeleteView):
     model = Customer
-    success_url = reverse_lazy('dashboard:customer-list')
+    success_url = reverse_lazy('dashboard:customers')
+
+
+# Testimonial view
+
+class TestimonialListView(NonDeletedItemMixin, SidebarMixin,ListView):
+    template_name = 'dashboard/testimonial/list.html'
+    model = Testimonials
+    success_url = reverse_lazy('dashboard:testimonials') 
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "name" in self.request.GET:
+            if self.request.GET.get('name') != '':
+                queryset = queryset.filter(
+                    name__contains=self.request.GET.get("name"))
+        return queryset   
+    
+class TestimonialCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/testimonial/form.html'
+    form_class = TestimonialCreateForm
+    success_url = reverse_lazy('dashboard:testimonials')  
+
+
+class TestimonialUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/testimonial/form.html'
+    model = Testimonials
+    form_class = TestimonialCreateForm
+    success_url = reverse_lazy('dashboard:testimonials')  
+
+class TestimonialDeleteView(DeleteMixin, DeleteView):
+    model = Testimonials
+    success_url = reverse_lazy('dashboard:testimonials')  
+
+
+# size view starts here
+
+
+class TagListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/tag/list.html'
+    model = Tag
+
+
+class TagCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/tag/form.html'
+    form_class = TagCreateForm
+    success_url = reverse_lazy('dashboard:tags')
+
+
+class TagUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/tag/form.html'
+    model = Tag
+    form_class = TagCreateForm
+    success_url = reverse_lazy('dashboard:tags')
+
+
+class TagDeleteView(DeleteMixin, DeleteView):
+    model = Tag
+    success_url = reverse_lazy('dashboard:tags')
+
+
+
+# Blogs view
+
+class BlogListView(NonDeletedItemMixin, SidebarMixin,ListView):
+    template_name = 'dashboard/blog/list.html'
+    model = Blog
+    success_url = reverse_lazy('dashboard:blogs') 
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "title" in self.request.GET:
+            if self.request.GET.get('title') != '':
+                queryset = queryset.filter(
+                    title__contains=self.request.GET.get("title"))
+                
+        if "quotes_by" in self.request.GET:
+            if self.request.GET.get('quotes_by') != '':
+                queryset = queryset.filter(
+                    quotes_by__contains=self.request.GET.get("quotes_by"))
+        return queryset   
+    
+class BlogCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/blog/form.html'
+    form_class = BlogCreateForm
+    success_url = reverse_lazy('dashboard:blogs')  
+
+
+class BlogUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/blog/form.html'
+    model = Blog
+    form_class = BlogCreateForm
+    success_url = reverse_lazy('dashboard:blogs')  
+
+class BlogDeleteView(DeleteMixin, DeleteView):
+    model = Blog
+    success_url = reverse_lazy('dashboard:blogs')
