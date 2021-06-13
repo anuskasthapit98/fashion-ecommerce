@@ -6,8 +6,5 @@ app_name = 'home'
 
 urlpatterns = [
     path('', HomeTemplateView.as_view(), name="home"),
-    
-    
-    
-   
+    path('contact/', ContactView.as_view(), name="contact"),
 ]

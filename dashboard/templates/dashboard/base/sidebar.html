@@ -25,14 +25,9 @@
           <span class="brand-name">Sleek Dashboard</span>
         </a>
       </div>
-
-
-
  <!-- begin sidebar scrollbar -->
-      <div class="sidebar-scrollbar">
-    
-        <!-- sidebar menu -->
-          
+      <div class="sidebar-scrollbar">   
+        <!-- sidebar menu -->         
         <ul class="nav sidebar-inner" id="sidebar-menu">
             <li  class="has-sub active expand" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#product"
@@ -104,6 +99,25 @@
                 <span class="nav-text">Blogs</span>
               </a>
               </li>
+            
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:contacts' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Contact</span>
+              </a>
+            </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:services' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Service</span>
+              </a>
+            </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:messages' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Message</span>
+              </a>
+            </li>
               {% if request.user.is_superuser %}
               
                   <li  class="has-sub " >

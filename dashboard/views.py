@@ -378,7 +378,7 @@ class TestimonialDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:testimonials')  
 
 
-# size view starts here
+# tag view starts here
 
 
 class TagListView(NonDeletedItemMixin, SidebarMixin, ListView):
@@ -440,3 +440,98 @@ class BlogUpdateView(UpdateView, SidebarMixin):
 class BlogDeleteView(DeleteMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('dashboard:blogs')
+   
+
+
+# contact 
+class ContactListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/contact/list.html'
+    model = Contact
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "email" in self.request.GET:
+            if self.request.GET.get('email') != '':
+                queryset = queryset.filter(
+                    email__contains=self.request.GET.get("email"))
+        return queryset
+
+
+class ContactCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/contact/form.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('dashboard:contacts')
+
+
+class ContactUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/contact/form.html'
+    model = Contact
+    form_class = ContactForm
+    success_url = reverse_lazy('dashboard:contacts')
+
+
+class ContactDeleteView(DeleteMixin, DeleteView):
+    model = Contact
+    success_url = reverse_lazy('dashboard:contact-list')
+
+# service 
+class ServiceListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/service/list.html'
+    model = service
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "title" in self.request.GET:
+            if self.request.GET.get('title') != '':
+                queryset = queryset.filter(
+                    title__contains=self.request.GET.get("title"))
+        return queryset
+
+
+class ServiceCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/service/form.html'
+    form_class = ServiceForm
+    success_url = reverse_lazy('dashboard:services')
+
+
+class ServiceUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/service/form.html'
+    model = service
+    form_class = ServiceForm
+    success_url = reverse_lazy('dashboard:services')
+
+
+class ServiceDeleteView(DeleteMixin, DeleteView):
+    model = service
+    success_url = reverse_lazy('dashboard:services')
+
+# message 
+class MessageListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/message/list.html'
+    model = Message
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "name" in self.request.GET:
+            if self.request.GET.get('name') != '':
+                queryset = queryset.filter(
+                    name__contains=self.request.GET.get("name"))
+        return queryset
+
+
+class MessageCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/message/form.html'
+    form_class = MessageForm
+    success_url = reverse_lazy('dashboard:messages')
+
+
+class MessageUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/message/form.html'
+    model = Message
+    form_class = MessageForm
+    success_url = reverse_lazy('dashboard:messages')
+
+
+class MessageDeleteView(DeleteMixin, DeleteView):
+    model = Message
+    success_url = reverse_lazy('dashboard:messages')

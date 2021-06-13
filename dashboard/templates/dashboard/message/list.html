@@ -1,0 +1,114 @@
+{% extends 'dashboard/base/base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+                     
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb p-0">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard:dashboard' %}">
+                    <span class="mdi mdi-home"></span>                
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    Our
+                </li>
+                <li class="breadcrumb-item" aria-current="page">Messages</li>
+                </ol>
+
+            </nav>
+          <div class="input-group justify-content-end">
+                    <form action="{% url 'dashboard:messages' %}" method="GET" class="form-inline">
+                      <input
+                        type="text"
+                        name="name"
+                        class="form-control float-right searchInput"
+                        id="Searchname"
+                        placeholder=" name"
+                      />
+                      <div class="input-group-append">
+                         <button type="submit" class="mb-1 btn btn-success">
+                          <span class="mdi mdi-magnify"></span>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+     
+
+     <div class="row">
+            
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom justify-content-between">
+                        <h2>Brands List</h2>
+                                    <a href="{% url 'dashboard:message-create' %}" type="button" class="mb-1 btn btn-outline-primary">Add Brand</a>
+
+                </div>
+        
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S.N</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Message</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for message in object_list %}
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ message.first_name }}</td>
+                                    <td>{{ message.last_name }}</td>
+                                    <td>{{ message.email }}</td>
+                                    <td>{{ message.phone }}</td>
+                                    <td>{{ message.Message }}</td>
+                                    <td>
+                                    <span>
+                                            <a href="{% url 'dashboard:message-update' message.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
+                                        </span>
+                                        <span>
+                                            <a href="{% url 'dashboard:message-delete' message.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
+                                        </span>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>				
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+$('.delete').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will permanently deleted !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'Your file has been deleted.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+</script>
+{% endblock %}
