@@ -24,8 +24,6 @@
                         <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             {{ form.media }}
-  
-
 
                             <div class="row form-group">
                                 <div class="col-md-6 col-sm-12">
@@ -69,7 +67,7 @@
                       </div>
                             <div class="form-footer pt-4 pt-5 mt-4 border-top">
                                 <button type="submit" class="btn btn-primary btn-default">Submit</button>
-                                <a href="{% url 'dashboard:user-list' %}" class="btn btn-secondary btn-default">Cancel</a>
+                                <a href="{% url 'dashboard:users' %}" class="btn btn-secondary btn-default">Cancel</a>
                             </div>
                         </form>
                     </di>

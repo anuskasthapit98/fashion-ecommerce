@@ -17,9 +17,11 @@ from dashboard.models import *
 
 class HomeTemplateView(TemplateView):
     template_name = 'home/base/index.html'
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['blogs'] = Blog.objects.filter(deleted_at__isnull=True)
         context['service'] = service.objects.filter(deleted_at__isnull=True)
         return context
 
@@ -62,28 +64,3 @@ class ContactView(CreateView):
         return super().form_valid(form)
 
 
-# newsletter
-
-class NewsletterView(View):
-    def post(self, request, *args, **kwargs):
-        email = self.request.POST.get('email')
-        if Subscription.objects.filter(email=email).exists():
-            messages.warning(request, "Wow, Already Subscribed.")
-
-        else:
-            obj = Subscription.objects.create(email=email)
-            messages.success(
-                request, f'Thank you for Subscription {email}')
-            subject = "Thank you for joining Us"
-            from_email = settings.EMAIL_HOST_USER
-            to_email = [email]
-            html_template = get_template(
-                "home/newsletter/newsletter.html").render()
-            plain_text = get_template(
-                "home/newsletter/newsletter.txt").render()
-            message = EmailMultiAlternatives(
-                subject, plain_text, from_email, to_email)
-
-            message.attach_alternative(html_template, "text/html")
-            message.send()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
