@@ -22,7 +22,7 @@
                     <form action="{% url 'dashboard:message-list' %}" method="GET" class="form-inline">
                       <input
                         type="text"
-                        name="name"
+                        name="first_name"
                         class="form-control float-right searchInput"
                         id="Searchname"
                         placeholder=" name"
@@ -42,8 +42,8 @@
             <div class="col-12">
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom justify-content-between">
-                        <h2>Brands List</h2>
-                                    <a href="{% url 'dashboard:message-create' %}" type="button" class="mb-1 btn btn-outline-primary">Add Brand</a>
+                        <h2>Messages List</h2>
+                                    <a href="{% url 'dashboard:message-create' %}" type="button" class="mb-1 btn btn-outline-primary">Add Message</a>
 
                 </div>
         
@@ -68,7 +68,7 @@
                                     <td>{{ message.last_name }}</td>
                                     <td>{{ message.email }}</td>
                                     <td>{{ message.phone }}</td>
-                                    <td>{{ message.Message }}</td>
+                                    <td>{{ message.message }}</td>
                                     <td>
                                     <span>
                                             <a href="{% url 'dashboard:message-update' message.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>

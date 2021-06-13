@@ -3,12 +3,17 @@ from django.http import HttpResponse, response
 from django.views.generic import ListView, TemplateView, DetailView, CreateView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from django.views.generic.base import View
+from django.contrib import messages
 
 from dashboard.forms import MessageForm
 from dashboard.models import *
 
 # Create your views here.
 
+
+
+# home
 class HomeTemplateView(TemplateView):
     template_name = 'home/base/index.html'
 
@@ -16,6 +21,9 @@ class HomeTemplateView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['service'] = service.objects.filter(deleted_at__isnull=True)
         return context
+
+
+# contact
 
 class ContactView(CreateView):
     template_name = 'home/contact/contact.html'
@@ -54,3 +62,24 @@ class ContactView(CreateView):
         else:
             pass
         return super().form_valid(form)
+
+
+# newsletter 
+
+# class NewsletterView(View):
+#     def post(self, request, *args, **kwargs):
+#         email = self.request.POST.get('email')
+#         if Subscription.objects.filter(email=email).exists():
+#             messages.warning(request, 'Wow, you have already subscribed')
+#         else:
+#             obj = Subscription.objects.create(email=email)
+#             messages.success(request, f'Thank you for subsciption {email}')
+#             subject = "Thank you for joining us"
+#             from_email = settings.EMAIL_HOST_USER
+#             to_email = [email]
+#             html_template = get_template("home/newsletter/newsletter.html").render()
+#             plain_text = get_template("home/newsletter/newsletter.txt").render()
+#             message = EmailMultiAlternatives(subject.plain_text, from_email, to_email)
+#             message.attach_alternative(html_template,"text/html")
+#             message.send()
+#         return response.HttpResponseRedirect(request.META.get('HTTP_REFER'))

@@ -415,10 +415,10 @@ class MessageListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if "name" in self.request.GET:
-            if self.request.GET.get('name') != '':
+        if "first_name" in self.request.GET:
+            if self.request.GET.get('first_name') != '':
                 queryset = queryset.filter(
-                    name__contains=self.request.GET.get("name"))
+                    first_name__contains=self.request.GET.get("first_name"))
         return queryset
 
 
