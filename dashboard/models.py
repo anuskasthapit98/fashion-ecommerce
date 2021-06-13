@@ -329,7 +329,7 @@ class service(DateTimeModel):
 class Contact(DateTimeModel):
     address = models.CharField(max_length=200)
     email = models.EmailField(max_length=200)
-    phone = models.PositiveIntegerField()
+    phone = models.CharField(max_length=200)
     working_hours = models.CharField(max_length=200)
     
 
@@ -362,3 +362,20 @@ class Subscription(DateTimeModel):
 
     def __str__(self):
         return self.email
+
+# message model
+
+class Message(DateTimeModel):
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=200)
+    message = models.TextField(max_length=400)
+
+    class Meta:
+        verbose_name = ('Message')
+        verbose_name_plural = ('Message')
+        
+        
+        def __str__(self):
+            return self.first_name

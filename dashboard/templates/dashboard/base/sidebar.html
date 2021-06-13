@@ -25,14 +25,9 @@
           <span class="brand-name">Sleek Dashboard</span>
         </a>
       </div>
-
-
-
  <!-- begin sidebar scrollbar -->
-      <div class="sidebar-scrollbar">
-    
-        <!-- sidebar menu -->
-          
+      <div class="sidebar-scrollbar">   
+        <!-- sidebar menu -->         
         <ul class="nav sidebar-inner" id="sidebar-menu">
             <li  class="has-sub active expand" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#product"
@@ -57,8 +52,7 @@
                       {% endfor %}
                 </div>
               </ul>
-            </li>
-            
+            </li>          
             <li  class="has-sub" >
                     <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#brands"
                       aria-expanded="false" aria-controls="brands">
@@ -66,19 +60,13 @@
                       <span class="nav-text">Brands</span> <b class="caret"></b>
                     </a>
                     <ul  class="collapse"  id="brands">
-                      <div class="sub-menu">
-                        
+                      <div class="sub-menu">                       
                         <li >
                           <a href="{% url 'dashboard:brand-list' %}">List</a>
-                        </li>
-                        
-                    
-                        
+                        </li>                      
                       </div>
                     </ul>
-            </li>
-            
-            
+            </li>           
             <li  class="has-sub" >
                     <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#category"
                       aria-expanded="false" aria-controls="category">
@@ -90,19 +78,34 @@
                         
                         <li >
                           <a href="{% url 'dashboard:category' %}">List</a>
-                        </li>
-                        
-                    
-                        
+                        </li>        
                       </div>
                     </ul>
             </li>
-               <li  class="has-sub" >
+            <li  class="has-sub" >
               <a class="sidenav-item-link" href="{% url 'dashboard:size-list' %}">
                 <i class="mdi mdi-view-dashboard-outline"></i>
                 <span class="nav-text">Sizes</span>
               </a>
-              </li>
+            </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:contact-list' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Contact</span>
+              </a>
+            </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:service-list' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Service</span>
+              </a>
+            </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:message-list' %}">
+                <i class="mdi mdi-view-dashboard-outline"></i>
+                <span class="nav-text">Message</span>
+              </a>
+            </li>
             <li  class="has-sub" >
               <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#customer"
                 aria-expanded="false" aria-controls="customer">

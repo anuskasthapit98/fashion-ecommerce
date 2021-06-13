@@ -3,10 +3,7 @@
 {% block content %}
 <div class="content-wrapper">
     <div class="content">							
-        <div class="breadcrumb-wrapper">
-        
-  
-                          
+                     
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb p-0">
                 <li class="breadcrumb-item">
@@ -17,18 +14,18 @@
                 <li class="breadcrumb-item">
                     Our
                 </li>
-                <li class="breadcrumb-item" aria-current="page">Customers</li>
+                <li class="breadcrumb-item" aria-current="page">Contact</li>
                 </ol>
 
             </nav>
-             <div class="input-group input-group-sm justify-content-end">
-                    <form action="{% url 'dashboard:customer-list' %}" method="GET" class="form-inline">
+          <div class="input-group justify-content-end">
+                    <form action="{% url 'dashboard:contact-list' %}" method="GET" class="form-inline">
                       <input
                         type="text"
-                        name="username"
+                        name="email"
                         class="form-control float-right searchInput"
-                        id="Searchusername"
-                        placeholder="username"
+                        id="SearchEmail"
+                        placeholder="email"
                       />
                       <div class="input-group-append">
                          <button type="submit" class="mb-1 btn btn-success">
@@ -38,53 +35,46 @@
                     </form>
                   </div>
 
-        </div>
+     
 
-        <div class="row">
+     <div class="row">
             
             <div class="col-12">
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom justify-content-between">
-                        <h2>Customers List</h2>
-                    <a href="{% url 'dashboard:customer-create' %}"  type="button" class="mb-1 btn btn-outline-primary">Add Customer</a>
+                        <h2>Contact List</h2>
+                                    <a href="{% url 'dashboard:contact-create' %}" type="button" class="mb-1 btn btn-outline-primary">Add Contact</a>
 
-            
-                    </div>
-                    
-                    
+                </div>
+        
                     <div class="card-body">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">S.N</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
-                                    <th scope="col">Username</th>
+                                    <th scope="col">Address</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Mobile</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Working horus</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for customer in object_list %}
+                                {% for contact in object_list %}
                                 <tr>
                                     <td scope="row">{{ forloop.counter }}</td>
-                                    <td>{{ customer.first_name }}</td>
-                                    <td>{{ customer.last_name }}</td>
-                                    <td>{{ customer.username }}</td>
-                                    <td>{{ customer.email }}</td>
-                                    <td>{{ customer.mobile }}</td>
-                                    
+                                    <td>{{ contact.address }}</td>
+                                    <td>{{ contact.email }}</td>
+                                    <td>{{ contact.phone }}</td>
+                                    <td>{{ contact.working_hours }}</td>
                                     <td>
-
- <span>
-                                            <a href="{% url 'dashboard:customer-update' customer.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
+                                    <span>
+                                            <a href="{% url 'dashboard:contact-update' contact.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
                                         </span>
                                         <span>
-                                            <a href="{% url 'dashboard:customer-delete' customer.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
+                                            <a href="{% url 'dashboard:contact-delete' contact.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
                                         </span>
-
-                                     
+                                        
                                     </td>
                                 </tr>
                                 {% endfor %}
