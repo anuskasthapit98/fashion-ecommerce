@@ -10,7 +10,6 @@ class AdminRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         user = request.user
         if user.is_authenticated and user.is_superuser:
-            # if user.is_authenticated and user.groups.filter(name="Admin").exists():
             pass
         else:
             return redirect('/login/')
