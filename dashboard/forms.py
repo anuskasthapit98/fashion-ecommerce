@@ -309,3 +309,11 @@ class MessageForm(FormControlMixin, forms.ModelForm):
                 raise forms.ValidationError({
                     'email': 'Enter valid email'})
             return email
+
+# color create form
+
+
+class ColorCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Color
+        fields = '__all__'
