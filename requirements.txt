@@ -1,5 +1,5 @@
 asgiref==3.3.4
-Django==3.2.3
+Django==3.2.4
 django-active-link==0.1.8
 django-ckeditor==6.1.0
 django-js-asset==1.2.2
