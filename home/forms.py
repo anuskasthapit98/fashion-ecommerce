@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 
 from dashboard.models import Subscription
-from dashboard.mixin import FormControlMixin
+from dashboard.mixines import FormControlMixin
 
 # newsletter
 class SubscriptionForm(FormControlMixin, ModelForm):

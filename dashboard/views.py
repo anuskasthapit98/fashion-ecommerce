@@ -14,7 +14,7 @@ from django.views.generic import TemplateView, FormView, View, CreateView, Updat
 
 from .forms import *
 from .models import *
-from .mixin import *
+from .mixines import *
 
 # Create your views here.
 # login view starts here

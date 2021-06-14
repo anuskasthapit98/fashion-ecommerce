@@ -279,7 +279,7 @@ class Wishlist(DateTimeModel):
         verbose_name_plural = ('Wishlists')
 
     def __str__(self):
-            return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
+        return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
 
 # cartproduct model
 

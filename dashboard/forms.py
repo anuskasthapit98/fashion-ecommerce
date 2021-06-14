@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import widgets
 
-from .mixin import *
+from .mixines import *
 from .models import *
 
 # user create form

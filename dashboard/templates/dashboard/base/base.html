@@ -8,7 +8,7 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
 
 
-  <title>Fashion Ecommerce| {% block title %} {% endblock %}</title>
+  <title>Ekocart | {% block title %} {% endblock %}</title>
 
   <!-- GOOGLE FONTS -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500|Poppins:400,500,600,700|Roboto:400,500" rel="stylesheet"/>
@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
 
   <!-- FAVICON -->
-  <link href="{% static 'dashboard/assets/img/favicon.png' %} " rel="shortcut icon" />
+  <link href="{% static 'dashboard/assets/img/favicon.ico' %} " rel="shortcut icon" />
 
   {% block style %}
 
@@ -67,6 +67,17 @@
       .form-inline input{
             margin: 5px 5px 5px 0;
       } 
+
+      .footer-logo .text-primary{
+   
+    color: #fe4c1c !important;
+
+
+  }
+
+ .sidebar .sidebar-inner{
+    margin-top: 0px;
+  }
 
 
   
