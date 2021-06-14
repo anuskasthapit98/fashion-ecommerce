@@ -25,24 +25,6 @@ class LoginView(FormView):
     form_class = StaffLoginForm
     success_url = reverse_lazy('dashboard:dashboard')
 
-    # def form_valid(self, form):
-    #     username = form.cleaned_data['username']
-    #     pword = form.cleaned_data['password']
-    #     user = authenticate(username=username, password=pword)
-
-    #     if user is not None:
-    #         login(self.request, user)
-    #         user.is_active = True
-
-    #     else:
-    #         return render(self.request, self.template_name,
-    #                       {
-    #                           'error': 'Invalid Username or password',
-    #                           'form': form
-    #                       })
-
-    #     return super().form_valid(form)
-
 
 # logout view
 class LogoutView(View):
@@ -116,6 +98,11 @@ class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, 
     template_name = 'dashboard/user/form.html'
     form_class = UserForm
     success_url = reverse_lazy('dashboard:users')
+
+    def form_valid(self, form):
+        form.instance.is_staff = True
+        print(form.instance.is_staff, 9999999999999999)
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('dashboard:reset-password', kwargs={'pk': self.object.pk})

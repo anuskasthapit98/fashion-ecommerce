@@ -9,14 +9,15 @@ urlpatterns = [
     # logout
     path('logout/', LogoutView.as_view(), name="logout"),
     # password reset
-    path('recoverpassword/<int:pk>', PasswordResetView.as_view(), name="reset-password"),
+    path('recoverpassword/<int:pk>',
+         PasswordResetView.as_view(), name="reset-password"),
     path('password-forgot/', ForgotPasswordView.as_view(), name='forgot-password'),
     # password change
     path('changepassword/', PasswordsChangeView.as_view(), name="change-password"),
 
     # user list
-    path('user/create', UserCreateView.as_view(), name='user-create'),
-    path('user/list', UsersListView.as_view(), name="users"),
+    path('user/create/', UserCreateView.as_view(), name='user-create'),
+    path('user/list/', UsersListView.as_view(), name="users"),
     path('userdisable/<int:pk>/',
          UserToggleStatusView.as_view(), name='user-disable'),
     # dashboard view
@@ -45,7 +46,7 @@ urlpatterns = [
     path('dashboard/product/<slug:slug>/update/',
          ProductUpdateView.as_view(), name='product-update'),
 
-    path('dashboard/product/<slug:slug>/delete,',
+    path('dashboard/product/<slug:slug>/delete/',
          ProductDeleteView.as_view(), name='product-delete'),
 
     # brand urls
@@ -80,12 +81,12 @@ urlpatterns = [
          TestimonialListView.as_view(), name='testimonials'),
     path('dashboard/testimonials/create/',
          TestimonialCreateView.as_view(), name='testimonial-create'),
-    path('dashboard/testimonials/update/<int:pk>/',
+    path('dashboard/testimonials/<int:pk>/update/',
          TestimonialUpdateView.as_view(), name='testimonial-update'),
-    path('dashboard/testimonials/delete/<int:pk>',
+    path('dashboard/testimonials/<int:pk>/delete/',
          TestimonialDeleteView.as_view(), name='testimonial-delete'),
-    
-    
+
+
     # tags urls
     path('dashboard/tags/list/', TagListView.as_view(), name='tags'),
     path('dashboard/tags/create/', TagCreateView.as_view(), name='tag-create'),
@@ -93,40 +94,43 @@ urlpatterns = [
          TagUpdateView.as_view(), name='tag-update'),
     path('dashboard/tags/<int:pk>/delete/',
          TagDeleteView.as_view(), name='tag-delete'),
-    
-    
-    #blogs 
-     path('dashboard/blogs/',
-         BlogListView.as_view(), name='blogs'),
-     path('dashboard/blogs/create/',
-         BlogCreateView.as_view(), name='blogs-create'),
-     path('dashboard/blogs/update/<int:pk>/',
-         BlogUpdateView.as_view(), name='blogs-update'),
-     path('dashboard/blogs/delete/<int:pk>',
-         BlogDeleteView.as_view(), name='blogs-delete'),
-    
 
-    
+
+    # blogs
+    path('dashboard/blogs/',
+         BlogListView.as_view(), name='blogs'),
+    path('dashboard/blogs/create/',
+         BlogCreateView.as_view(), name='blogs-create'),
+    path('dashboard/blogs/<int:pk>/update/',
+         BlogUpdateView.as_view(), name='blogs-update'),
+    path('dashboard/blogs/<int:pk>/delete/',
+         BlogDeleteView.as_view(), name='blogs-delete'),
+
+
+
     # contact urls
     path('dashboard/contact/list/', ContactListView.as_view(), name='contacts'),
-    path('dashboard/contact/create/', ContactCreateView.as_view(), name='contact-create'),
+    path('dashboard/contact/create/',
+         ContactCreateView.as_view(), name='contact-create'),
     path('dashboard/contact/<int:pk>/update/',
          ContactUpdateView.as_view(), name='contact-update'),
     path('dashboard/contact/<int:pk>/delete/',
          ContactDeleteView.as_view(), name='contact-delete'),
 
-     # service urls
+    # service urls
     path('dashboard/service/list/', ServiceListView.as_view(), name='services'),
-    path('dashboard/service/create/', ServiceCreateView.as_view(), name='service-create'),
+    path('dashboard/service/create/',
+         ServiceCreateView.as_view(), name='service-create'),
     path('dashboard/service/<int:pk>/update/',
          ServiceUpdateView.as_view(), name='service-update'),
     path('dashboard/service/<int:pk>/delete/',
          ServiceDeleteView.as_view(), name='service-delete'),
 
-   
-     # message urls
+
+    # message urls
     path('dashboard/message/list/', MessageListView.as_view(), name='messages'),
-    path('dashboard/message/create/', MessageCreateView.as_view(), name='message-create'),
+    path('dashboard/message/create/',
+         MessageCreateView.as_view(), name='message-create'),
     path('dashboard/message/<int:pk>/update/',
          MessageUpdateView.as_view(), name='message-update'),
     path('dashboard/message/<int:pk>/delete/',
