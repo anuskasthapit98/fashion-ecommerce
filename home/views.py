@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.views.generic.base import View
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
@@ -12,24 +12,48 @@ from django.contrib import messages
 from dashboard.forms import MessageForm
 from dashboard.models import *
 
-
+from dashboard.mixin import NonDeletedItemMixin
 # Create your views here.
+
 
 class HomeTemplateView(TemplateView):
     template_name = 'home/base/index.html'
-    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['blogs'] = Blog.objects.filter(deleted_at__isnull=True)
         context['service'] = service.objects.filter(deleted_at__isnull=True)
+        context['trend_products'] = Products.objects.filter(
+            deleted_at__isnull=True).order_by('-view_count')
         return context
+
+# products view
+
+
+class ProductListView(NonDeletedItemMixin, ListView):
+    template_name = 'home/product/list.html'
+    model = Products
+
+
+class ProductDetailView(DetailView):
+    template_name = 'home/product/detail.html'
+    model = Products
+    context_object_name = 'product_detail'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        p_slug = self.kwargs.get('slug')
+        obj = Products.objects.get(pk=p_slug)
+        category = obj.categories
+        context['similar_product'] = Products.objects.filter(
+            categories__name=category).exclude(slug=p_slug)
+        return context
+
 
 class ContactView(CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
     success_url = reverse_lazy('contact')
-  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,7 +71,6 @@ class ContactView(CreateView):
         message = request.POST.get('message')
         obj = Message.objects.create(
             first_name=first_name, last_name=last_name, email=email, phone=phone, message=message)
-      
         return redirect('contact')
 
     def form_valid(self, form):
@@ -62,5 +85,3 @@ class ContactView(CreateView):
         else:
             pass
         return super().form_valid(form)
-
-

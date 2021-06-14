@@ -371,34 +371,36 @@ class CustomerDeleteView(DeleteMixin, DeleteView):
 
 # Testimonial view
 
-class TestimonialListView(NonDeletedItemMixin, SidebarMixin,ListView):
+class TestimonialListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/testimonial/list.html'
     model = Testimonials
-    success_url = reverse_lazy('dashboard:testimonials') 
-    
+    success_url = reverse_lazy('dashboard:testimonials')
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
                     name__contains=self.request.GET.get("name"))
-        return queryset   
-    
+        return queryset
+
+
 class TestimonialCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/testimonial/form.html'
     form_class = TestimonialCreateForm
-    success_url = reverse_lazy('dashboard:testimonials')  
+    success_url = reverse_lazy('dashboard:testimonials')
 
 
 class TestimonialUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/testimonial/form.html'
     model = Testimonials
     form_class = TestimonialCreateForm
-    success_url = reverse_lazy('dashboard:testimonials')  
+    success_url = reverse_lazy('dashboard:testimonials')
+
 
 class TestimonialDeleteView(DeleteMixin, DeleteView):
     model = Testimonials
-    success_url = reverse_lazy('dashboard:testimonials')  
+    success_url = reverse_lazy('dashboard:testimonials')
 
 
 # tag view starts here
@@ -427,46 +429,46 @@ class TagDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:tags')
 
 
-
 # Blogs view
 
-class BlogListView(NonDeletedItemMixin, SidebarMixin,ListView):
+class BlogListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/blog/list.html'
     model = Blog
-    success_url = reverse_lazy('dashboard:blogs') 
-    
+    success_url = reverse_lazy('dashboard:blogs')
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if "title" in self.request.GET:
             if self.request.GET.get('title') != '':
                 queryset = queryset.filter(
                     title__contains=self.request.GET.get("title"))
-                
+
         if "quotes_by" in self.request.GET:
             if self.request.GET.get('quotes_by') != '':
                 queryset = queryset.filter(
                     quotes_by__contains=self.request.GET.get("quotes_by"))
-        return queryset   
-    
+        return queryset
+
+
 class BlogCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/blog/form.html'
     form_class = BlogCreateForm
-    success_url = reverse_lazy('dashboard:blogs')  
+    success_url = reverse_lazy('dashboard:blogs')
 
 
 class BlogUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/blog/form.html'
     model = Blog
     form_class = BlogCreateForm
-    success_url = reverse_lazy('dashboard:blogs')  
+    success_url = reverse_lazy('dashboard:blogs')
+
 
 class BlogDeleteView(DeleteMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('dashboard:blogs')
-   
 
 
-# contact 
+# contact
 class ContactListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/contact/list.html'
     model = Contact
@@ -497,7 +499,9 @@ class ContactDeleteView(DeleteMixin, DeleteView):
     model = Contact
     success_url = reverse_lazy('dashboard:contact-list')
 
-# service 
+# service
+
+
 class ServiceListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/service/list.html'
     model = service
@@ -528,7 +532,9 @@ class ServiceDeleteView(DeleteMixin, DeleteView):
     model = service
     success_url = reverse_lazy('dashboard:services')
 
-# message 
+# message
+
+
 class MessageListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/message/list.html'
     model = Message
