@@ -95,7 +95,7 @@ class PasswordResetView(View):
         messages.success(
             self.request, "Password reset code is sent")
 
-        return redirect(reverse_lazy('dashboard:user-list'))
+        return redirect(reverse_lazy('dashboard:users'))
 
 
 # password change view
