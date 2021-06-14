@@ -6,6 +6,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
 from django.db.models.query_utils import Q
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.crypto import get_random_string
@@ -52,49 +53,49 @@ class LogoutView(View):
 
 # password reset view
 
-# class ForgotPasswordView(FormView):
-#     template_name = 'dashboard/auth/reset-password.html'
-#     form_class = PasswordResetForm
-#     success_url = reverse_lazy('dashboard:login')
+class ForgotPasswordView(FormView):
+    template_name = 'dashboard/auth/reset-password.html'
+    form_class = PasswordResetForm
+    success_url = reverse_lazy('dashboard:login')
 
-#     def form_valid(self, form):
-#         email = form.cleaned_data['email']
-#         user = User.objects.filter(email=email).first()
-#         password = get_random_string(8)
-#         user.set_password(password)
-#         user.save(update_fields=['password'])
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        user = User.objects.filter(email=email).first()
+        password = get_random_string(8)
+        user.set_password(password)
+        user.save(update_fields=['password'])
 
-#         text_content = 'Your password has been changed. {} '.format(password)
-#         send_mail(
-#             'Password Reset | Ekocart',
-#             text_content,
-#             conf_settings.EMAIL_HOST_USER,
-#             [email],
-#             fail_silently=False,
-#         )
-#         messages.success(self.request, "Password reset code is sent")
-#         return super().form_valid(form)
+        text_content = 'Your password has been changed. {} '.format(password)
+        send_mail(
+            'Password Reset | Ekocart',
+            text_content,
+            conf_settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+        messages.success(self.request, "Password reset code is sent")
+        return super().form_valid(form)
 
 
-# class PasswordResetView(View):
-#     def get(self, request, *args, **kwargs):
-#         account = Account.objects.filter(pk=self.kwargs.get("pk")).first()
-#         password = get_random_string(8)
-#         account.set_password(password)
-#         account.save(update_fields=['password'])
+class PasswordResetView(View):
+    def get(self, request, *args, **kwargs):
+        account = Account.objects.filter(pk=self.kwargs.get("pk")).first()
+        password = get_random_string(8)
+        account.set_password(password)
+        account.save(update_fields=['password'])
 
-#         text_content = 'Your password has been changed. {} '.format(password)
-#         send_mail(
-#             'Password Reset | Ekocart',
-#             text_content,
-#             conf_settings.EMAIL_HOST_USER,
-#             [account.email],
-#             fail_silently=False,
-#         )
-#         messages.success(
-#             self.request, "Password reset code is sent")
+        text_content = 'Your password has been changed. {} '.format(password)
+        send_mail(
+            'Password Reset | Ekocart',
+            text_content,
+            conf_settings.EMAIL_HOST_USER,
+            [account.email],
+            fail_silently=False,
+        )
+        messages.success(
+            self.request, "Password reset code is sent")
 
-#         return redirect(reverse_lazy('dashboard:user-list'))
+        return redirect(reverse_lazy('dashboard:users'))
 
 
 # password change view
@@ -117,7 +118,7 @@ class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, 
     success_url = reverse_lazy('dashboard:users')
 
     def get_success_url(self):
-        return reverse('dashboard:passwordreset', kwargs={'pk': self.object.pk})
+        return reverse('dashboard:reset-password', kwargs={'pk': self.object.pk})
 
 
 class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, ListView):
@@ -370,34 +371,36 @@ class CustomerDeleteView(DeleteMixin, DeleteView):
 
 # Testimonial view
 
-class TestimonialListView(NonDeletedItemMixin, SidebarMixin,ListView):
+class TestimonialListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/testimonial/list.html'
     model = Testimonials
-    success_url = reverse_lazy('dashboard:testimonials') 
-    
+    success_url = reverse_lazy('dashboard:testimonials')
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
                     name__contains=self.request.GET.get("name"))
-        return queryset   
-    
+        return queryset
+
+
 class TestimonialCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/testimonial/form.html'
     form_class = TestimonialCreateForm
-    success_url = reverse_lazy('dashboard:testimonials')  
+    success_url = reverse_lazy('dashboard:testimonials')
 
 
 class TestimonialUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/testimonial/form.html'
     model = Testimonials
     form_class = TestimonialCreateForm
-    success_url = reverse_lazy('dashboard:testimonials')  
+    success_url = reverse_lazy('dashboard:testimonials')
+
 
 class TestimonialDeleteView(DeleteMixin, DeleteView):
     model = Testimonials
-    success_url = reverse_lazy('dashboard:testimonials')  
+    success_url = reverse_lazy('dashboard:testimonials')
 
 
 # tag view starts here
@@ -426,46 +429,46 @@ class TagDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:tags')
 
 
-
 # Blogs view
 
-class BlogListView(NonDeletedItemMixin, SidebarMixin,ListView):
+class BlogListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/blog/list.html'
     model = Blog
-    success_url = reverse_lazy('dashboard:blogs') 
-    
+    success_url = reverse_lazy('dashboard:blogs')
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if "title" in self.request.GET:
             if self.request.GET.get('title') != '':
                 queryset = queryset.filter(
                     title__contains=self.request.GET.get("title"))
-                
+
         if "quotes_by" in self.request.GET:
             if self.request.GET.get('quotes_by') != '':
                 queryset = queryset.filter(
                     quotes_by__contains=self.request.GET.get("quotes_by"))
-        return queryset   
-    
+        return queryset
+
+
 class BlogCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/blog/form.html'
     form_class = BlogCreateForm
-    success_url = reverse_lazy('dashboard:blogs')  
+    success_url = reverse_lazy('dashboard:blogs')
 
 
 class BlogUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/blog/form.html'
     model = Blog
     form_class = BlogCreateForm
-    success_url = reverse_lazy('dashboard:blogs')  
+    success_url = reverse_lazy('dashboard:blogs')
+
 
 class BlogDeleteView(DeleteMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('dashboard:blogs')
-   
 
 
-# contact 
+# contact
 class ContactListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/contact/list.html'
     model = Contact
@@ -496,7 +499,9 @@ class ContactDeleteView(DeleteMixin, DeleteView):
     model = Contact
     success_url = reverse_lazy('dashboard:contact-list')
 
-# service 
+# service
+
+
 class ServiceListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/service/list.html'
     model = service
@@ -527,7 +532,9 @@ class ServiceDeleteView(DeleteMixin, DeleteView):
     model = service
     success_url = reverse_lazy('dashboard:services')
 
-# message 
+# message
+
+
 class MessageListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/message/list.html'
     model = Message

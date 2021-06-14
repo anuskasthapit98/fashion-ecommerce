@@ -5,7 +5,6 @@ from django.db import models
 from django.utils import timezone
 
 
-
 ORDER_STATUS = (
     ("Order Received", "Order Received"),
     ("Order Processing", "Order Processing"),
@@ -43,6 +42,8 @@ class DateTimeModel(models.Model):
             return super().delete()
 
 # Account Model
+
+
 class Account(User):
     mobile = models.CharField(max_length=250)
     address = models.CharField(max_length=250)
@@ -57,6 +58,8 @@ class Account(User):
         return self.username
 
 # Customer Model
+
+
 class Customer(DateTimeModel):
     first_name = models.CharField(max_length=50, default="New User")
     last_name = models.CharField(max_length=50, default="New User")
@@ -98,6 +101,8 @@ class Category(DateTimeModel):
         return ' -> '.join(full_path[::-1])
 
 # Brand Model
+
+
 class Brands(DateTimeModel):
     name = models.CharField(max_length=250)
     logo = models.ImageField(upload_to="brands")
@@ -111,6 +116,8 @@ class Brands(DateTimeModel):
         return self.name
 
 # Size Model
+
+
 class Size(DateTimeModel):
     name = models.CharField(max_length=250)
 
@@ -123,6 +130,8 @@ class Size(DateTimeModel):
         return self.name
 
 # Product Image Model
+
+
 class ProductImage(DateTimeModel):
     image = models.ImageField(upload_to="products")
 
@@ -132,7 +141,17 @@ class Color(DateTimeModel):
     image = models.ImageField(upload_to="color")
     title = models.CharField(max_length=200)
 
+    class Meta:
+        verbose_name = ('Color')
+        verbose_name_plural = ('Sizes')
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
 # products model
+
+
 class Products(DateTimeModel):
     categories = models.ForeignKey(Category, on_delete=models.CASCADE)
     brands = models.ForeignKey(Brands, on_delete=models.CASCADE)
@@ -190,12 +209,13 @@ class Coupon(DateTimeModel):
 
 # billingadress model
 
-class BillingAddress(DateTimeModel): 
+
+class BillingAddress(DateTimeModel):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.EmailField()
     phone = models.CharField(max_length=200)
-    company_name = models.CharField(max_length=200,null=True, blank=True)
+    company_name = models.CharField(max_length=200, null=True, blank=True)
     province = models.CharField(max_length=200)
     address_one = models.CharField(max_length=200)
     address_two = models.CharField(max_length=200, blank=True, null=True)
@@ -211,26 +231,26 @@ class BillingAddress(DateTimeModel):
 
 
 # cart model
-class Cart(DateTimeModel):    
-    products = models.ManyToManyField(Products) 
+class Cart(DateTimeModel):
+    products = models.ManyToManyField(Products)
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = ('Cart')
         verbose_name_plural = ('Carts')
-        
-        
+
     def __str__(self):
         return "Product: " + str(self.products.slug)
 
 # order model
 
-class Order(DateTimeModel): 
+
+class Order(DateTimeModel):
     code = models.CharField(max_length=50, unique=True)
     coupon = models.ForeignKey(
         Coupon, on_delete=models.CASCADE, blank=True, null=True)
     product = models.ManyToManyField(Products)
-    address = models.ForeignKey(BillingAddress,on_delete=models.CASCADE)
+    address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE)
     subtotal = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
     status = models.CharField(max_length=50, choices=ORDER_STATUS)
@@ -251,30 +271,31 @@ class Order(DateTimeModel):
 
 # wishlist model
 
-class Wishlist(DateTimeModel): 
+class Wishlist(DateTimeModel):
     products = models.ForeignKey(Products, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = ('Wishlist')
         verbose_name_plural = ('Wishlists')
-        
-        
-    def __str__(self):
-        return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
+
+        def __str__(self):
+            return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
 
 # cartproduct model
 
+
 class CartProduct(models.Model):
-    cart = models.ForeignKey(Cart, on_delete = models.CASCADE)
-    product = models.ForeignKey(Products, on_delete = models.CASCADE)
-    rate = models.PositiveIntegerField(default = 0)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    rate = models.PositiveIntegerField(default=0)
     quantity = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
 
     def str(self):
         return "Cart: " + str(self.cart.id) + " CartProduct: " + str(self.id)
-    
+
 # testimonials model
+
 
 class Testimonials(DateTimeModel):
     image = models.ImageField(upload_to="testimonials")
@@ -286,33 +307,35 @@ class Testimonials(DateTimeModel):
         verbose_name = ('Testimonial')
         verbose_name_plural = ('Testimonials')
         ordering = ['name']
-        
+
     def __str__(self):
         return self.name
 
 # Tag model
+
+
 class Tag(DateTimeModel):
-    title = models.CharField(max_length=200, unique= True)
+    title = models.CharField(max_length=200, unique=True)
 
     class Meta:
         verbose_name = ('Tags')
         verbose_name_plural = ('Tags')
         ordering = ['-created_at']
 
-        
     def __str__(self):
         return self.title
-    
+
 
 # blog model
+
 
 class Blog(DateTimeModel):
     title = models.CharField(max_length=200)
     tags = models.ManyToManyField(Tag)
     description = RichTextField()
     image = models.ImageField(upload_to="blog")
-    quotes =  models.TextField(max_length=400, null= True, blank= True)
-    quotes_by = models.CharField(max_length=200, null= True, blank= True)
+    quotes = models.TextField(max_length=400, null=True, blank=True)
+    quotes_by = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateField()
 
     class Meta:
@@ -324,9 +347,8 @@ class Blog(DateTimeModel):
         return self.title
 
 
-
 # service model
-    
+
 class service(DateTimeModel):
     image = models.ImageField(upload_to="service")
     title = models.CharField(max_length=200)
@@ -336,28 +358,29 @@ class service(DateTimeModel):
         verbose_name = ('Service')
         verbose_name_plural = ('Services')
         ordering = ['title']
-        
+
     def __str__(self):
         return self.title
 
 # contact model
+
 
 class Contact(DateTimeModel):
     address = models.CharField(max_length=200)
     email = models.EmailField(max_length=200)
     phone = models.CharField(max_length=200)
     working_hours = models.CharField(max_length=200)
-    
 
     class Meta:
         verbose_name = ('Contact')
         verbose_name_plural = ('Contacts')
         ordering = ['email']
-        
+
     def __str__(self):
         return self.email
 
 # ads model
+
 
 class Ads(DateTimeModel):
     image = models.ImageField(upload_to="ads")
@@ -367,11 +390,12 @@ class Ads(DateTimeModel):
         verbose_name = ('Ads')
         verbose_name_plural = ('Ads')
         ordering = ['title']
-        
+
     def __str__(self):
         return self.title
 
-# newsletter model 
+# newsletter model
+
 
 class Subscription(DateTimeModel):
     email = models.EmailField()
@@ -380,6 +404,7 @@ class Subscription(DateTimeModel):
         return self.email
 
 # message model
+
 
 class Message(DateTimeModel):
     first_name = models.CharField(max_length=200)
@@ -391,7 +416,6 @@ class Message(DateTimeModel):
     class Meta:
         verbose_name = ('Message')
         verbose_name_plural = ('Message')
-        
-        
+
     def __str__(self):
         return self.first_name
