@@ -52,9 +52,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">S.N</th>
-                                    <th scope="col">Name</th>
+                                    <th scope="col" width='25%'>Name</th>
                                     <th scope="col">Logo</th>
-                                    <th>Action</th>
+                                    <th width='20%'>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,9 +62,9 @@
                                 <tr>
                                     <td scope="row">{{ forloop.counter }}</td>
                                     <td>{{ brand.name }}</td>
-                                    <td><img src="{{ brand.logo.url}}" style="width: 20%"/></td>
+                                    <td><img src="{{ brand.logo.url}}" style="width: 20%;"/></td>
                                     <td>
-                                    <span>
+                                        <span>
                                             <a href="{% url 'dashboard:brand-update' brand.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
                                         </span>
                                         <span>
