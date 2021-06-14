@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'dashboard',
     'home',
     'ckeditor',
+    'active_link',
     'rest_framework',
     'active_link',
 ]

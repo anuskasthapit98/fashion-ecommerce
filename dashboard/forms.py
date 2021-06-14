@@ -13,17 +13,12 @@ from .models import *
 class UserForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['username', 'email', 'address', 'image', 'mobile', 'groups']
+        fields = ['username', 'email', 'address', 'image', 'mobile']
         widgets = {
             'image': forms.ClearableFileInput(attrs={
                 'onchange': 'preview()'
             })
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['groups'].widget.attrs.update(
-            {'class': 'form-control select2 feature-select'})
 
     def clean(self):
         cleaned_data = super().clean()
@@ -48,6 +43,8 @@ class UserForm(FormControlMixin, forms.ModelForm):
             })
 
 # login form
+
+
 class StaffLoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -230,7 +227,8 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
                     'mobile': 'Invalid mobile no.'
                 })
 
-#Testimonial create form
+# Testimonial create form
+
 
 class TestimonialCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
@@ -242,18 +240,19 @@ class TestimonialCreateForm(FormControlMixin, forms.ModelForm):
                 'placeholder': 'choose image'
             }),
         }
-        
-#Tags create form
+
+# Tags create form
+
 
 class TagCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Tag
         fields = '__all__'
 
-        
-#Blog create form
 
-class BlogCreateForm(FormControlMixin,forms.ModelForm):
+# Blog create form
+
+class BlogCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Blog
         fields = '__all__'
@@ -267,7 +266,7 @@ class BlogCreateForm(FormControlMixin,forms.ModelForm):
                 'placeholder': datetime.date.today()
             }),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['tags'].widget.attrs.update({
