@@ -139,4 +139,9 @@ urlpatterns = [
          ColorUpdateView.as_view(), name='color-update'),
     path('dashboard/color/<int:pk>/delete/',
          ColorDeleteView.as_view(), name='color-delete'),
+
+     #newsletter urls
+    path('dashboard/newsletter/list/', NewsletterListView.as_view(), name='newsletters'),
+    path('dashboard/newsletter/<int:pk>/delete/',
+         NewsletterDeleteView.as_view(), name='newsletter-delete'),
 ]

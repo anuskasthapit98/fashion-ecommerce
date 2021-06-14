@@ -10,5 +10,14 @@ urlpatterns = [
     path('products/list/', ProductListView.as_view(), name='product-list'),
     path('products/<slug:slug>/detail/',
          ProductDetailView.as_view(), name='product-detail'),
+
+     #contact    
     path('contact/', ContactView.as_view(), name="contact"),
+
+    #Newsletter
+    path('newsletter/', SubscriptionView.as_view(), name='newsletter'),
+
+
+
+
 ]

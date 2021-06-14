@@ -143,7 +143,7 @@ class Color(DateTimeModel):
 
     class Meta:
         verbose_name = ('Color')
-        verbose_name_plural = ('Sizes')
+        verbose_name_plural = ('Colors')
         ordering = ['title']
 
     def __str__(self):
@@ -278,7 +278,7 @@ class Wishlist(DateTimeModel):
         verbose_name = ('Wishlist')
         verbose_name_plural = ('Wishlists')
 
-        def __str__(self):
+    def __str__(self):
             return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
 
 # cartproduct model

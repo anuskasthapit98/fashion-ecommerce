@@ -600,3 +600,25 @@ class ColorUpdateView(UpdateView, SidebarMixin):
 class ColorDeleteView(DeleteMixin, DeleteView):
     model = Color
     success_url = reverse_lazy('dashboard:colors')
+
+# newsletter view starts here
+
+
+class NewsletterListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/newsletter/list.html'
+    model = Subscription
+
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "email" in self.request.GET:
+            if self.request.GET.get('email') != '':
+                queryset = queryset.filter(
+                    email__contains=self.request.GET.get("email"))
+        return queryset
+
+
+
+class NewsletterDeleteView(DeleteMixin, DeleteView):
+    model = Subscription
+    success_url = reverse_lazy('dashboard:newsletters')

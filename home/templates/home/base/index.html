@@ -611,7 +611,7 @@
 
 <section class="bg-light">
 
- {% csrf_token %}
+
   <div class="container">
     <div class="row justify-content-center text-center mb-8">
       <div class="col-lg-6 col-md-10">
@@ -622,7 +622,7 @@
           <h2 class="mb-0">Subscribe Our Newsletter</h2>
         </div>
         <div class="subscribe-form">
-          <form id="mc-form" class="row align-items-center no-gutters mb-3" action="#" method="POST">
+          <form id="mc-form" class="row align-items-center no-gutters mb-3" action="{% url 'home:newsletter' %}" method="POST">
             {% csrf_token %}
             <div class="col">
               <input name="email" class="email form-control input-2 bg-white" id="mc-email" placeholder="Email Address" required="" type="email">

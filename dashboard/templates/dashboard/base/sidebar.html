@@ -123,6 +123,12 @@
                 <span class="nav-text">Message</span>
               </a>
             </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:newsletters' %}">
+                <i class="mdi mdi-message-bulleted"></i>
+                <span class="nav-text">Newsletter</span>
+              </a>
+            </li>
               {% if request.user.is_superuser %}
               
                   <li  class="has-sub " >
