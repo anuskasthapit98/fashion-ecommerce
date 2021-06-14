@@ -12,7 +12,7 @@ from django.contrib import messages
 from dashboard.forms import MessageForm
 from dashboard.models import *
 
-from dashboard.mixin import NonDeletedItemMixin
+from dashboard.mixines import NonDeletedItemMixin
 # Create your views here.
 
 

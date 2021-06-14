@@ -143,7 +143,7 @@ class Color(DateTimeModel):
 
     class Meta:
         verbose_name = ('Color')
-        verbose_name_plural = ('Sizes')
+        verbose_name_plural = ('Colors')
         ordering = ['title']
 
     def __str__(self):
