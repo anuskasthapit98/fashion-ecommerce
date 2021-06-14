@@ -70,6 +70,12 @@
                 <span class="nav-text">Categories</span>
               </a>
             </li>
+            <li  class="has-sub" >
+                <a class="sidenav-item-link" href="{% url 'dashboard:colors' %}">
+                  <i class="mdi mdi-view-list"></i>
+                  <span class="nav-text">Colors</span>
+                </a>
+              </li>
            
            
                <li  class="has-sub {% active_link 'dashboard:sizes' 'active' %}" >
@@ -119,6 +125,12 @@
               <a class="sidenav-item-link" href="{% url 'dashboard:messages' %}">
                 <i class="mdi mdi-message-bulleted"></i>
                 <span class="nav-text">Message</span>
+              </a>
+            </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:newsletters' %}">
+                <i class="mdi mdi-message-bulleted"></i>
+                <span class="nav-text">Newsletter</span>
               </a>
             </li>
               {% if request.user.is_superuser %}
