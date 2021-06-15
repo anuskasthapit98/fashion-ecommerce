@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.urls.base import clear_script_prefix
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.views.generic.base import View
 from django.urls import reverse_lazy
@@ -8,6 +9,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.conf import settings
 from django.contrib import messages
+from django.views.generic.edit import FormView
 
 from dashboard.forms import MessageForm
 from dashboard.models import *
@@ -51,6 +53,7 @@ class ProductDetailView(DetailView):
 
 # contact
 
+
 class ContactView(CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
@@ -89,6 +92,7 @@ class ContactView(CreateView):
 
 # newsletter
 
+
 class SubscriptionView(View):
     def post(self, request, *args, **kwargs):
         email = self.request.POST.get('email')
@@ -112,4 +116,54 @@ class SubscriptionView(View):
             message.send()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# cart funtionality view
 
+
+class AddToCartView(View):
+    # template_name = 'home/cart/add-to-cart.html'
+
+    def get(self, request, *args, **kwargs):
+
+        # getting product id
+        product_id = self.kwargs['pro_id']
+        # get product
+        product_obj = Products.objects.get(id=product_id)
+        # check if cart exists of not
+        cart_id = self.request.session.get('cart_id')
+        # if cart exists
+        if cart_id:
+            cart_obj = Cart.objects.get(id=cart_id)
+            # checking for product existance
+            this_product_in_cart = cart_obj.cartproduct_set.filter(
+                product=product_obj)
+            if this_product_in_cart:
+                cartproduct = this_product_in_cart.last()
+                cartproduct.quantity += 1
+                cartproduct.subtotal += product_obj.price
+                cartproduct.save()
+                cart_obj.total += product_obj.price
+                cart_obj.save()
+                messages.success(self.request, "Item added to cart")
+            else:
+                cartproduct = CartProduct.objects.create(
+                    cart=cart_obj, product=product_obj, rate=product_obj.price, quantity=1,
+                    subtotal=product_obj.price, size='-')
+                cart_obj.total += product_obj.price
+                cart_obj.save()
+                messages.success(self.request, "Item added to cart")
+
+        # if cart does not exists
+        else:
+            cart_obj = Cart.objects.create(total=0)
+            self.request.session['cart_id'] = cart_obj.id
+            cartproduct = CartProduct.objects.create(
+                cart=cart_obj, product=product_obj, rate=product_obj.price, quantity=1,
+                subtotal=product_obj.price, size='-')
+            cart_obj.total += product_obj.price
+            cart_obj.save()
+            messages.success(self.request, "Item added to cart")
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
+    # def get_successurl(self):
+    #     messages.success(self.request, "Item added to cart")
+    #     return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))

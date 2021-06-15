@@ -82,13 +82,12 @@ class Category(DateTimeModel):
     img = models.ImageField(upload_to="category")
     parent = models.ForeignKey('self', related_name="sub_Category",
                                on_delete=models.CASCADE, null=True, blank=True, )
-    slug = models.SlugField(unique=True, primary_key=True)
     description = RichTextField()
 
     class Meta:
         verbose_name = ('Category')
         verbose_name_plural = ('Categories')
-        ordering = ['slug']
+        ordering = ['name']
 
     def __str__(self):
 
@@ -161,7 +160,7 @@ class Products(DateTimeModel):
     size = models.ManyToManyField(Size)
     price = models.PositiveIntegerField()
     status = models.BooleanField(default=True)
-    slug = models.SlugField(unique=True, primary_key=True)
+    slug = models.SlugField(unique=True)
     color = models.ManyToManyField(Color)
     vat_incl = models.BooleanField(default=False)
     vat_percent = models.DecimalField(
@@ -232,15 +231,33 @@ class BillingAddress(DateTimeModel):
 
 # cart model
 class Cart(DateTimeModel):
-    products = models.ManyToManyField(Products)
-    quantity = models.PositiveIntegerField(default=1)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=True, blank=True)
+    vat = models.DecimalField(
+        max_digits=50, decimal_places=2, null=True, blank=True)
+    total = models.DecimalField(max_digits=50, decimal_places=2)
 
     class Meta:
         verbose_name = ('Cart')
         verbose_name_plural = ('Carts')
 
     def __str__(self):
-        return "Product: " + str(self.products.slug)
+        return f"Cart: {self.id}"
+
+# cartproduct model
+
+
+class CartProduct(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    rate = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField()
+    size = models.CharField(max_length=200, null=True, blank=True)
+    subtotal = models.PositiveIntegerField()
+
+    def str(self):
+        return "Cart: " + str(self.cart.id) + " CartProduct: " + str(self.id)
+
 
 # order model
 
@@ -281,18 +298,6 @@ class Wishlist(DateTimeModel):
     def __str__(self):
         return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
 
-# cartproduct model
-
-
-class CartProduct(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
-    rate = models.PositiveIntegerField(default=0)
-    quantity = models.PositiveIntegerField()
-    subtotal = models.PositiveIntegerField()
-
-    def str(self):
-        return "Cart: " + str(self.cart.id) + " CartProduct: " + str(self.id)
 
 # testimonials model
 
