@@ -619,3 +619,34 @@ class NewsletterListView(NonDeletedItemMixin, SidebarMixin, ListView):
 class NewsletterDeleteView(DeleteMixin, DeleteView):
     model = Subscription
     success_url = reverse_lazy('dashboard:newsletters')
+
+
+# about 
+class AboutListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/about/list.html'
+    model = Abouts
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "title" in self.request.GET:
+            if self.request.GET.get('title') != '':
+                queryset = queryset.filter(
+                    title__contains=self.request.GET.get("title"))
+        return queryset
+
+
+class AboutCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/about/form.html'
+    form_class = AboutCreateForm
+    success_url = reverse_lazy('dashboard:abouts')
+
+class AboutUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/about/form.html'
+    model = Abouts
+    form_class = AboutCreateForm
+    success_url = reverse_lazy('dashboard:abouts')
+
+
+class AboutDeleteView(DeleteMixin, DeleteView):
+    model = Abouts
+    success_url = reverse_lazy('dashboard:abouts')

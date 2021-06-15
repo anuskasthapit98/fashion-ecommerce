@@ -43,9 +43,13 @@
             <img class="img-fluid" src="{% static 'home/assets/images/logo.png'%}" alt="">
           </a>
           <div class="media ml-lg-11"> <i class="las la-mobile-alt ic-2x bg-white rounded p-2 shadow-sm mr-2 text-primary"></i>
+         
             <div class="media-body"> <span class="mb-0 d-block">Call Us</span>
-              <a class="text-muted" href="tel:+912345678900">+91-234-567-8900</a>
+             {% for contact in contact %}
+              <a class="text-muted" href="tel:+912345678900">{{ contact.phone }}</a>
+             {% endfor %}
             </div>
+     
           </div>
         </div>
         <div class="col-md-6">
@@ -252,7 +256,7 @@
                 </li>
                 <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
-                    <li> <a href="about-us.html">About</a>
+                    <li> <a href="{% url 'home:abouts' %}">About</a>
                     </li>
                     <li> <a href="faq.html">FAQ</a>
                     </li>

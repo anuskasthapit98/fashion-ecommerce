@@ -144,6 +144,16 @@ urlpatterns = [
     path('dashboard/color/<int:pk>/delete/',
          ColorDeleteView.as_view(), name='color-delete'),
 
+     # about urls 
+
+    path('dashboard/about/list/', AboutListView.as_view(), name='abouts'),
+    path('dashboard/about/create/', AboutCreateView.as_view(), name='about-create'),
+    path('dashboard/about/<int:pk>/update/',
+         AboutUpdateView.as_view(), name='about-update'),
+    path('dashboard/about/<int:pk>/delete/',
+         AboutDeleteView.as_view(), name='about-delete'),
+
+
     # newsletter urls
     path('dashboard/newsletter/list/',
          NewsletterListView.as_view(), name='newsletters'),

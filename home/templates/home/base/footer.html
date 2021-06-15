@@ -36,7 +36,7 @@
               </li>
               <li class="mb-3 nav-item"><a class="nav-link" href="blog-card.html">Blogs</a>
               </li>
-              <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact Us</a>
+              <li class="nav-item"><a class="nav-link" href="{% url 'home:contact' %}">Contact Us</a>
               </li>
             </ul>
           </div>
@@ -78,13 +78,15 @@
           </div>
         </div>
       </div>
+      
       <div class="col-12 col-lg-3 mt-6 mt-lg-0">
+      {% for contact in contact|slice:1 %}
         <div class="d-flex mb-3">
           <div class="mr-2"> <i class="las la-map ic-2x text-primary"></i>
           </div>
           <div>
             <h6 class="mb-1 text-light">Store address</h6>
-            <p class="mb-0 text-muted">423B, Road Wordwide Country, USA</p>
+            <p class="mb-0 text-muted">{{ contact.address }}</p>
           </div>
         </div>
         <div class="d-flex mb-3">
@@ -92,7 +94,7 @@
           </div>
           <div>
             <h6 class="mb-1 text-light">Email Us</h6>
-            <a class="text-muted" href="mailto:themeht23@gmail.com"> themeht23@gmail.com</a>
+            <a class="text-muted" href="mailto:themeht23@gmail.com">{{ contact.email }}</a>
           </div>
         </div>
         <div class="d-flex mb-3">
@@ -100,7 +102,7 @@
           </div>
           <div>
             <h6 class="mb-1 text-light">Phone Number</h6>
-            <a class="text-muted" href="tel:+912345678900">+91-234-567-8900</a>
+            <a class="text-muted" href="tel:+912345678900">{{ contact.phone }}</a>
           </div>
         </div>
         <div class="d-flex">
@@ -108,14 +110,17 @@
           </div>
           <div>
             <h6 class="mb-1 text-light">Working Hours</h6>
-            <span class="text-muted">Mon - Fri: 10AM - 7PM</span>
+            <span class="text-muted">{{ contact.working_hours }}</span>
           </div>
         </div>
+         {% endfor %}
       </div>
+     
     </div>
+     
     <hr class="my-8">
     <div class="row text-muted align-items-center">
-      <div class="col-md-7">Copyright ©2020 All rights reserved | This Template is made by <i class="lar la-heart text-primary heartBeat2"></i>  <u><a class="text-primary" href="#">ThemeHt</a></u>
+      <div class="col-md-7">Copyright ©{% now Y%} All rights reserved | This Template is made by <i class="lar la-heart text-primary heartBeat2"></i>  <u><a class="text-primary" href="#">ThemeHt</a></u>
       </div>
       <div class="col-md-5 text-md-right mt-3 mt-md-0">
         <ul class="list-inline mb-0">
@@ -294,32 +299,3 @@
   </div>
 </div>
 
-<!-- Subscribe Modal -->
-<div class="modal fade" id="mailchimpModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content" data-bg-img="{% static 'home/assets/images/bg/08.png'%}">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body text-center">
-        <div class="mb-4">
-          <h6 class="text-primary mb-1">
-                  — Newsletter
-              </h6>
-          <h2 class="mb-0">Subscribe get notified!</h2>
-        </div>
-        <div class="subscribe-form">
-          <form id="mc-form1" class="row align-items-center no-gutters mb-3">
-            <div class="col">
-              <input value="" name="EMAIL" class="email form-control input-2 bg-white" id="mc-email1" placeholder="Email Address" required="" type="email">
-            </div>
-            <div class="col-auto">
-              <input class="btn btn-primary overflow-auto" name="subscribe" value="Subscribe" type="submit">
-            </div>
-          </form> <small>Get started for 1 Month free trial No Purchace required.</small>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
