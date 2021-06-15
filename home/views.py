@@ -143,6 +143,8 @@ class AddToCartView(View):
                 cartproduct.subtotal += product_obj.selling_price
                 cartproduct.save()
                 cart_obj.total += product_obj.selling_price
+                if product_obj.vat_amt:
+                    cart_obj.vat += product_obj.vat_amt
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
             # if product doesnot exists
@@ -151,17 +153,21 @@ class AddToCartView(View):
                     cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
                     subtotal=product_obj.selling_price, size='-')
                 cart_obj.total += product_obj.selling_price
+                if product_obj.vat_amt:
+                    cart_obj.vat += product_obj.vat_amt
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
 
         # if cart does not exists
         else:
-            cart_obj = Cart.objects.create(total=0)
+            cart_obj = Cart.objects.create(total=0, vat=0)
             self.request.session['cart_id'] = cart_obj.id
             cartproduct = CartProduct.objects.create(
                 cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
                 subtotal=product_obj.selling_price, size='-')
             cart_obj.total += product_obj.selling_price
+            if product_obj.vat_amt:
+                cart_obj.vat += product_obj.vat_amt
             cart_obj.save()
             messages.success(self.request, "Item added to cart")
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))

@@ -259,12 +259,34 @@ class ProductCreateView(CreateView, SidebarMixin):
     form_class = ProductForm
     success_url = reverse_lazy('dashboard:products')
 
+    def form_valid(self, form):
+        discount = form.cleaned_data.get('discount_percent')
+        vat = form.cleaned_data.get('vat_percent')
+        marked_price = form.cleaned_data.get('marked_price')
+        if discount != None:
+            form.instance.selling_price = marked_price - \
+                ((marked_price*discount)/100)
+        if vat != None:
+            form.instance.vat_amt = (marked_price*vat)/100
+        return super().form_valid(form)
+
 
 class ProductUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/product/form.html'
     model = Products
     form_class = ProductForm
     success_url = reverse_lazy('dashboard:products')
+
+    def form_valid(self, form):
+        discount = form.cleaned_data.get('discount_percent')
+        vat = form.cleaned_data.get('vat_percent')
+        marked_price = form.cleaned_data.get('marked_price')
+        if discount != None:
+            form.instance.selling_price = marked_price - \
+                ((marked_price*discount)/100)
+        if vat != None:
+            form.instance.vat_amt = (marked_price*vat)/100
+        return super().form_valid(form)
 
 
 class ProductDeleteView(DeleteMixin, DeleteView):
@@ -570,7 +592,6 @@ class ColorListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/color/list.html'
     model = Color
 
-    
     def get_queryset(self):
         queryset = super().get_queryset()
         if "title" in self.request.GET:
@@ -578,7 +599,6 @@ class ColorListView(NonDeletedItemMixin, SidebarMixin, ListView):
                 queryset = queryset.filter(
                     title__contains=self.request.GET.get("title"))
         return queryset
-
 
 
 class ColorCreateView(CreateView, SidebarMixin):
@@ -605,7 +625,6 @@ class NewsletterListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/newsletter/list.html'
     model = Subscription
 
-    
     def get_queryset(self):
         queryset = super().get_queryset()
         if "email" in self.request.GET:
@@ -613,7 +632,6 @@ class NewsletterListView(NonDeletedItemMixin, SidebarMixin, ListView):
                 queryset = queryset.filter(
                     email__contains=self.request.GET.get("email"))
         return queryset
-
 
 
 class NewsletterDeleteView(DeleteMixin, DeleteView):
