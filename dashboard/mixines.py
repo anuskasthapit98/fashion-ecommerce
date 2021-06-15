@@ -6,16 +6,6 @@ from django.views.generic.base import TemplateView
 from dashboard.models import Category
 
 
-class AdminRequiredMixin(object):
-    def dispatch(self, request, *args, **kwargs):
-        user = request.user
-        if user.is_authenticated and user.is_superuser:
-            pass
-        else:
-            return redirect('/login/')
-        return super().dispatch(request, *args, *kwargs)
-
-
 class StaffRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         user = request.user
@@ -28,12 +18,13 @@ class StaffRequiredMixin(object):
 
 class CustomLoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
+
         user = request.user
-        if user.is_superuser and user.is_staff:
+        if user.is_superuser or (user.is_staff and user.is_active):
             pass
         else:
-            return redirect('/login/')
-        return super().dispatch(request, *args, *kwargs)
+            return redirect('dashboard:login')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class DeleteMixin(object):

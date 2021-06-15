@@ -351,7 +351,7 @@
                 <div class="card product-card">
                   <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="lar la-heart"></i>
                   </button>
-                  <a class="card-img-hover d-block" href="{% url 'home:product-detail' related.slug %}">
+                  <a class="card-img-hover d-block" href="{% url 'home:product-detail' related.id %}">
                         {% for img in related.image.all|slice:1 %}
                         <img class="card-img-top card-img-back" src="{{ img.image.url }}" alt="{{ related.name }}">
                         {% endfor %}
@@ -361,7 +361,7 @@
                   </a>
                   <div class="card-info">
                     <div class="card-body">
-                      <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' related.slug %}">{{ related.name }}</a>
+                      <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' related.id %}">{{ related.name }}</a>
                       </div>
                       <div class="mt-1"> <span class="product-price"><del class="text-muted">Nrs. {{ related.price }}</del> $25.00</span>
                         <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>

@@ -25,6 +25,17 @@ class LoginView(FormView):
     form_class = StaffLoginForm
     success_url = reverse_lazy('dashboard:dashboard')
 
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        pword = form.cleaned_data['password']
+        user = authenticate(username=username, password=pword)
+
+        if user is not None:
+            login(self.request, user)
+            user.is_active = True
+
+        return redirect(self.success_url)
+
 
 # logout view
 class LogoutView(View):
@@ -94,21 +105,20 @@ class PasswordsChangeView(PasswordChangeView):
 # user
 
 
-class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, CreateView):
+class UserCreateView(SuperAdminRequiredMixin, SidebarMixin, CreateView):
     template_name = 'dashboard/user/form.html'
     form_class = UserForm
     success_url = reverse_lazy('dashboard:users')
 
     def form_valid(self, form):
         form.instance.is_staff = True
-        print(form.instance.is_staff, 9999999999999999)
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('dashboard:reset-password', kwargs={'pk': self.object.pk})
 
 
-class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, ListView):
+class UsersListView(SuperAdminRequiredMixin, SidebarMixin, ListView):
     template_name = 'dashboard/user/list.html'
     model = Account
     success_url = reverse_lazy('dashboard:users')
@@ -131,7 +141,7 @@ class UserToggleStatusView(View):
 # dashboard views
 
 
-class AdminDashboardView(SidebarMixin, TemplateView):
+class AdminDashboardView(CustomLoginRequiredMixin, SidebarMixin, TemplateView):
     template_name = 'dashboard/base/index.html'
 
 

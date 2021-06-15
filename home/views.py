@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.urls.base import clear_script_prefix
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.views.generic.base import View
 from django.urls import reverse_lazy
@@ -8,6 +9,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.conf import settings
 from django.contrib import messages
+from django.views.generic.edit import FormView
 
 
 from dashboard.forms import MessageForm
@@ -48,11 +50,11 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        p_slug = self.kwargs.get('slug')
-        obj = Products.objects.get(pk=p_slug)
+        p_id = self.kwargs.get('pk')
+        obj = Products.objects.get(pk=p_id)
         category = obj.categories
         context['similar_product'] = Products.objects.filter(
-            categories__name=category).exclude(slug=p_slug)
+            categories__name=category).exclude(pk=p_id)
         return context
 
 # about
@@ -72,6 +74,7 @@ class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
        return context
 
 # contact
+
 
 class ContactView(CreateView):
     template_name = 'home/contact/contact.html'
@@ -111,6 +114,7 @@ class ContactView(CreateView):
 
 # newsletter
 
+
 class SubscriptionView(View):
     def post(self, request, *args, **kwargs):
         email = self.request.POST.get('email')
@@ -134,4 +138,52 @@ class SubscriptionView(View):
             message.send()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# cart funtionality view
 
+
+class AddToCartView(View):
+    # template_name = 'home/cart/add-to-cart.html'
+
+    def get(self, request, *args, **kwargs):
+
+        # getting product id
+        product_id = self.kwargs['pro_id']
+        # get product
+        product_obj = Products.objects.get(id=product_id)
+        # check if cart exists of not
+        cart_id = self.request.session.get('cart_id')
+        # if cart exists
+        if cart_id:
+            cart_obj = Cart.objects.get(id=cart_id)
+            # checking for product existance
+            this_product_in_cart = cart_obj.cartproduct_set.filter(
+                product=product_obj)
+            # if product already exists
+            if this_product_in_cart:
+                cartproduct = this_product_in_cart.last()
+                cartproduct.quantity += 1
+                cartproduct.subtotal += product_obj.selling_price
+                cartproduct.save()
+                cart_obj.total += product_obj.selling_price
+                cart_obj.save()
+                messages.success(self.request, "Item added to cart")
+            # if product doesnot exists
+            else:
+                cartproduct = CartProduct.objects.create(
+                    cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
+                    subtotal=product_obj.selling_price, size='-')
+                cart_obj.total += product_obj.selling_price
+                cart_obj.save()
+                messages.success(self.request, "Item added to cart")
+
+        # if cart does not exists
+        else:
+            cart_obj = Cart.objects.create(total=0)
+            self.request.session['cart_id'] = cart_obj.id
+            cartproduct = CartProduct.objects.create(
+                cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
+                subtotal=product_obj.selling_price, size='-')
+            cart_obj.total += product_obj.selling_price
+            cart_obj.save()
+            messages.success(self.request, "Item added to cart")
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))

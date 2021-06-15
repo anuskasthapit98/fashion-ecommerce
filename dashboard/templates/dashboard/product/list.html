@@ -3,54 +3,51 @@
 {% block content %}
 <div class="content-wrapper">
     <div class="content">					        
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb p-0">
-                <li class="breadcrumb-item">
-                    <a href="{% url 'dashboard:dashboard' %}">
-                    <span class="mdi mdi-home"></span>                
-                    </a>
-                </li>
-                <li class="breadcrumb-item">
-                    Our
-                </li>
-                <li class="breadcrumb-item" aria-current="page">Products</li>
-                </ol>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:dashboard' %}">
+                <span class="mdi mdi-home"></span>                
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                Our
+            </li>
+            <li class="breadcrumb-item" aria-current="page">Products</li>
+            </ol>
 
-            </nav>
-               <div class="input-group justify-content-end">
-                    <form action="{% url 'dashboard:products' %}" method="GET" class="form-inline">
-                       <input
-                            type="text"
-                            name="name"
-                            class="form-control float-right searchInput"
-                            id="Search"
-                            placeholder="name"
-                          />
-                        <input
-                            type="text"
-                            name="brands"
-                            class="form-control float-right searchInput"
-                            id="Search"
-                            placeholder="brands"
-                          />
-                        <input
-                            type="text"
-                            name="categories"
-                            class="form-control float-right searchInput"
-                            id="Search"
-                            placeholder="category"
-                          />
+        </nav>
+        <div class="input-group justify-content-end">
+            <form action="{% url 'dashboard:products' %}" method="GET" class="form-inline">
+                <input
+                    type="text"
+                    name="name"
+                    class="form-control float-right searchInput"
+                    id="Search"
+                    placeholder="name"
+                    />
+                <input
+                    type="text"
+                    name="brands"
+                    class="form-control float-right searchInput"
+                    id="Search"
+                    placeholder="brands"
+                    />
+                <input
+                    type="text"
+                    name="categories"
+                    class="form-control float-right searchInput"
+                    id="Search"
+                    placeholder="category"
+                    />
 
-                      <div class="input-group-append">
-                        <button type="submit" class="mb-1 btn btn-success">
-                          <span class="mdi mdi-magnify"></span>
-                        </button>
-                      </div>
-                    </form>
-            </div>
-           
-        
-              
+                <div class="input-group-append">
+                <button type="submit" class="mb-1 btn btn-success">
+                    <span class="mdi mdi-magnify"></span>
+                </button>
+                </div>
+            </form>
+        </div>
         <div class="row">
             
             <div class="col-12">
@@ -72,8 +69,8 @@
                                     <th scope="col">Brand</th>
                                     <th scope="col">Image</th>
                                     <th scope="col">Category</th>
-                                    <th scope="col">Subcategory</th>
-                                    <th scope="col">Price</th>
+                                    <th scope="col">Marked Price</th>
+                                    <th scope="col">Selling Price</th>
                                     <th scope="col">Discount</th>
                                     <th scope="col">Status</th>
                                     <th>Action</th>
@@ -91,9 +88,9 @@
                                         {% endfor %}
                                     </td>
                                     <td>{{ product.categories }}</td>
-                                    <td>{{ product.categories.parent }}</td>
-                                    <td>{{ product.price }}</td>
-                                    <td>{{ product.price }}</td>
+                                    <td>{{ product.marked_price }}</td>
+                                    <td>{{ product.selling_price }}</td>
+                                    <td>{{ product.discount_percent }} %</td>
                                     <td>
                                         {% if product.status %}
                                         <span>In Stock</span>
