@@ -4,7 +4,7 @@ from rest_framework import generics
 from django.shortcuts import render
 
 from dashboard.models import *
-from dashboard.mixin import NonDeletedItemMixin
+from dashboard.mixines import NonDeletedItemMixin
 from .serializers import *
 # Create your views here.
 

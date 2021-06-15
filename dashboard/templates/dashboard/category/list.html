@@ -1,100 +1,83 @@
 {% extends 'dashboard/base/index.html' %} 
+{% block title %} Categories {% endblock %}
 {% load static %} 
 {% block content %}
 
 
-    <div class="content-wrapper">
-      <div class="content">
- 
-
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb p-0">
-              <li class="breadcrumb-item">
-                <a href="index.html">
-                  <span class="mdi mdi-home"></span>
-                </a>
-              </li>
-              <li class="breadcrumb-item">components</li>
-              <li class="breadcrumb-item" aria-current="page">table</li>
-              
-            </ol>
-          </nav>
-        <div class="input-group justify-content-end">
-                        <form action="{% url 'dashboard:categories' %}" method="GET" class="form-inline">
-                          <input
-                            type="text"
-                            name="name"
-                            class="form-control float-right searchInput"
-                            id="SearchCategory"
-                            placeholder="Category name"
-                          />
-                          <div class="input-group-append">
-                            <button type="submit" class="btn btn-secondary">
-                              <span class="mdi mdi-magnify"></span>
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-  
-        
-
-        
-<div class="row">
+  <div class="content-wrapper">
+    <div class="content">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item">
+              <a href="index.html">
+                <span class="mdi mdi-home"></span>
+              </a>
+            </li>
+            <li class="breadcrumb-item">components</li>
+            <li class="breadcrumb-item" aria-current="page">table</li>
             
-            <div class="col-12">
-                <div class="card card-default">
-                    <div class="card-header card-header-border-bottom justify-content-between">
-											<h2>CATEGORIES</h2>
-                    <a href="{% url 'dashboard:category-create' %}"  type="button" class="mb-1 btn btn-outline-primary">Add Category</a>
-
-                   
-                      
-</div>
-         
-                     
-									
-										<div class="card-body">
-											{% comment %} <p class="mb-5">Similar to tables and dark tables, use the modifier classes <code>.thead-light</code> or <code>.thead-dark</code> to make &lt;thead&gt;s appear light or dark gray. Read bootstrap documentation for <a href="http://getbootstrap.com/docs/4.1/content/tables/#table-head-options" target="_blank"> more details.</a></p> {% endcomment %}
-											<table class="table table-hover ">
-												<thead>
-													<tr>
-														<th scope="col">SID</th>
-														<th scope="col">Category</th>
-														<th scope="col">Description</th>
-														<th scope="col">Image</th>
-                            <th scope="col">Action</th>
-													</tr>
-												</thead>
-												<tbody>
-                         {% for category in object_list %} 
-													<tr>
-									
-                            <td scope="row">{{category.slug}}</td>
-                           
-														<td>{{category.name}}</td>
-														<td>{{category.description|safe}}</td>
-														<td><img width="100px" height="100px" src="{{ category.img.url }}" alt="" /></td>
-                            <td>
-                              <span>
-                           <a href="{% url 'dashboard:category-update' category.slug %}" class="btn btn-sm btn-success"> <span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
-                    </span>
-                      <span>
-                    <a  href="{% url 'dashboard:category-delete' category.slug %}"class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
-
-</span>
-                        
-                            
-                            </td>
-
-													</tr>
-                           {%endfor%}
-												</tbody>
-											</table>
-										</div>
-									</div>
-	</div>
- </div>
+          </ol>
+        </nav>
+      <div class="input-group justify-content-end">
+        <form action="{% url 'dashboard:categories' %}" method="GET" class="form-inline">
+          <input
+            type="text"
+            name="name"
+            class="form-control float-right searchInput"
+            id="SearchCategory"
+            placeholder="Category name"
+          />
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-secondary">
+              <span class="mdi mdi-magnify"></span>
+            </button>
           </div>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-default">
+              <div class="card-header card-header-border-bottom justify-content-between">
+                <h2>CATEGORIES</h2>
+                <a href="{% url 'dashboard:category-create' %}"  type="button" class="mb-1 btn btn-outline-primary">Add Category</a>
+              </div>
+              <div class="card-body">
+                {% comment %} <p class="mb-5">Similar to tables and dark tables, use the modifier classes <code>.thead-light</code> or <code>.thead-dark</code> to make &lt;thead&gt;s appear light or dark gray. Read bootstrap documentation for <a href="http://getbootstrap.com/docs/4.1/content/tables/#table-head-options" target="_blank"> more details.</a></p> {% endcomment %}
+                <table class="table table-hover ">
+                  <thead>
+                    <tr>
+                      <th scope="col">SID</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Image</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for category in object_list %} 
+                    <tr>
+                      <td scope="row">{{category.slug}}</td>
+                      <td>{{category.name}}</td>
+                      <td>{{category.description|safe}}</td>
+                      <td><img width="100px" height="100px" src="{{ category.img.url }}" alt="" /></td>
+                      <td>
+                        <span>
+                          <a href="{% url 'dashboard:category-update' category.id %}" class="btn btn-sm btn-success"> <span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
+                        </span>
+                        <span>
+                          <a  href="{% url 'dashboard:category-delete' category.id %}"class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
+                        </span>
+                      </td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}
 {% block script %}

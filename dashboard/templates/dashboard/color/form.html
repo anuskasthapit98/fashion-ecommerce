@@ -1,5 +1,5 @@
 {% extends 'dashboard/base/base.html' %}
-{% block title %} New Size {% endblock %}
+
 {% block content %}
 <div class="content-wrapper">
     <div class="content">							
@@ -7,7 +7,7 @@
             <div class="col-12">
                 <div class="card card-default">
                     <div class="card-header card-header-border-bottom">
-                        <h2>Create Size</h2>
+                        <h2>Create Color</h2>
                     </div>
                     <div class="card-body">
                         <form method="POST" enctype="multipart/form-data">
@@ -15,19 +15,25 @@
                            
                             <div class="row form-group">
                                 <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlInput1">Size </label>
-                                    {{ form.name }}
-                                    <span class="form-error">{{ form.errors.name }}</span>
+                                    <label for="exampleFormControlInput1">Title </label>
+                                    {{ form.title }}
+                                    
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Image </label>
+                                    {{ form.image }}
+                          
                                 </div>
                             </div>
                             
-                            
                             <div class="form-footer pt-4 pt-5 mt-4 border-top">
                                 <button type="submit" class="btn btn-primary btn-default">Submit</button>
-                                <a href="{% url 'dashboard:sizes' %}" class="btn btn-secondary btn-default">Cancel</a>
+                                <a href="{% url 'dashboard:colors' %}" class="btn btn-secondary btn-default">Cancel</a>
                             </div>
                         </form>
-                    </di>
+                    </div>
                 </div>
             </div>
         </div>

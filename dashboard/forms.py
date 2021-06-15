@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import widgets
 
-from .mixin import *
+from .mixines import *
 from .models import *
 
 # user create form
@@ -126,15 +126,6 @@ class CategoryForm(FormControlMixin, forms.ModelForm):
         model = Category
         fields = "__all__"
 
-    def clean_slug(self):
-        slug = self.cleaned_data['slug']
-
-        if Category.objects.filter(slug=slug).exists():
-            raise forms.ValidationError('This ID is not available')
-        else:
-            pass
-
-        return slug
 
 # product image form
 
@@ -308,3 +299,11 @@ class MessageForm(FormControlMixin, forms.ModelForm):
                 raise forms.ValidationError({
                     'email': 'Enter valid email'})
             return email
+
+# color create form
+
+
+class ColorCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Color
+        fields = '__all__'

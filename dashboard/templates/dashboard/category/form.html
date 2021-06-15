@@ -1,4 +1,5 @@
 {% extends 'dashboard/base/index.html' %} 
+{% block title %} New Category{% endblock %}
 {% load static %} 
 {% block content %}
 
@@ -12,12 +13,8 @@
                     </div>
                     <div class="card-body">
                         <form method="POST" enctype="multipart/form-data">
-                         {% csrf_token %}
-                         {{form.media}}
-                         <div class="form-group">
-                                <label for="exampleFormControlInput1">Slug</label>
-                                {{form.slug}}
-                            </div>
+                            {% csrf_token %}
+                            {{form.media}}
                              <span class= 'form-error'>{{ form.errors.slug }}</span>
                             <div class="row form-group">
                              
@@ -34,20 +31,7 @@
                                     {{form.description}}
                                 </div> {% endcomment %}
                             </div>
-                            {% comment %} <div class="form-group">
-                                <label for="exampleFormControlSelect12">S</label>
-                                <select class="form-control" id="exampleFormControlSelect12">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div> {% endcomment %}
-                            {% comment %} <div class="form-group">
-                                <label for="exampleFormControlInput1">Sub-Category</label>
-                                {{form.slug}}
-                            </div> {% endcomment %}
+                            
                             <div class="form-group">
                                 <label for="exampleFormControlTextarea1">Description</label>
                                 <p>{{form.description}}</p>

@@ -1,5 +1,5 @@
 {% extends 'dashboard/base/base.html' %}
-{% block title %} Sizes {% endblock %}
+
 {% block content %}
 <div class="content-wrapper">
     <div class="content">							
@@ -15,16 +15,16 @@
                 <li class="breadcrumb-item">
                     Our
                 </li>
-                <li class="breadcrumb-item" aria-current="page">Sizes</li>
+                <li class="breadcrumb-item" aria-current="page">Subscribers</li>
                 </ol>
 
             </nav>
             
 <div class="input-group justify-content-end">
-                    <form action="{% url 'dashboard:sizes' %}" method="GET" class="form-inline">
-                      <input type="text" name="name" class="form-control float-right searchInput"
-                        id="SearchBrand"
-                        placeholder="size"
+                    <form action="{% url 'dashboard:newsletters' %}" method="GET" class="form-inline">
+                      <input type="text" name="email" class="form-control float-right searchInput"
+                        id="SearchEmail"
+                        placeholder="email"
                       />
                       <div class="input-group-append">
                          <button type="button" class="mb-1 btn btn-secondary">
@@ -38,35 +38,26 @@
         <div class="row ">
             
             <div class="col-12">
-                <div class="card card-default">
-                    <div class="card-header card-header-border-bottom justify-content-between">
-                        <h2>Sizes List</h2>
-                        <a href="{% url 'dashboard:size-create' %}" type="button" class="mb-1 btn btn-outline-primary">Add Size</a>
-
-
-                    </div>
-                    
-                    
+                <div class="card card-default"> 
                     <div class="card-body">
                         <table class="table table-hover ">
                             <thead>
                                 <tr>
                                     <th scope="col">S.N</th>
-                                    <th scope="col">Size</th>
+                                    <th scope="col">Email</th>s
                                     <th width="25%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for size in object_list %}
+                                {% for newsletter in object_list %}
                                 <tr>
                                     <td scope="row">{{ forloop.counter }}</td>
-                                    <td>{{ size.name }}</td>
+                                    <td>{{ newsletter.email }}</td>
+
                                     <td>
-                                    <span>
-                                            <a href="{% url 'dashboard:size-update' size.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
-                                        </span>
+                                    
                                         <span>
-                                            <a href="{% url 'dashboard:size-delete' size.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
+                                            <a href="{% url 'dashboard:newsletter-delete' newsletter.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
                                         </span>
 
                                       

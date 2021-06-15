@@ -1,10 +1,10 @@
 {% load static %}
-
+{% load active_link_tags %}
 <aside class="left-sidebar bg-sidebar">
     <div id="sidebar" class="sidebar sidebar-with-footer">
       <!-- Aplication Brand -->
       <div class="app-brand">
-        <a href="{% url 'dashboard:dashboard' %}">
+        <a href="{%url 'dashboard:dashboard' %}">
           <svg
             class="brand-icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -22,29 +22,32 @@
               <path class="logo-fill-white" fill="#FFF" d="M11 4v25l8 4V0z" />
             </g>
           </svg>
-          <span class="brand-name">Fashion Ecommerce</span>
+       
+          <span class="brand-name">Ekocart Dashboard</span>
         </a>
       </div>
  <!-- begin sidebar scrollbar -->
       <div class="sidebar-scrollbar">   
         <!-- sidebar menu -->         
         <ul class="nav sidebar-inner" id="sidebar-menu">
-            <li  class="has-sub active expand" >
-              <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#product"
+            <li  class="has-sub {% active_link 'dashboard:products' 'active' %} {% active_link 'dashboard:specific-products' 'active' %} " >
+              <a class="sidenav-item-link " href="javascript:void(0)" data-toggle="collapse" data-target="#product"
                 aria-expanded="false" aria-controls="product">
                 <i class="mdi mdi-view-list"></i>
-                <span class="nav-text">Products</span> <b class="caret"></b>
+                <span class="nav-text ">Products</span> <b class="caret"></b>
               </a>
-              <ul  class="collapse"  id="product"
+              
+              <ul  class="collapse "  id="product"
                 data-parent="#sidebar-menu">
+
                 <div class="sub-menu">
-                      <li  class="active" >
-                        <a class="sidenav-item-link" href="{% url 'dashboard:products' %}">
+                      <li  class="{% active_link 'dashboard:products' 'active' %}" >
+                        <a class="sidenav-item-link " href="{% url 'dashboard:products' %}">
                           <span class="nav-text">All Products</span>
                         </a>
                       </li>
                       {% for cat in sidebar_categories %}
-                      <li  class="active" >
+                      <li  class="{% active_link 'dashboard:specific-products' 'active' %}" >
                         <a class="sidenav-item-link" href="{% url 'dashboard:specific-products' %}?category={{ cat.name }}">
                           <span class="nav-text">{{ cat.name }}</span>
                         </a>
@@ -52,75 +55,88 @@
                       {% endfor %}
                 </div>
               </ul>
+              
             </li>
           
-            <li  class="has-sub" >
+            <li  class="has-sub {% active_link 'dashboard:brands' 'active' %}" >
               <a class="sidenav-item-link" href="{% url 'dashboard:brands' %}">
                 <i class="mdi mdi-view-list"></i>
                 <span class="nav-text">Brands</span>
               </a>
             </li>
 
-            <li  class="has-sub" >
+            <li  class="has-sub {% active_link 'dashboard:categories' 'active' %}" >
               <a class="sidenav-item-link" href="{% url 'dashboard:categories' %}">
                 <i class="mdi mdi-view-list"></i>
                 <span class="nav-text">Categories</span>
               </a>
             </li>
+            <li  class="has-sub" >
+                <a class="sidenav-item-link" href="{% url 'dashboard:colors' %}">
+                  <i class="mdi mdi-view-list"></i>
+                  <span class="nav-text">Colors</span>
+                </a>
+              </li>
            
            
-               <li  class="has-sub" >
+               <li  class="has-sub {% active_link 'dashboard:sizes' 'active' %}" >
               <a class="sidenav-item-link" href="{% url 'dashboard:sizes' %}">
                 <i class="mdi mdi-view-list"></i>
                 <span class="nav-text">Sizes</span>
               </a>
               </li>
-               <li  class="has-sub" >
+               <li  class="has-sub {% active_link 'dashboard:tags' 'active' %}" >
               <a class="sidenav-item-link" href="{% url 'dashboard:tags' %}">
                 <i class="mdi mdi-view-list"></i>
                 <span class="nav-text">Tags</span>
               </a>
               </li>
-              <li  class="has-sub" >
+              <li  class="has-sub {% active_link 'dashboard:customers' 'active' %}" >
                 <a class="sidenav-item-link" href="{% url 'dashboard:customers' %}">
                 <i class="mdi mdi-account"></i>
                 <span class="nav-text">Customer</span>
               </a>
               </li>
-              <li  class="has-sub" >
+              <li  class="has-sub {% active_link 'dashboard:testimonials' 'active' %}" >
                 <a class="sidenav-item-link" href="{% url 'dashboard:testimonials' %}">
                 <i class="mdi mdi-comment-text"></i>
                 <span class="nav-text">Testimonials</span>
               </a>
               </li>
-              <li  class="has-sub" >
+              <li  class="has-sub {% active_link 'dashboard:blogs' 'active' %}" >
                 <a class="sidenav-item-link" href="{% url 'dashboard:blogs' %}">
                 <i class="mdi mdi-blogger"></i>
                 <span class="nav-text">Blogs</span>
               </a>
               </li>
             
-            <li  class="has-sub" >
+            <li  class="has-sub {% active_link 'dashboard:contacts' 'active' %}" >
               <a class="sidenav-item-link" href="{% url 'dashboard:contacts' %}">
                 <i class="mdi mdi-phone"></i>
                 <span class="nav-text">Contact</span>
               </a>
             </li>
-            <li  class="has-sub" >
+            <li  class="has-sub {% active_link 'dashboard:services' 'active' %}" >
               <a class="sidenav-item-link" href="{% url 'dashboard:services' %}">
                 <i class="mdi mdi-format-list-bulleted-type"></i>
                 <span class="nav-text">Service</span>
               </a>
             </li>
-            <li  class="has-sub" >
+            <li  class="has-sub {% active_link 'dashboard:messages' 'active' %}" >
               <a class="sidenav-item-link" href="{% url 'dashboard:messages' %}">
                 <i class="mdi mdi-message-bulleted"></i>
                 <span class="nav-text">Message</span>
               </a>
             </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:newsletters' %}">
+                <i class="mdi mdi-message-bulleted"></i>
+                <span class="nav-text">Newsletter</span>
+              </a>
+            </li>
               {% if request.user.is_superuser %}
               
-                  <li  class="has-sub " >
+                  <li  class="has-sub {% active_link 'dashboard:users' 'active' %}" >
                         <a class="sidenav-item-link" href="javascript:void(1)" data-toggle="collapse" data-target="#admin"
                           aria-expanded="false" aria-controls="admin">
                           <i class="mdi mdi-security-account"></i>
@@ -129,7 +145,7 @@
                         <ul  class="collapse"  id="admin"
                           data-parent="#sidebar-menu">
                           <div class="sub-menu">
-                                <li  class="#" >
+                                <li  class="{% active_link 'dashboard:users' 'active' %}" >
                                   <a class="sidenav-item-link" href="{% url 'dashboard:users' %}">
                                     <span class="nav-text">Users</span>
                                   </a>
