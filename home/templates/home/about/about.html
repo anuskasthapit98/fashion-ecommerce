@@ -1,0 +1,310 @@
+{% extends 'home/base.html' %} 
+{% load static %} 
+{% block content %}
+
+
+<!--hero section start-->
+
+<section class="bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h1 class="h2 mb-0">About Us</h1>
+      </div>
+      <div class="col-md-6 mt-3 mt-md-0">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-md-end bg-transparent p-0 m-0">
+            <li class="breadcrumb-item"><a class="text-dark" href="#"><i class="las la-home mr-1"></i>Home</a>
+            </li>
+            <li class="breadcrumb-item">Pages</li>
+            <li class="breadcrumb-item active text-primary" aria-current="page">About Us</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
+</section>
+
+<!--hero section end--> 
+
+
+<!--body content start-->
+
+<div class="page-content">
+
+<!--feature start-->
+
+<section>
+  <div class="container">
+  {% for about in about %}
+    <div class="row align-items-end mb-5">
+      <div class="col-12 col-md-12 col-lg-6">
+        <div>
+          <h6 class="text-primary mb-1">
+                  — Why Choose Us
+              </h6>
+          <h2 class="mb-0">{{ about.title_one}}</h2>
+        </div>
+      </div>
+      <div class="col-12 col-md-12 col-lg-6">
+        <div>
+          <p class="lead mb-0">{{ about.description_one}}</p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+    <div class="row align-items-center">
+    {% for service in service %}
+      <div class="col-lg-3 col-md-6">
+        <div class="px-4 py-7 rounded text-center border">
+          <img src="{{ service.image.url }}" height="100px" width="100px"></i>
+          <h5 class="mt-2 mb-1">{{ service.title }}</h5>
+          <p class="mb-0">{{ service.description }}</p>
+        </div>
+      </div>
+    {% endfor %}
+      
+      
+    </div>
+  </div>
+</section>
+
+<!--feature end-->
+
+
+<section class="p-0">
+{% for about in about %}
+  <div class="container">
+    <div class="row align-items-center justify-content-between">
+      <div class="col-12 col-lg-7 mb-6 mb-lg-0">
+        <div class="row align-items-center">
+          
+          
+        
+            <img src="{{ about.image.url }}" class="img-fluid rounded shadow mb-5" alt="...">
+          
+          
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+      
+        <div> <h6 class="text-primary mb-1">
+                  — About Us
+              </h6>
+          <h2 class="mt-3 font-w-5">{{ about.title_two }}</h2>
+          <p class="lead">{{ about.description_two }}</p>
+        </div>
+      
+      </div>
+    </div>
+    <div class="row mt-8">
+      <div class="col-lg-4 col-md-4">
+        <h5><span class="text-primary font-w-7">01.</span>{{ about.mission_title }}</h5>
+        <p>{{ about.mission_description }}</p>
+      </div>
+      <div class="col-lg-4 col-md-4">
+        <h5><span class="text-primary font-w-7">02.</span>{{ about.vision_title }}</h5>
+        <p>{{ about.value_title }}</p>
+      </div>
+      <div class="col-lg-4 col-md-4">
+        <h5><span class="text-primary font-w-7">03.</span>{{ about.vision_title }} </h5>
+        <p>{{ about.value_description }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</section>
+
+<!--testimonial start-->
+
+<section>
+  <div class="container text-center">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div>
+          <h6 class="text-primary mb-1">
+                  — Testimonial
+              </h6>
+          <h2 class="mb-0">Our Client Feedback</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="owl-carousel" data-items="3" data-md-items="3" data-sm-items="1">
+        {% for test in testimonial  %}
+          <div class="item">
+            <div class="card p-5 p-lg-8 bg-white shadow-sm border-0 mx-3 mt-3">
+              <div>
+                <img alt="Image" src="{{ test.image.url }}" class="shadow-primary img-fluid rounded-circle d-inline">
+              </div>
+              <div class="card-body p-0 mt-5">
+                <p class="text-muted">{{ test.description }}</p>
+                <div>
+                  <h5 class="text-primary d-inline mb-0">{{ test.name }}</h5>
+                  <small class="text-muted font-italic">- {{ test.designation }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %} 
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--testimonial end-->
+
+
+<!--multi sec start-->
+
+<section class="bg-light">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-8">
+      <div class="col-lg-6 col-md-10">
+        <div class="mb-4">
+          <h6 class="text-primary mb-1">
+                  — Newsletter
+              </h6>
+          <h2 class="mb-0">Subscribe Our Newsletter</h2>
+        </div>
+        <div class="subscribe-form">
+           <form id="mc-form" class="row align-items-center no-gutters mb-3" action="{% url 'home:newsletter' %}" method="POST">
+            {% csrf_token %}
+            <div class="col">
+              <input name="email" class="email form-control input-2 bg-white" id="mc-email" placeholder="Email Address" required="" type="email">
+            </div>
+            <div class="col-auto">
+              <input class="btn btn-primary overflow-auto" type="submit">
+            </div>
+          </form> <small>Get started for 1 Month free trial No Purchace required.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="p-0 mt-n11">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex flex-wrap align-items-center text-center bg-white shadow">
+        {% for brand in brand %}
+          <div class="clients-logo">
+            <img class="img-fluid" src="{{ brand.logo.url }}" alt="">
+          </div>
+        {% endfor %}  
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--multi sec end-->
+
+
+<!--blog start-->
+
+<section>
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div>
+          <h6 class="text-primary mb-1">
+                  — Fashion Blog
+              </h6>
+          <h2 class="mb-0">Latest News Feed</h2>
+        </div>
+      </div>
+    </div>
+    <!-- / .row -->
+    <div class="row">
+    {% for blog in blog %}
+      <div class="col-12 col-lg-4">
+        <!-- Blog Card -->
+        <div class="card border-0 bg-transparent">
+          <div class="position-relative rounded overflow-hidden">
+            <div class="position-absolute z-index-1 bottom-0 bg-white text-primary shadow-primary text-center py-1 px-2 rounded ml-3 mb-3">20 Apr</div>
+            <img class="card-img-top hover-zoom" src="{{ blog.image.url }}" alt="Image">
+          </div>
+          <div class="card-body px-0 pb-0">
+            <div> <a class="d-inline-block link-title btn-link text-small mr-2" href="#">{{ blog.tags }}</a>
+              <a class="d-inline-block link-title btn-link text-small" href="#">Fashion</a>
+            </div>
+            <h2 class="h5 font-w-6 mt-2 mb-0">
+                <a class="link-title" href="blog-single.html">{{ blog.description|safe }}</a>
+              </h2>
+          </div>
+          <div></div>
+        </div>
+        <!-- End Blog Card -->
+      </div>
+    {% endfor %}  
+
+    </div>
+    <div class="row justify-content-center text-center mt-5">
+      <div class="col"> <a class="btn btn-dark" href="#">View All Blog</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--blog end-->
+
+
+<!--instagram start-->
+
+<section class="p-0">
+  <div class="container-fluid p-0">
+    <div class="row no-gutters">
+      <div class="col-md-8 col-lg-4 order-lg-1 align-items-center d-flex justify-content-center bg-dark p-5">
+        <div class="d-flex align-items-center">
+          <img class="img-fluid" src="assets/images/insta/instagram-logo.png" alt="">
+          <div class="ml-3">
+            <h6 class="text-white mb-0">Follow Us on</h6>
+            <h3 class="text-white mb-0">Instagram</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <a class="insta-item" href="#">
+          <img class="img-fluid" src="assets/images/insta/01.jpg" alt="">
+          <div class="insta-icon"><i class="lab la-instagram"></i>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <a class="insta-item" href="#">
+          <img class="img-fluid" src="assets/images/insta/02.jpg" alt="">
+          <div class="insta-icon"><i class="lab la-instagram"></i>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2 order-lg-1">
+        <a class="insta-item" href="#">
+          <img class="img-fluid" src="assets/images/insta/03.jpg" alt="">
+          <div class="insta-icon"><i class="lab la-instagram"></i>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2 order-lg-1">
+        <a class="insta-item" href="#">
+          <img class="img-fluid" src="assets/images/insta/04.jpg" alt="">
+          <div class="insta-icon"><i class="lab la-instagram"></i>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--instagram end-->
+
+</div>
+
+<!--body content end--> 
+
+{% endblock %}

@@ -9,28 +9,34 @@ from django.template.loader import get_template
 from django.conf import settings
 from django.contrib import messages
 
+
 from dashboard.forms import MessageForm
 from dashboard.models import *
+from dashboard.mixines import *
 
-from dashboard.mixines import NonDeletedItemMixin
+from .mixin import *
+
 # Create your views here.
 
 
-class HomeTemplateView(TemplateView):
+class HomeTemplateView(BaseMixin,TemplateView):
     template_name = 'home/base/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['blogs'] = Blog.objects.filter(deleted_at__isnull=True)
         context['service'] = service.objects.filter(deleted_at__isnull=True)
+        context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
         context['trend_products'] = Products.objects.filter(
             deleted_at__isnull=True).order_by('-view_count')
+        context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
+        
         return context
 
 # products view
 
 
-class ProductListView(NonDeletedItemMixin, ListView):
+class ProductListView(BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
 
@@ -48,6 +54,22 @@ class ProductDetailView(DetailView):
         context['similar_product'] = Products.objects.filter(
             categories__name=category).exclude(slug=p_slug)
         return context
+
+# about
+
+class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
+    model = Abouts
+    template_name = 'home/about/about.html'
+    
+    def get_context_data(self, **kwargs):
+       context = super().get_context_data(**kwargs)
+       context['about'] = Abouts.objects.filter(deleted_at__isnull=True)
+       context['testimonial'] = Testimonials.objects.filter(deleted_at__isnull=True)
+       context['service'] = service.objects.filter(deleted_at__isnull=True)
+       context['blog'] = Blog.objects.filter(deleted_at__isnull=True)
+       context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
+
+       return context
 
 # contact
 

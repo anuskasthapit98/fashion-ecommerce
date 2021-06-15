@@ -419,3 +419,27 @@ class Message(DateTimeModel):
 
     def __str__(self):
         return self.first_name
+
+
+# about
+class Abouts(DateTimeModel):
+    image = models.ImageField(upload_to="abouts")
+    title_one = models.CharField(max_length=200)
+    description_one = models.TextField(max_length=500)
+    title_two = models.CharField(max_length=200)
+    description_two = models.TextField(max_length=500)
+    mission_title = models.CharField(max_length=200)
+    mission_description = models.TextField(max_length=500)
+    vision_title = models.CharField(max_length=200)
+    vision_description = models.TextField(max_length=500)
+    value_title = models.CharField(max_length=200)
+    value_description = models.TextField(max_length=500)
+
+    class Meta:
+        verbose_name = ('About')
+        verbose_name_plural = ('Abouts')
+
+    def __str__(self):
+        return self.title
+
+

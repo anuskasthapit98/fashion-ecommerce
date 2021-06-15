@@ -642,30 +642,12 @@
     <div class="row">
       <div class="col-12">
         <div class="d-flex flex-wrap align-items-center text-center bg-white shadow">
+        {% for brand in brand %}
           <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/01.png'%}" alt="">
+            <img class="img-fluid" src="{{ brand.logo.url }}" alt="">
           </div>
-          <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/02.png'%}" alt="">
-          </div>
-          <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/03.png'%}" alt="">
-          </div>
-          <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/04.png'%}" alt="">
-          </div>
-          <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/05.png'%}" alt="">
-          </div>
-          <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/06.png'%}" alt="">
-          </div>
-          <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/07.png'%}" alt="">
-          </div>
-          <div class="clients-logo">
-            <img class="img-fluid" src="{% static 'home/assets/images/client/08.png'%}" alt="">
-          </div>
+        {% endfor %}
+    
         </div>
       </div>
     </div>
