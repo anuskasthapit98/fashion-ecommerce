@@ -8,7 +8,7 @@ urlpatterns = [
     path('', HomeTemplateView.as_view(), name="home"),
     # products
     path('products/list/', ProductListView.as_view(), name='product-list'),
-    path('products/<slug:slug>/detail/',
+    path('products/<int:pk>/detail/',
          ProductDetailView.as_view(), name='product-detail'),
 
     # contact

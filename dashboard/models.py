@@ -158,7 +158,9 @@ class Products(DateTimeModel):
     image = models.ManyToManyField(ProductImage)
     description = RichTextField()
     size = models.ManyToManyField(Size)
-    price = models.PositiveIntegerField()
+    marked_price = models.PositiveIntegerField()
+    selling_price = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True)
     status = models.BooleanField(default=True)
     slug = models.SlugField(unique=True)
     color = models.ManyToManyField(Color)
@@ -169,8 +171,7 @@ class Products(DateTimeModel):
         max_digits=12, decimal_places=2, null=True, blank=True)
     discount_percent = models.DecimalField(
         max_digits=12, decimal_places=2, null=True, blank=True)
-    discount_amt = models.DecimalField(
-        max_digits=12, decimal_places=2, null=True, blank=True)
+
     view_count = models.PositiveIntegerField(default=0, null=True, blank=True)
 
     class Meta:

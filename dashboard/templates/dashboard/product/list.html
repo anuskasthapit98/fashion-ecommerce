@@ -69,8 +69,8 @@
                                     <th scope="col">Brand</th>
                                     <th scope="col">Image</th>
                                     <th scope="col">Category</th>
-                                    <th scope="col">Subcategory</th>
-                                    <th scope="col">Price</th>
+                                    <th scope="col">Marked Price</th>
+                                    <th scope="col">Selling Price</th>
                                     <th scope="col">Discount</th>
                                     <th scope="col">Status</th>
                                     <th>Action</th>
@@ -88,9 +88,9 @@
                                         {% endfor %}
                                     </td>
                                     <td>{{ product.categories }}</td>
-                                    <td>{{ product.categories.parent }}</td>
-                                    <td>{{ product.price }}</td>
-                                    <td>{{ product.price }}</td>
+                                    <td>{{ product.marked_price }}</td>
+                                    <td>{{ product.selling_price }}</td>
+                                    <td>{{ product.discount_percent }} %</td>
                                     <td>
                                         {% if product.status %}
                                         <span>In Stock</span>

@@ -92,7 +92,7 @@
         <div class="card product-card">
           <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="lar la-heart"></i>
           </button>
-          <a class="card-img-hover d-block" href="{% url 'home:product-detail' product.slug %}">
+          <a class="card-img-hover d-block" href="{% url 'home:product-detail' product.id %}">
             {% for img in product.image.all|slice:1 %}
             <img class="card-img-top card-img-back" src="{{ img.image.url }}" alt="...">
             {% endfor %}
@@ -102,9 +102,9 @@
           </a>
           <div class="card-info">
             <div class="card-body">
-              <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' product.slug %}">{{ product.name }}</a>
+              <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' product.id %}">{{ product.name }}</a>
               </div>
-              <div class="mt-1"> <span class="product-price"><del class="text-muted">$35.00</del>Nrs. {{ product.price }}</span>
+              <div class="mt-1"> <span class="product-price"><del class="text-muted">Nrs. {{ product.marked_price }}</del>Nrs. {{ product.selling_price }}</span>
                 <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
                 </div>
               </div>
