@@ -20,16 +20,6 @@
                             {{ form.media }}
                             <div class="row form-group">
                                 <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlInput1">Product Name</label>
-                                    {{ form.name }}
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlPassword">Slug (unique*)</label>
-                                    {{ form.slug }}
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-md-6 col-sm-12">
                                     <label for="exampleFormControlInput1">Category </label>
                                     {{ form.categories }}
                                 </div>
@@ -38,6 +28,17 @@
                                     {{ form.brands }}
                                 </div>
                             </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Product Name</label>
+                                    {{ form.name }}
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlPassword">Slug (unique*)</label>
+                                    {{ form.slug }}
+                                </div>
+                            </div>
+                            
                             <div class="row form-group">
                                 <div class="col-md-6 col-sm-12">
                                     <label for="exampleFormControlInput1">Marked Price</label>
@@ -91,7 +92,7 @@
                                 <a href="{% url 'dashboard:products' %}" class="btn btn-secondary btn-default">Cancel</a>
                             </div>
                         </form>
-                    </di>
+                    </div>
                 </div>
             </div>
         </div>

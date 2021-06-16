@@ -302,8 +302,16 @@ class MessageForm(FormControlMixin, forms.ModelForm):
 
 # color create form
 
-
 class ColorCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Color
         fields = '__all__'
+
+
+# about create form
+
+class AboutCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Abouts
+        fields = '__all__'
+

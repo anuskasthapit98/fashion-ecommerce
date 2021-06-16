@@ -1,0 +1,111 @@
+{% extends 'dashboard/base/base.html' %}
+{% block title %} About {% endblock %}
+{% block style %}
+<style>
+{% include 'dashboard/documents/upload-file.css' %}
+</style>
+{% endblock %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Create About</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                           
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Title One </label>
+                                    {{ form.title_one }}
+                                    
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Title's one description </label>
+                                    {{ form.description_one }}
+                                    
+                                </div>
+                            </div>
+                             <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Title two </label>
+                                    {{ form.title_two }}
+                                    
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Title's two description </label>
+                                    {{ form.description_two }}
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlTextarea1">Mission Title </label>
+                                    {{ form.mission_title }}
+                                </div>
+                            </div>
+                             <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlTextarea1">Mission description </label>
+                                    {{ form.mission_description }}
+                                </div>
+                            </div>
+                             <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlTextarea1">Vision title </label>
+                                    {{ form.vision_title }}
+                                </div>
+                            </div>
+                             <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlTextarea1"> Vision description </label>
+                                    {{ form.vision_description }}
+                                </div>
+                            </div>
+                             <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlTextarea1">Value title </label>
+                                    {{ form.value_title }}
+                                </div>
+                            </div>
+                             <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlTextarea1">Value description </label>
+                                    {{ form.value_description }}
+                                </div>
+                            </div>
+                               <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Image </label>
+                                    {{ form.image }}
+                          
+                                </div>
+                            </div>
+                            <div class="form-footer pt-4 pt-5 mt-4 border-top">
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                                <a href="{% url 'dashboard:abouts' %}" class="btn btn-secondary btn-default">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+{% include 'dashboard/documents/upload-file.js' %}
+</script>
+{% endblock %}
