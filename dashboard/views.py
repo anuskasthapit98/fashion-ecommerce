@@ -628,10 +628,10 @@ class AboutListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if "title" in self.request.GET:
-            if self.request.GET.get('title') != '':
+        if "title_one" in self.request.GET:
+            if self.request.GET.get('title_one') != '':
                 queryset = queryset.filter(
-                    title__contains=self.request.GET.get("title"))
+                    title_one__contains=self.request.GET.get("title_one"))
         return queryset
 
 

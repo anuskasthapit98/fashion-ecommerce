@@ -1,3 +1,4 @@
+from typing import List
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls.base import clear_script_prefix
@@ -187,3 +188,9 @@ class AddToCartView(View):
             cart_obj.save()
             messages.success(self.request, "Item added to cart")
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
+
+
+
+   
+
