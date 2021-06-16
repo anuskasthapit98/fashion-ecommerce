@@ -156,11 +156,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="ModalLabel">Your Cart (2)</h5>
+        <h5 class="modal-title" id="ModalLabel">Your Cart ({{ cart_products.count }})</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        {% for cart in cart_products %}
         <div>
           <div class="row align-items-center">
             <div class="col-5 d-flex align-items-center">
@@ -169,42 +170,24 @@
                 </button>
               </div>
               <!-- Image -->
-              <a href="product-left-image.html">
-                <img class="img-fluid" src="{% static 'home/assets/images/product/01.jpg'%}" alt="...">
+              {% for img in cart.product.image.all|slice:1 %}
+              <a href="{% url 'home:product-detail' cart.product.id %}">
+                <img class="img-fluid" src="{{ img.image.url }}" alt="...">
               </a>
+              {% endfor %}
             </div>
             <div class="col-7">
               <!-- Title -->
-              <h6><a class="link-title" href="product-left-image.html">Women Lather Jacket</a></h6>
-              <div class="product-meta"><span class="mr-2 text-primary">$25.00</span><span class="text-muted">x 1</span>
+              <h6><a class="link-title" href="{% url 'home:product-detail' cart.product.id %}">{{ cart.product.name }}</a></h6>
+              <div class="product-meta"><span class="mr-2 text-primary">{{ cart.rate }}</span><span class="text-muted">x {{ cart.quantity }}</span>
               </div>
             </div>
           </div>
         </div>
         <hr class="my-5">
-        <div>
-          <div class="row align-items-center">
-            <div class="col-5 d-flex align-items-center">
-              <div class="mr-4">
-                <button type="submit" class="btn btn-primary btn-sm"><i class="las la-times"></i>
-                </button>
-              </div>
-              <!-- Image -->
-              <a href="product-left-image.html">
-                <img class="img-fluid" src="{% static 'home/assets/images/product/13.jpg'%}" alt="...">
-              </a>
-            </div>
-            <div class="col-7">
-              <!-- Title -->
-              <h6><a class="link-title" href="product-left-image.html">Men's Brand Tshirts</a></h6>
-              <div class="product-meta"><span class="mr-2 text-primary">$27.00</span><span class="text-muted">x 1</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr class="my-5">
-        <div class="d-flex justify-content-between align-items-center mb-8"> <span class="text-muted">Subtotal:</span>  <span class="text-dark">$52.00</span> 
-        </div> <a href="product-cart.html" class="btn btn-primary btn-animated mr-2"><i class="las la-shopping-cart mr-1"></i>View Cart</a>
+        {% endfor %}
+        <div class="d-flex justify-content-between align-items-center mb-8"> <span class="text-muted">Subtotal:</span>  <span class="text-dark">Nrs. {{ subtotal }}</span> 
+        </div> <a href="{% url 'home:my-cart' %}" class="btn btn-primary btn-animated mr-2"><i class="las la-shopping-cart mr-1"></i>View Cart</a>
         <a href="product-checkout.html" class="btn btn-dark"><i class="las la-money-check mr-1"></i>Continue To Checkout</a>
       </div>
     </div>
