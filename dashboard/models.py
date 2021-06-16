@@ -234,8 +234,9 @@ class BillingAddress(DateTimeModel):
 class Cart(DateTimeModel):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=50, decimal_places=2, default=0)
     vat = models.DecimalField(
-        max_digits=50, decimal_places=2, null=True, blank=True)
+        max_digits=50, decimal_places=2, null=True, blank=True, default=0)
     total = models.DecimalField(max_digits=50, decimal_places=2)
 
     class Meta:
@@ -447,5 +448,3 @@ class Abouts(DateTimeModel):
 
     def __str__(self):
         return self.title
-
-
