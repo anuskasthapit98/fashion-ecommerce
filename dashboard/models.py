@@ -2,6 +2,7 @@ import datetime
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User, Group
 from django.db import models
+from django.db.models.enums import Choices
 from django.utils import timezone
 
 
@@ -60,12 +61,14 @@ class Account(User):
 # Customer Model
 
 
-class Customer(DateTimeModel):
-    first_name = models.CharField(max_length=50, default="New User")
-    last_name = models.CharField(max_length=50, default="New User")
-    username = models.CharField(max_length=50)
-    email = models.CharField(max_length=100)
+
+class Customer(User):
+    GENDER = (('Male','Male'),
+              ('Female', 'Female'),
+               ('Others', 'Others'),)
     mobile = models.CharField(max_length=10)
+    gender = models.CharField(max_length=10, choices = GENDER)
+    is_customer = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = ('Customer')
@@ -73,7 +76,7 @@ class Customer(DateTimeModel):
         ordering = ['username']
 
     def __str__(self):
-        return self.username
+        return self.first_name
 
 
 # Category Model
@@ -354,6 +357,23 @@ class Blog(DateTimeModel):
         return self.title
 
 
+#comment model 
+class Comment(DateTimeModel):
+    full_name = models.CharField(max_length=30)
+    email = models.EmailField()
+    product = models.ForeignKey(
+        Products, related_name='product_name', on_delete=models.CASCADE, null=True, blank=True)
+    blog = models.ForeignKey(
+        Blog, related_name="blog_title", on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.TextField()
+
+    class Meta:
+        verbose_name = ('Comment')
+        verbose_name_plural = ('Comments')
+
+    def __str__(self):
+        return  'Comment {} by {}'.format(self.comment, self.full_name)
+    
 # service model
 
 class service(DateTimeModel):

@@ -12,12 +12,14 @@ from django.contrib import messages
 from django.views.generic.edit import FormView
 
 
-from dashboard.forms import MessageForm
+from dashboard.forms import *
 from dashboard.models import *
 from dashboard.mixines import *
 
 from .mixins import *
 
+from dashboard.mixines import NonDeletedItemMixin
+from django.db.models import Q
 # Create your views here.
 
 
@@ -34,6 +36,20 @@ class HomeTemplateView(BaseMixin, TemplateView):
         context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
 
         return context
+    
+    
+#Resgistration 
+
+class CustomerRegistrationView(CreateView):
+    template_name = 'home/auth/register.html'
+    form_class = CustomerCreateForm
+    success_url = reverse_lazy('home:home')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CustomerCreateForm()
+        return context
+
 
 # products view
 
@@ -114,6 +130,57 @@ class ContactView(BaseMixin, CreateView):
             pass
         return super().form_valid(form)
 
+
+#blogs
+
+class BlogView(ListView):
+    template_name= 'home/blog/blog.html'
+    model = Blog
+    paginate_by = 3
+    
+    def get_context_data(self, **kwargs) :
+        context =  super().get_context_data(**kwargs)
+        context['tags'] = Tag.objects.filter(deleted_at__isnull=True)
+        return context
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if 'keyword' in self.request.GET:
+            if self.request.GET.get('keyword') != '':
+                search_item = self.request.GET.get('keyword')
+                queryset = queryset.filter(Q(title__contains=search_item) |
+                                           Q(tags__title__contains=search_item) |
+                                           Q(description__icontains=search_item))
+        return queryset
+
+class BlogDetailView(DetailView):
+    template_name = 'home/blog/detail.html'
+    model = Blog
+    form_class = BlogCommentForm
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['blogs'] = Blog.objects.exclude(
+            id=self.get_object().id).order_by("-id")
+        context['form'] = BlogCommentForm(initial={'blog': self.object})
+        blog = self.kwargs.get('pk')
+        context['comment'] = Comment.objects.filter(blog=blog).order_by('-id')
+        return context
+    
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        comment = request.POST.get('comment')
+        blog = self.kwargs.get('pk')
+        form = Blog.objects.get(pk=Blog)
+        obj = Comment.objects.create(
+            full_name=name, email=email, comment=comment, blog=form)
+
+        return redirect('blog-detail', pk=blog)
+    
+    
+    
 # newsletter
 
 
