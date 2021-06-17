@@ -191,33 +191,44 @@ class SizeCreateForm(FormControlMixin, forms.ModelForm):
 
 class CustomerCreateForm(FormControlMixin, forms.ModelForm):
         username = forms.CharField(widget=forms.TextInput())
-        password = forms.CharField(widget=forms.PasswordInput(attrs={ 
-                'type' : 'password'}))
-        confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
-                'type' : 'password'
-                }))
+        password = forms.CharField(widget=forms.PasswordInput())
+        confirm_password = forms.CharField(widget=forms.PasswordInput())
 
         class Meta:
             model = Customer
-            fields ='__all__'
+            fields =['username','password','confirm_password','first_name','last_name','email','mobile','gender']
+            
+        def clean(self):
+            cleaned_data = super().clean()
+            username = self.cleaned_data['username']
+            mobile = self.cleaned_data['mobile']
+            password = self.cleaned_data['password']
+            confirm_password = self.cleaned_data['confirm_password']
+            print(username, mobile,password,confirm_password ,"11111111111111111")
+            if Customer.objects.filter(username=username).exists():
+                print(username)
+                raise ValidationError({
+                    'username': 'username is not available'
+                })
+           
+            if Customer.objects.filter(mobile=mobile):
+                print(mobile)
+                raise ValidationError({
+                    'mobile': 'mobile no. already exists'
+                })
+            if len(mobile) < 10:
+                print(mobile)
+                raise ValidationError({
+                    'mobile': 'Invalid mobile no.'
+                })
 
-        # def clean_username(self):
-        #     uname = self.cleaned_data["username"]
-        #     if User.objects.filter(username=uname).exists():
-        #         raise forms.ValidationError("This username is already taken")
-        #     return uname
-
-        # # to take only unique username only
-
-        # def clean_confirm_password(self):
-        #     password = self.cleaned_data["password"]
-        #     confirm_password = self.cleaned_data["confirm_password"]
-
-        #     if password != confirm_password:
-        #         raise forms.ValidationError("password didn't match")
-
-        #     return confirm_password
-        # # to confirm password of user's
+            if confirm_password != password:
+                print(confirm_password)
+                raise forms.ValidationError({
+                    'confirm_password': 'Password Not Matched'})
+           
+            return self.cleaned_data
+      
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.fields['first_name'].widget.attrs.update({
@@ -232,65 +243,16 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
             self.fields['password'].widget.attrs.update({
                 'placeholder': "password"
             })
+            self.fields['confirm_password'].widget.attrs.update({
+                'placeholder': "reenter-password"
+            })
+            self.fields['username'].widget.attrs.update({
+                'placeholder': "username"
+            })
+            self.fields['mobile'].widget.attrs.update({
+                'placeholder': "mobile"
+            })
 
-    
-    # class Meta:
-    #     model = Customer
-    #     fields = '__all__'
-    #     widgets = {
-    #         'first_name': forms.TextInput(attrs={
-    #             'class': 'form-control', 
-    #             'placeholder':  'First Name'}),
-    #         'last_name': forms.TextInput(attrs={
-    #             'class': 'form-control', 
-    #             'placeholder':  'Last Name'}),
-    #         'email': forms.EmailInput(attrs={
-    #             'class': 'form-control', 
-    #             'placeholder':  'Email Address'}),
-    #         'mobile': forms.TextInput(attrs={
-    #             'class': 'form-control', 
-    #             'placeholder':  'Mobile no.'}),
-    #          'password': forms.PasswordInput(attrs={
-    #             'class': 'form-control', 
-    #             'type' : 'password',
-    #             'placeholder':  'Enter Password'}),
-    #         'confirm_password': forms.PasswordInput(attrs={
-    #             'class': 'form-control', 
-    #             'type' : 'password',
-    #             'placeholder':  'Re-Enter Password'}),
-    #     }
-
-    #     def clean(self):
-    #         cleaned_data = super().clean()
-    #         username = self.cleaned_data['username']
-    #         email = self.cleaned_data['email']
-    #         mobile = self.cleaned_data['mobile']
-    #         password = self.cleaned_data['password']
-    #         confirm_password = self.cleaned_data['confirm_password']
-            
-    #         if Customer.objects.filter(username=username).exists():
-    #             raise ValidationError({
-    #                 'username': 'username is not available'
-    #             })
-    #         if Customer.objects.filter(email=email).exists():
-    #             raise ValidationError({
-    #                 'email': 'email already exists'
-    #             })
-    #         if Customer.objects.filter(mobile=mobile):
-    #             raise ValidationError({
-    #                 'mobile': 'mobile no. already exists'
-    #             })
-    #         if len(mobile) < 10:
-    #             raise ValidationError({
-    #                 'mobile': 'Invalid mobile no.'
-    #             })
-
-    #         if password != confirm_password:
-    #             raise forms.ValidationError({
-    #                 'confirm_password': 'Password Not Matched'})
-           
-    #         return self.cleaned_data
-                
             
 
 # Testimonial create form

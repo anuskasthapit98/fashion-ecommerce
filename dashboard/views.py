@@ -357,7 +357,7 @@ class SizeDeleteView(DeleteMixin, DeleteView):
 
 # customer view starts here
 
-class CustomerListView(NonDeletedItemMixin, SidebarMixin, ListView):
+class CustomerListView(SidebarMixin, ListView):
     template_name = 'dashboard/customer/list.html'
     model = Customer
 

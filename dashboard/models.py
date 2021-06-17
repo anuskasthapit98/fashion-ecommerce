@@ -2,6 +2,7 @@ import datetime
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User, Group
 from django.db import models
+from django.db.models.enums import Choices
 from django.utils import timezone
 
 
@@ -60,14 +61,13 @@ class Account(User):
 # Customer Model
 
 
-class Customer(DateTimeModel):
-    first_name = models.CharField(max_length=50, default="First Name")
-    last_name = models.CharField(max_length=50, default="Last Name")
-    username = models.CharField(max_length=50)
-    password = models.CharField(max_length=100)
-    confirm_password = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
+
+class Customer(User):
+    GENDER = (('Male','Male'),
+              ('Female', 'Female'),
+               ('Others', 'Others'),)
     mobile = models.CharField(max_length=10)
+    gender = models.CharField(max_length=10, choices = GENDER)
     is_customer = models.BooleanField(default=True)
 
     class Meta:

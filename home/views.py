@@ -48,32 +48,7 @@ class CustomerRegistrationView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CustomerCreateForm()
-
         return context
-
-    def post(self, request, *args, **kwargs):
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('first_name')
-        email = request.POST.get('email')
-        mobile = request.POST.get('mobile')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        obj = Customer.objects.create(
-            first_name=first_name, last_name=last_name, email=email, mobile=mobile, password = password, confirm_password = confirm_password )
-        return redirect('home:home')
-
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-
-        if "@" not in email:
-            return render(self.request, self.template_name,
-                          {
-                              'error': 'Invalid email',
-                              'form': form
-                          })
-        else:
-            pass
-        return super().form_valid(form)
 
 
 # products view
