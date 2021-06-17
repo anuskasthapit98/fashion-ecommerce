@@ -1,5 +1,6 @@
+import re
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls.base import clear_script_prefix
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.views.generic.base import View
@@ -146,16 +147,20 @@ class SubscriptionView(View):
 class AddToCartView(View):
 
     def get(self, request, *args, **kwargs):
-        quantity = request.POST.get('quantity')
-        size = request.POST.get('size')
-        print(quantity, size, 88888888888888888888)
+        quantity = 1
+        size = None
+        if 'quantity' in request.GET:
+            quantity = int(request.GET.get('quantity'))
+        if 'size' in request.GET:
+            size = request.GET.get('size')
 
+        print(quantity, size)
         # getting product id
         product_id = self.kwargs['pro_id']
         # get product
         product_obj = Products.objects.get(id=product_id)
         # check if cart exists of not
-        cart_id = self.request.session.get('cart_id')
+        cart_id = self.request.session.get('cart_id', None)
         # if cart exists
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
@@ -165,23 +170,24 @@ class AddToCartView(View):
             # if product already exists
             if this_product_in_cart:
                 cartproduct = this_product_in_cart.last()
-                cartproduct.quantity += 1
-                cartproduct.subtotal += product_obj.selling_price
+                cartproduct.quantity += quantity
+                cartproduct.size = size
+                cartproduct.subtotal += (quantity * product_obj.selling_price)
                 cartproduct.save()
-                cart_obj.subtotal += product_obj.selling_price
+                cart_obj.subtotal += (quantity * product_obj.selling_price)
                 if product_obj.vat_amt:
-                    cart_obj.vat += product_obj.vat_amt
+                    cart_obj.vat += (quantity * product_obj.vat_amt)
                 cart_obj.total = cart_obj.subtotal + cart_obj.vat
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
             # if product doesnot exists
             else:
                 cartproduct = CartProduct.objects.create(
-                    cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
-                    subtotal=product_obj.selling_price, size='-')
-                cart_obj.subtotal += product_obj.selling_price
+                    cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=quantity,
+                    subtotal=(quantity * product_obj.selling_price), size=size)
+                cart_obj.subtotal += (quantity * product_obj.selling_price)
                 if product_obj.vat_amt:
-                    cart_obj.vat += product_obj.vat_amt
+                    cart_obj.vat += (quantity * product_obj.vat_amt)
                 cart_obj.total = cart_obj.subtotal + cart_obj.vat
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
@@ -191,14 +197,29 @@ class AddToCartView(View):
             cart_obj = Cart.objects.create(total=0, subtotal=0)
             self.request.session['cart_id'] = cart_obj.id
             cartproduct = CartProduct.objects.create(
-                cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
-                subtotal=product_obj.selling_price, size='-')
-            cart_obj.subtotal += product_obj.selling_price
+                cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=quantity,
+                subtotal=(quantity * product_obj.selling_price), size=size)
+            cart_obj.subtotal += (quantity * product_obj.selling_price)
             if product_obj.vat_amt:
-                cart_obj.vat += product_obj.vat_amt
+                cart_obj.vat += (quantity * product_obj.vat_amt)
             cart_obj.total = cart_obj.subtotal + cart_obj.vat
             cart_obj.save()
             messages.success(self.request, "Item added to cart")
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
+
+class ManageCartView(View):
+    def get(self, request, *args, **kwargs):
+        cp_id = self.kwargs.get('p_id')
+        action = request.GET.get('action')
+        cp_obj = CartProduct.objects.get(id=cp_id)
+        cart_obj = cp_obj.cart
+        if action == 'remove':
+            cart_obj.subtotal -= (cp_obj.subtotal)
+            cart_obj.vat -= (cp_obj.quantity*cp_obj.product.vat_amt)
+            cart_obj.total = cart_obj.subtotal + cart_obj.vat
+            cart_obj.save()
+            cp_obj.delete()
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
@@ -214,3 +235,17 @@ class MyCartView(BaseMixin, TemplateView):
             cart = None
         context['cart'] = cart
         return context
+
+
+# coupen validation form
+class CoupenValidation(View):
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            return super().dispatch(request, *args, **kwargs)
+        return JsonResponse({"error": "Cannot access this page"}, status=404)
+
+    def get(self, request, *args, **kwargs):
+        code = request.GET.get('code')
+        print('form validation called')
+        print(code, 999999999999999999999999)
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))

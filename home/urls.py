@@ -24,7 +24,13 @@ urlpatterns = [
     # cart funtionality url
     path('add-to-cart/<int:pro_id>/', AddToCartView.as_view(), name='add-to-cart'),
     # my cart
-    path('my-cart/', MyCartView.as_view(), name='my-cart')
+    path('my-cart/', MyCartView.as_view(), name='my-cart'),
+    # manage cart
+    path('manage/<int:p_id>cart/', ManageCartView.as_view(), name='manage-cart'),
+
+    # coupen validation
+    path('coupen/validation/', CoupenValidation.as_view(),
+         name='coupon-validation'),
 
 
 
