@@ -59,15 +59,14 @@ class StaffLoginForm(forms.Form):
         cleaned_data = super().clean()
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            pass
-        else:
+        user = User.objects.filter(username=username, is_active=True).first()
+        if user == None or not user.check_password(password):
             raise ValidationError({
                 'username': 'Invalid username or password'
             })
+        return self.cleaned_data
 
-# password reset form
+        # password reset form
 
 
 class PasswordResetForm(forms.Form):
@@ -127,15 +126,6 @@ class CategoryForm(FormControlMixin, forms.ModelForm):
         model = Category
         fields = "__all__"
 
-    def clean_slug(self):
-        slug = self.cleaned_data['slug']
-
-        if Category.objects.filter(slug=slug).exists():
-            raise forms.ValidationError('This ID is not available')
-        else:
-            pass
-
-        return slug
 
 # product image form
 
@@ -402,11 +392,16 @@ class MessageForm(FormControlMixin, forms.ModelForm):
 
 # color create form
 
-
 class ColorCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Color
         fields = '__all__'
-        
-        
+
+
+# about create form
+
+class AboutCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Abouts
+        fields = '__all__'
 

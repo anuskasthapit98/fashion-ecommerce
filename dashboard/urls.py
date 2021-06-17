@@ -27,9 +27,9 @@ urlpatterns = [
     path('dashboard/category/', CategoryListView.as_view(), name="categories"),
     path('dashboard/category/create/',
          CategoryCreateView.as_view(), name="category-create"),
-    path('dashboard/category/<slug:slug>/update/',
+    path('dashboard/category/<int:pk>/update/',
          CategoryUpdateView.as_view(), name="category-update"),
-    path('dashboard/category/<slug:slug>/delete/',
+    path('dashboard/category/<int:pk>/delete/',
          CategoryDeleteView.as_view(), name="category-delete"),
 
     # image create
@@ -145,7 +145,7 @@ urlpatterns = [
     path('dashboard/message/<int:pk>/delete/',
          MessageDeleteView.as_view(), name='message-delete'),
 
-      # color urls
+    # color urls
     path('dashboard/color/list/', ColorListView.as_view(), name='colors'),
     path('dashboard/color/create/', ColorCreateView.as_view(), name='color-create'),
     path('dashboard/color/<int:pk>/update/',
@@ -153,8 +153,19 @@ urlpatterns = [
     path('dashboard/color/<int:pk>/delete/',
          ColorDeleteView.as_view(), name='color-delete'),
 
-     #newsletter urls
-    path('dashboard/newsletter/list/', NewsletterListView.as_view(), name='newsletters'),
+     # about urls 
+
+    path('dashboard/about/list/', AboutListView.as_view(), name='abouts'),
+    path('dashboard/about/create/', AboutCreateView.as_view(), name='about-create'),
+    path('dashboard/about/<int:pk>/update/',
+         AboutUpdateView.as_view(), name='about-update'),
+    path('dashboard/about/<int:pk>/delete/',
+         AboutDeleteView.as_view(), name='about-delete'),
+
+
+    # newsletter urls
+    path('dashboard/newsletter/list/',
+         NewsletterListView.as_view(), name='newsletters'),
     path('dashboard/newsletter/<int:pk>/delete/',
          NewsletterDeleteView.as_view(), name='newsletter-delete'),
 ]

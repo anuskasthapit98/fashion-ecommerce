@@ -135,6 +135,12 @@
                 <span class="nav-text">Message</span>
               </a>
             </li>
+            <li  class="has-sub {% active_link 'dashboard:abouts' 'active' %}" >
+                <a class="sidenav-item-link" href="{% url 'dashboard:abouts' %}">
+                <i class="mdi mdi-comment-text"></i>
+                <span class="nav-text">About</span>
+              </a>
+              </li>
             <li  class="has-sub" >
               <a class="sidenav-item-link" href="{% url 'dashboard:newsletters' %}">
                 <i class="mdi mdi-message-bulleted"></i>

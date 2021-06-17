@@ -25,6 +25,17 @@ class LoginView(FormView):
     form_class = StaffLoginForm
     success_url = reverse_lazy('dashboard:dashboard')
 
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        pword = form.cleaned_data['password']
+        user = authenticate(username=username, password=pword)
+
+        if user is not None:
+            login(self.request, user)
+            user.is_active = True
+
+        return redirect(self.success_url)
+
 
 # logout view
 class LogoutView(View):
@@ -94,21 +105,20 @@ class PasswordsChangeView(PasswordChangeView):
 # user
 
 
-class UserCreateView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, CreateView):
+class UserCreateView(SuperAdminRequiredMixin, SidebarMixin, CreateView):
     template_name = 'dashboard/user/form.html'
     form_class = UserForm
     success_url = reverse_lazy('dashboard:users')
 
     def form_valid(self, form):
         form.instance.is_staff = True
-        print(form.instance.is_staff, 9999999999999999)
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('dashboard:reset-password', kwargs={'pk': self.object.pk})
 
 
-class UsersListView(SuperAdminRequiredMixin, AdminRequiredMixin, SidebarMixin, ListView):
+class UsersListView(SuperAdminRequiredMixin, SidebarMixin, ListView):
     template_name = 'dashboard/user/list.html'
     model = Account
     success_url = reverse_lazy('dashboard:users')
@@ -131,7 +141,7 @@ class UserToggleStatusView(View):
 # dashboard views
 
 
-class AdminDashboardView(SidebarMixin, TemplateView):
+class AdminDashboardView(CustomLoginRequiredMixin, SidebarMixin, TemplateView):
     template_name = 'dashboard/base/index.html'
 
 
@@ -249,12 +259,34 @@ class ProductCreateView(CreateView, SidebarMixin):
     form_class = ProductForm
     success_url = reverse_lazy('dashboard:products')
 
+    def form_valid(self, form):
+        discount = form.cleaned_data.get('discount_percent')
+        vat = form.cleaned_data.get('vat_percent')
+        marked_price = form.cleaned_data.get('marked_price')
+        if discount != None:
+            form.instance.selling_price = marked_price - \
+                ((marked_price*discount)/100)
+        if vat != None:
+            form.instance.vat_amt = (marked_price*vat)/100
+        return super().form_valid(form)
+
 
 class ProductUpdateView(UpdateView, SidebarMixin):
     template_name = 'dashboard/product/form.html'
     model = Products
     form_class = ProductForm
     success_url = reverse_lazy('dashboard:products')
+
+    def form_valid(self, form):
+        discount = form.cleaned_data.get('discount_percent')
+        vat = form.cleaned_data.get('vat_percent')
+        marked_price = form.cleaned_data.get('marked_price')
+        if discount != None:
+            form.instance.selling_price = marked_price - \
+                ((marked_price*discount)/100)
+        if vat != None:
+            form.instance.vat_amt = (marked_price*vat)/100
+        return super().form_valid(form)
 
 
 class ProductDeleteView(DeleteMixin, DeleteView):
@@ -603,7 +635,6 @@ class ColorListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/color/list.html'
     model = Color
 
-    
     def get_queryset(self):
         queryset = super().get_queryset()
         if "title" in self.request.GET:
@@ -636,7 +667,6 @@ class NewsletterListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/newsletter/list.html'
     model = Subscription
 
-    
     def get_queryset(self):
         queryset = super().get_queryset()
         if "email" in self.request.GET:
@@ -646,7 +676,38 @@ class NewsletterListView(NonDeletedItemMixin, SidebarMixin, ListView):
         return queryset
 
 
-
 class NewsletterDeleteView(DeleteMixin, DeleteView):
     model = Subscription
     success_url = reverse_lazy('dashboard:newsletters')
+
+
+# about
+class AboutListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/about/list.html'
+    model = Abouts
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "title" in self.request.GET:
+            if self.request.GET.get('title') != '':
+                queryset = queryset.filter(
+                    title__contains=self.request.GET.get("title"))
+        return queryset
+
+
+class AboutCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/about/form.html'
+    form_class = AboutCreateForm
+    success_url = reverse_lazy('dashboard:abouts')
+
+
+class AboutUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/about/form.html'
+    model = Abouts
+    form_class = AboutCreateForm
+    success_url = reverse_lazy('dashboard:abouts')
+
+
+class AboutDeleteView(DeleteMixin, DeleteView):
+    model = Abouts
+    success_url = reverse_lazy('dashboard:abouts')

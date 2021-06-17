@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.urls.base import clear_script_prefix
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.views.generic.base import View
 from django.urls import reverse_lazy
@@ -8,24 +9,32 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.conf import settings
 from django.contrib import messages
+from django.views.generic.edit import FormView
+
 
 from dashboard.forms import *
 from dashboard.models import *
+from dashboard.mixines import *
+
+from .mixins import *
 
 from dashboard.mixines import NonDeletedItemMixin
 from django.db.models import Q
 # Create your views here.
 
 
-class HomeTemplateView(TemplateView):
+class HomeTemplateView(BaseMixin, TemplateView):
     template_name = 'home/base/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['blogs'] = Blog.objects.filter(deleted_at__isnull=True)
         context['service'] = service.objects.filter(deleted_at__isnull=True)
+        context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
         context['trend_products'] = Products.objects.filter(
             deleted_at__isnull=True).order_by('-view_count')
+        context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
+
         return context
     
     
@@ -70,28 +79,47 @@ class CustomerRegistrationView(CreateView):
 # products view
 
 
-class ProductListView(NonDeletedItemMixin, ListView):
+class ProductListView(BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(BaseMixin, DetailView):
     template_name = 'home/product/detail.html'
     model = Products
     context_object_name = 'product_detail'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        p_slug = self.kwargs.get('slug')
-        obj = Products.objects.get(pk=p_slug)
+        p_id = self.kwargs.get('pk')
+        obj = Products.objects.get(pk=p_id)
         category = obj.categories
         context['similar_product'] = Products.objects.filter(
-            categories__name=category).exclude(slug=p_slug)
+            categories__name=category).exclude(pk=p_id)
+        return context
+
+# about
+
+
+class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
+    model = Abouts
+    template_name = 'home/about/about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = Abouts.objects.filter(deleted_at__isnull=True)
+        context['testimonial'] = Testimonials.objects.filter(
+            deleted_at__isnull=True)
+        context['service'] = service.objects.filter(deleted_at__isnull=True)
+        context['blog'] = Blog.objects.filter(deleted_at__isnull=True)
+        context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
+
         return context
 
 # contact
 
-class ContactView(CreateView):
+
+class ContactView(BaseMixin, CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
     success_url = reverse_lazy('contact')
@@ -180,6 +208,7 @@ class BlogDetailView(DetailView):
     
 # newsletter
 
+
 class SubscriptionView(View):
     def post(self, request, *args, **kwargs):
         email = self.request.POST.get('email')
@@ -203,4 +232,77 @@ class SubscriptionView(View):
             message.send()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# cart funtionality view
 
+
+class AddToCartView(View):
+
+    def get(self, request, *args, **kwargs):
+        quantity = request.POST.get('quantity')
+        size = request.POST.get('size')
+        print(quantity, size, 88888888888888888888)
+
+        # getting product id
+        product_id = self.kwargs['pro_id']
+        # get product
+        product_obj = Products.objects.get(id=product_id)
+        # check if cart exists of not
+        cart_id = self.request.session.get('cart_id')
+        # if cart exists
+        if cart_id:
+            cart_obj = Cart.objects.get(id=cart_id)
+            # checking for product existance
+            this_product_in_cart = cart_obj.cartproduct_set.filter(
+                product=product_obj)
+            # if product already exists
+            if this_product_in_cart:
+                cartproduct = this_product_in_cart.last()
+                cartproduct.quantity += 1
+                cartproduct.subtotal += product_obj.selling_price
+                cartproduct.save()
+                cart_obj.subtotal += product_obj.selling_price
+                if product_obj.vat_amt:
+                    cart_obj.vat += product_obj.vat_amt
+                cart_obj.total = cart_obj.subtotal + cart_obj.vat
+                cart_obj.save()
+                messages.success(self.request, "Item added to cart")
+            # if product doesnot exists
+            else:
+                cartproduct = CartProduct.objects.create(
+                    cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
+                    subtotal=product_obj.selling_price, size='-')
+                cart_obj.subtotal += product_obj.selling_price
+                if product_obj.vat_amt:
+                    cart_obj.vat += product_obj.vat_amt
+                cart_obj.total = cart_obj.subtotal + cart_obj.vat
+                cart_obj.save()
+                messages.success(self.request, "Item added to cart")
+
+        # if cart does not exists
+        else:
+            cart_obj = Cart.objects.create(total=0, subtotal=0)
+            self.request.session['cart_id'] = cart_obj.id
+            cartproduct = CartProduct.objects.create(
+                cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=1,
+                subtotal=product_obj.selling_price, size='-')
+            cart_obj.subtotal += product_obj.selling_price
+            if product_obj.vat_amt:
+                cart_obj.vat += product_obj.vat_amt
+            cart_obj.total = cart_obj.subtotal + cart_obj.vat
+            cart_obj.save()
+            messages.success(self.request, "Item added to cart")
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
+
+class MyCartView(BaseMixin, TemplateView):
+    template_name = 'home/cart/cart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart_id = self.request.session.get('cart_id')
+        if cart_id:
+            cart = Cart.objects.get(id=cart_id)
+        else:
+            cart = None
+        context['cart'] = cart
+        return context

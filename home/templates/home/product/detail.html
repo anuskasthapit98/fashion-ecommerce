@@ -52,46 +52,49 @@
                 </li>
               </ul>
               <p class="mb-4">{{ product_detail.description|safe }}</p>
-              <div class="d-sm-flex align-items-center mb-5">
-                <div class="d-flex align-items-center mr-sm-4">
-                  <button class="btn-product btn-product-up"> <i class="las la-minus"></i>
-                  </button>
-                  <input class="form-product" type="number" name="form-product" value="1">
-                  <button class="btn-product btn-product-down"> <i class="las la-plus"></i>
-                  </button>
+              <form method="GET" action="{% url 'home:add-to-cart' product_detail.id %}" >
+                <div class="d-sm-flex align-items-center mb-5">
+                  <div class="d-flex align-items-center mr-sm-4">
+                    <button class="btn-product btn-product-up"> <i class="las la-minus"></i>
+                    </button>
+                    <input name='quantity' class="form-product" type="number" name="form-product" value="1">
+                    <button class="btn-product btn-product-down"> <i class="las la-plus"></i>
+                    </button>
+                  </div>
+                  <select class="custom-select mt-3 mt-sm-0" id="inputGroupSelect02">
+                    <option selected>Size</option>
+                    {% for size in product_detail.size.all %}
+                    <option name='size' value="{{ size.id }}">{{ size.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="d-flex text-center ml-sm-4 mt-3 mt-sm-0">
+                      {% for color in product_detail.color.all %}
+                    <div class="form-check pl-0 mr-3">
+                      <input type="radio" class="form-check-input" id="color-filter{{ forloop.counter }}" name="Radios">
+                      <label class="form-check-label" for="color-filter1" data-bg-color="#3cb371"></label>
+                    </div>
+                    {% endfor %}
+                    <div class="form-check pl-0 mr-3">
+                      <input type="radio" class="form-check-input" id="color-filter2" name="Radios" checked>
+                      <label class="form-check-label" for="color-filter2" data-bg-color="#4876ff"></label>
+                    </div>
+                    <div class="form-check pl-0 mr-3">
+                      <input type="radio" class="form-check-input" id="color-filter3" name="Radios">
+                      <label class="form-check-label" for="color-filter3" data-bg-color="#0a1b2b"></label>
+                    </div>
+                    <div class="form-check pl-0">
+                      <input type="radio" class="form-check-input" id="color-filter4" name="Radios">
+                      <label class="form-check-label" for="color-filter4" data-bg-color="#f94f15"></label>
+                    </div>
+                  </div>
                 </div>
-                <select class="custom-select mt-3 mt-sm-0" id="inputGroupSelect02">
-                  <option selected>Size</option>
-                  {% for size in product_detail.size.all %}
-                  <option value="{{ size.id }}">{{ size.name }}</option>
-                  {% endfor %}
-                </select>
-                <div class="d-flex text-center ml-sm-4 mt-3 mt-sm-0">
-                    {% for color in product_detail.color.all %}
-                  <div class="form-check pl-0 mr-3">
-                    <input type="radio" class="form-check-input" id="color-filter{{ forloop.counter }}" name="Radios">
-                    <label class="form-check-label" for="color-filter1" data-bg-color="#3cb371"></label>
-                  </div>
-                  {% endfor %}
-                  <div class="form-check pl-0 mr-3">
-                    <input type="radio" class="form-check-input" id="color-filter2" name="Radios" checked>
-                    <label class="form-check-label" for="color-filter2" data-bg-color="#4876ff"></label>
-                  </div>
-                  <div class="form-check pl-0 mr-3">
-                    <input type="radio" class="form-check-input" id="color-filter3" name="Radios">
-                    <label class="form-check-label" for="color-filter3" data-bg-color="#0a1b2b"></label>
-                  </div>
-                  <div class="form-check pl-0">
-                    <input type="radio" class="form-check-input" id="color-filter4" name="Radios">
-                    <label class="form-check-label" for="color-filter4" data-bg-color="#f94f15"></label>
-                  </div>
+                <div class="d-sm-flex align-items-center mt-5">
+                  <button type="submit" class="btn btn-primary btn-animated mr-sm-4 mb-3 mb-sm-0">
+                    <i class="las la-shopping-cart mr-1"></i>Add To Cart</button>
+                  <a class="btn btn-animated btn-dark" href="#"> <i class="lar la-heart mr-1"></i>Add To Wishlist
+                  </a>
                 </div>
-              </div>
-              <div class="d-sm-flex align-items-center mt-5">
-                <button class="btn btn-primary btn-animated mr-sm-4 mb-3 mb-sm-0"><i class="las la-shopping-cart mr-1"></i>Add To Cart</button>
-                <a class="btn btn-animated btn-dark" href="#"> <i class="lar la-heart mr-1"></i>Add To Wishlist
-                </a>
-              </div>
+              </form>
               <div class="d-flex align-items-center border-top border-bottom py-4 mt-5">
                 <h6 class="mb-0 mr-4">Share It:</h6>
                 <ul class="list-inline">
@@ -351,7 +354,7 @@
                 <div class="card product-card">
                   <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="lar la-heart"></i>
                   </button>
-                  <a class="card-img-hover d-block" href="{% url 'home:product-detail' related.slug %}">
+                  <a class="card-img-hover d-block" href="{% url 'home:product-detail' related.id %}">
                         {% for img in related.image.all|slice:1 %}
                         <img class="card-img-top card-img-back" src="{{ img.image.url }}" alt="{{ related.name }}">
                         {% endfor %}
@@ -361,9 +364,9 @@
                   </a>
                   <div class="card-info">
                     <div class="card-body">
-                      <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' related.slug %}">{{ related.name }}</a>
+                      <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' related.id %}">{{ related.name }}</a>
                       </div>
-                      <div class="mt-1"> <span class="product-price"><del class="text-muted">Nrs. {{ related.price }}</del> $25.00</span>
+                      <div class="mt-1"> <span class="product-price"><del class="text-muted">Nrs. {{ related.selling_price }}</del> Nrs. {{ related.marked_price }}</span>
                         <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
                         </div>
                       </div>

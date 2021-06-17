@@ -85,13 +85,12 @@ class Category(DateTimeModel):
     img = models.ImageField(upload_to="category")
     parent = models.ForeignKey('self', related_name="sub_Category",
                                on_delete=models.CASCADE, null=True, blank=True, )
-    slug = models.SlugField(unique=True, primary_key=True)
     description = RichTextField()
 
     class Meta:
         verbose_name = ('Category')
         verbose_name_plural = ('Categories')
-        ordering = ['slug']
+        ordering = ['name']
 
     def __str__(self):
 
@@ -162,9 +161,11 @@ class Products(DateTimeModel):
     image = models.ManyToManyField(ProductImage)
     description = RichTextField()
     size = models.ManyToManyField(Size)
-    price = models.PositiveIntegerField()
+    marked_price = models.PositiveIntegerField()
+    selling_price = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True)
     status = models.BooleanField(default=True)
-    slug = models.SlugField(unique=True, primary_key=True)
+    slug = models.SlugField(unique=True)
     color = models.ManyToManyField(Color)
     vat_incl = models.BooleanField(default=False)
     vat_percent = models.DecimalField(
@@ -173,8 +174,7 @@ class Products(DateTimeModel):
         max_digits=12, decimal_places=2, null=True, blank=True)
     discount_percent = models.DecimalField(
         max_digits=12, decimal_places=2, null=True, blank=True)
-    discount_amt = models.DecimalField(
-        max_digits=12, decimal_places=2, null=True, blank=True)
+
     view_count = models.PositiveIntegerField(default=0, null=True, blank=True)
 
     class Meta:
@@ -235,15 +235,34 @@ class BillingAddress(DateTimeModel):
 
 # cart model
 class Cart(DateTimeModel):
-    products = models.ManyToManyField(Products)
-    quantity = models.PositiveIntegerField(default=1)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=50, decimal_places=2, default=0)
+    vat = models.DecimalField(
+        max_digits=50, decimal_places=2, null=True, blank=True, default=0)
+    total = models.DecimalField(max_digits=50, decimal_places=2)
 
     class Meta:
         verbose_name = ('Cart')
         verbose_name_plural = ('Carts')
 
     def __str__(self):
-        return "Product: " + str(self.products.slug)
+        return f"Cart: {self.id}"
+
+# cartproduct model
+
+
+class CartProduct(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    rate = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField()
+    size = models.CharField(max_length=200, null=True, blank=True)
+    subtotal = models.PositiveIntegerField()
+
+    def str(self):
+        return "Cart: " + str(self.cart.id) + " CartProduct: " + str(self.id)
+
 
 # order model
 
@@ -284,18 +303,6 @@ class Wishlist(DateTimeModel):
     def __str__(self):
         return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
 
-# cartproduct model
-
-
-class CartProduct(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
-    rate = models.PositiveIntegerField(default=0)
-    quantity = models.PositiveIntegerField()
-    subtotal = models.PositiveIntegerField()
-
-    def str(self):
-        return "Cart: " + str(self.cart.id) + " CartProduct: " + str(self.id)
 
 # testimonials model
 
@@ -439,3 +446,25 @@ class Message(DateTimeModel):
 
     def __str__(self):
         return self.first_name
+
+
+# about
+class Abouts(DateTimeModel):
+    image = models.ImageField(upload_to="abouts")
+    title_one = models.CharField(max_length=200)
+    description_one = models.TextField(max_length=500)
+    title_two = models.CharField(max_length=200)
+    description_two = models.TextField(max_length=500)
+    mission_title = models.CharField(max_length=200)
+    mission_description = models.TextField(max_length=500)
+    vision_title = models.CharField(max_length=200)
+    vision_description = models.TextField(max_length=500)
+    value_title = models.CharField(max_length=200)
+    value_description = models.TextField(max_length=500)
+
+    class Meta:
+        verbose_name = ('About')
+        verbose_name_plural = ('Abouts')
+
+    def __str__(self):
+        return self.title
