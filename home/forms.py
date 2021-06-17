@@ -27,3 +27,5 @@ class SubscriptionForm(FormControlMixin, ModelForm):
         return email
 
 
+
+    
