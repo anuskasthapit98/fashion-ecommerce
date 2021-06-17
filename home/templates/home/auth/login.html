@@ -1,0 +1,83 @@
+{% extends 'home/base.html' %}
+{%load static%}
+{% block content %}
+
+
+<!--hero section start-->
+
+<section class="bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h1 class="h2 mb-0">Login</h1>
+      </div>
+      <div class="col-md-6 mt-3 mt-md-0">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-md-end bg-transparent p-0 m-0">
+            <li class="breadcrumb-item"><a class="text-dark" href="#"><i class="las la-home mr-1"></i>Home</a>
+            </li>
+            <li class="breadcrumb-item">Pages</li>
+            <li class="breadcrumb-item active text-primary" aria-current="page">Login</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
+</section>
+
+<!--hero section end--> 
+
+
+<!--body content start-->
+
+<div class="page-content">
+
+<!--login start-->
+
+<section>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5">
+        <div class="shadow p-3">
+          <img class="img-fluid mb-5" src="assets/images/login.png" alt="">
+          <h3 class="text-center mb-3 text-uppercase">User Login</h3>
+          <form id="contact-form" method="post" action="http://themeht.com/ekocart/html/php/contact.php">
+            <div class="messages"></div>
+            <div class="form-group">
+              <input id="form_name" type="text" name="name" class="form-control" placeholder="User name" required="required" data-error="Username is required.">
+              <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group">
+              <input id="form_password" type="password" name="password" class="form-control" placeholder="Password" required="required" data-error="password is required.">
+              <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group mt-4 mb-5">
+              <div class="remember-checkbox d-flex align-items-center justify-content-between">
+                <div class="checkbox">
+                  <input type="checkbox" id="check2" name="check2">
+                  <label for="check2">Remember me</label>
+                </div>
+                 <a href="#">Forgot Password?</a>
+              </div>
+            </div> <a href="#" class="btn btn-primary btn-block">Login Now</a>
+           
+           
+          </form>
+          <div class="d-flex align-items-center text-center justify-content-center mt-4">
+                  <span class="text-muted mr-1">Don't have an account?</span>
+                   <a href="signup.html">Sign Up</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--login end-->
+
+</div>
+
+<!--body content end--> 
+{% endblock %}
