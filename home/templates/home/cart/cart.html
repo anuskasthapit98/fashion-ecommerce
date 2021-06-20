@@ -88,10 +88,10 @@
               <p>Enter your coupon code if you have one.</p>
               <div class="row form-row">
                 <div class="col">
-                  <input class="form-control" id="coupon" placeholder="Coupon Code" type="text">
+                  <input class="form-control" id="c-code" placeholder="Coupon Code" type="text">
                 </div>
                 <div class="col col-auto">
-                  <button type="submit" class="btn btn-dark btn-animated apply-coupon">Apply Coupon</button>
+                  <button class="btn btn-dark btn-animated" id="code">Apply Coupon</button>
                 </div>
               </div>
             </form>
@@ -106,7 +106,7 @@
             <div class="d-flex justify-content-between align-items-center border-bottom py-3"> <span class="text-muted">VAT</span>  <span class="text-dark">Nrs. {{ cart.vat }}</span> 
             </div>
             <div class="d-flex justify-content-between align-items-center pt-3 mb-5"> <span class="text-dark h5">Total</span>  <span class="text-dark font-weight-bold h5">Nrs. {{ cart.total }}</span> 
-            </div> <a class="btn btn-primary btn-animated btn-block" href="product-checkout.html">Proceed To Checkout</a>
+            </div> <a class="btn btn-primary btn-animated btn-block" href="{% url 'home:checkout' %}">Proceed To Checkout</a>
             <a class="btn btn-dark btn-animated mt-3" href="#">Continue Shopping</a>
           </div>
         </div>
@@ -118,43 +118,30 @@
   
   <!--body content end--> 
 {% endblock %}
-{% block script %}
-<script>
-$('.remove').click(function(e) {
-        e.preventDefault();
-        swal({
-                title: "Are you sure?",
-                text: "It will permanently removed !",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    window.location.href = $(this).attr('href');
-                    swal(" 'A product has been removed.'!", {
-                        icon: "success",
-                    });
-                }
-            });
-    })
-</script>
-<script>
-  $('.apply-coupon').click( function(){
-    let coupon = $('#coupon').val();
-    alert('button clicked' + coupon);
 
-    console.log(coupon);
-    // $.ajax({
-    //   method : "GET",
-    //   url : "{% url 'home:coupon-validation' %}",
-    //   data : {
-    //     code = coupon
-    //   },
-    //   success : function(data){
-    //     console.log(data)
-    //   }
-    // })
-  })
-</script>
+{% block script %}
+ 
+<script>
+$("#code").click(function(){ 
+  var code = $("#c-code").val();
+  $.ajax({
+    url: "{% url 'home:coupon' %}",
+
+    data: {
+      'coupon_code': code
+    },
+  
+    success: function (data){
+      if (data.valid){
+        alert("Coupon successfully added")
+      }
+      else{
+        alert("Coupon not found");
+      }
+    }
+  });
+});
+</script> 
+
+
 {% endblock %}

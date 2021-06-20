@@ -1,0 +1,148 @@
+{% extends 'home/base.html' %}
+{% block title %} Checkout {% endblock %}
+{% block content %}
+
+
+<!--body content start-->
+
+<div class="page-content">
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-7 col-md-12">
+        <div class="checkout-form box-shadow white-bg">
+          <h2 class="mb-4">Billing Details</h2>
+          <form class="row" method="POST">
+          {% csrf_token %}
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>First Name</label>
+                {{ form.first_name }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Last Name</label>
+               {{ form.last_name }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>E-mail Address</label>
+               {{ form.email }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Phone Number</label>
+               {{ form.phone }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Company Name</label>
+              {{ form.company_name }}
+              </div>
+            </div>
+    
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Address</label>
+                {{ form.address_one }}
+              </div>
+              <div class="form-group">
+              {{ form.address_two }}
+              </div>
+            </div>
+         
+            <div class="col-md-6">
+              <div class="form-group mb-md-0">
+                <label>State/Province</label>
+               {{ form.province }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-md-0">
+                <label>Zip/Postal Code</label>
+         {{ form.zip_code }}
+              </div>
+            </div>
+           <div class="col-md-6">
+              <div class="form-group mb-md-0">
+                <label>Payment Method</label>
+             {{ form.payment_method }}
+              </div>
+            </div>
+            
+        </div>
+        
+      </div>
+      
+      <div class="col-lg-5 col-md-12 mt-5 mt-lg-0">
+        <div class="shadow p-3 p-lg-5">
+       <div class="p-3 p-lg-5 shadow-sm mb-5" id="coupon">
+              <label class="text-black mb-3">Enter your coupon code if you have one</label>
+              <div class="input-group">
+                <input class="form-control" id="c-code" placeholder="Coupon Code" aria-label="Coupon Code" aria-describedby="button-addon2" type="text">
+                <div class="input-group-append">
+                  <button class="btn btn-primary btn-sm px-4" type="button" id="code">Apply</button>
+                </div>
+              </div>
+          </div> 
+        <div class="p-3 p-lg-5 shadow-sm mb-5">
+          <h3 class="mb-3">Your Order</h3>
+           {% for product in cart.cartproduct_set.all %}
+          <ul class="list-unstyled">
+            
+            <li class="mb-3 border-bottom pb-3"><span> 1 x {{ product.product.name }} </span>Rs. {{ product.rate }}</li>
+            <li class="mb-3 border-bottom pb-3"><span> Shipping </span>Rs. {{ product.shipping_charge }}</li>
+            <li class="mb-3 border-bottom pb-3"><span> Subtotal </span>{{ product.subtotal }}</li>
+            <li><span><strong class="cart-total"> Total :</strong></span>  <strong class="cart-total">Rs. {{ product.total }} </strong>
+          
+            </li>
+          </ul>
+          {% endfor %}
+        </div>
+        <button class="btn btn-primary btn-animated btn-block">Proceed to Payment</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</div>
+<!--body content end--> 
+{% endblock %}
+
+{% block script %}
+ 
+<script>
+$("#code").click(function(){ 
+
+  var code = $("#c-code").val();
+  alert(code)
+  $.ajax({
+    url: "{% url 'home:coupon' %}",
+
+    data: {
+      'coupon_code': code
+    },
+  
+    success: function (data){
+      if (data.valid){
+        alert("Coupon successfully added")
+      }
+      else{
+        alert("Coupon not found");
+      }
+    }
+  });
+});
+</script> 
+
+
+{% endblock %}
+
+
