@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 
-from dashboard.models import Contact, CartProduct, Cart
+from dashboard.models import Category, CategoryType, Contact, CartProduct, Cart
 
 
 class BaseMixin(object):
@@ -20,4 +20,9 @@ class BaseMixin(object):
         context['cart_products'] = cart_product
         context['subtotal'] = subtotal
         # context['subtotal'] = cart_product.subtotal
+
+        # navbar
+        context['category_type'] = CategoryType.objects.filter(
+            deleted_at__isnull=True)
+        context['category'] = Category.objects.filter(parent__isnull=True)
         return context

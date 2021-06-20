@@ -49,7 +49,7 @@
                       {% for cat in sidebar_categories %}
                       <li  class="{% active_link 'dashboard:specific-products' 'active' %}" >
                         <a class="sidenav-item-link" href="{% url 'dashboard:specific-products' %}?category={{ cat.name }}">
-                          <span class="nav-text">{{ cat.name }}</span>
+                          <span class="nav-text">{{ cat.type }}</span>
                         </a>
                       </li>
                       {% endfor %}
