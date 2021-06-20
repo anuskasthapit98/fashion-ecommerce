@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import ValidationError
 from django.forms import widgets
 
 from .mixines import *
@@ -190,70 +190,76 @@ class SizeCreateForm(FormControlMixin, forms.ModelForm):
 # customer create form
 
 class CustomerCreateForm(FormControlMixin, forms.ModelForm):
-        username = forms.CharField(widget=forms.TextInput())
-        password = forms.CharField(widget=forms.PasswordInput())
-        confirm_password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
 
-        class Meta:
-            model = Customer
-            fields =['username','password','confirm_password','first_name','last_name','email','mobile','gender']
-            
-        def clean(self):
-            cleaned_data = super().clean()
-            username = self.cleaned_data['username']
-            mobile = self.cleaned_data['mobile']
-            password = self.cleaned_data['password']
-            confirm_password = self.cleaned_data['confirm_password']
-            print(username, mobile,password,confirm_password ,"11111111111111111")
-            if Customer.objects.filter(username=username).exists():
-                print(username)
-                raise ValidationError({
-                    'username': 'username is not available'
-                })
-           
-            if Customer.objects.filter(mobile=mobile):
-                print(mobile)
-                raise ValidationError({
-                    'mobile': 'mobile no. already exists'
-                })
-            if len(mobile) < 10:
-                print(mobile)
-                raise ValidationError({
-                    'mobile': 'Invalid mobile no.'
-                })
+    class Meta:
+        model = Customer
+        fields = ['username', 'password', 'confirm_password',
+                  'first_name', 'last_name', 'email', 'mobile', 'gender']
 
-            if confirm_password != password:
-                print(confirm_password)
-                raise forms.ValidationError({
-                    'confirm_password': 'Password Not Matched'})
-           
-            return self.cleaned_data
-      
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields['first_name'].widget.attrs.update({
-                'placeholder': "first name"
-            })
-            self.fields['last_name'].widget.attrs.update({
-                'placeholder': "last name"
-            })
-            self.fields['email'].widget.attrs.update({
-                'placeholder': "email"
-            })
-            self.fields['password'].widget.attrs.update({
-                'placeholder': "password"
-            })
-            self.fields['confirm_password'].widget.attrs.update({
-                'placeholder': "reenter-password"
-            })
-            self.fields['username'].widget.attrs.update({
-                'placeholder': "username"
-            })
-            self.fields['mobile'].widget.attrs.update({
-                'placeholder': "mobile"
+    def clean(self):
+        cleaned_data = super().clean()
+        username = self.cleaned_data['username']
+        mobile = self.cleaned_data['mobile']
+        password = self.cleaned_data['password']
+        confirm_password = self.cleaned_data['confirm_password']
+        print(username, mobile, password, confirm_password, "11111111111111111")
+        if password != confirm_password:
+            print('password did not matched')
+            raise ValidationError({
+                'password': 'Password did not match'
             })
 
-            
+        # if Customer.objects.filter(username=username).exists():
+        #     print(username)
+        #     raise ValidationError({
+        #         'username': 'username is not available'
+        #     })
+
+        # if Customer.objects.filter(mobile=mobile):
+        #     print(mobile)
+        #     raise ValidationError({
+        #         'mobile': 'mobile no. already exists'
+        #     })
+        # if len(mobile) < 10:
+        #     print(mobile)
+        #     raise ValidationError({
+        #         'mobile': 'Invalid mobile no.'
+        #     })
+
+        # if confirm_password != password:
+        #     print(confirm_password)
+        #     raise forms.ValidationError({
+        #         'confirm_password': 'Password Not Matched'})
+
+        # return self.cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({
+            'placeholder': "first name"
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'placeholder': "last name"
+        })
+        self.fields['email'].widget.attrs.update({
+            'placeholder': "email"
+        })
+        self.fields['password'].widget.attrs.update({
+            'placeholder': "password"
+        })
+        self.fields['confirm_password'].widget.attrs.update({
+            'placeholder': "reenter-password"
+        })
+        self.fields['username'].widget.attrs.update({
+            'placeholder': "username"
+        })
+        self.fields['mobile'].widget.attrs.update({
+            'placeholder': "mobile"
+        })
+
 
 # Testimonial create form
 
@@ -301,11 +307,12 @@ class BlogCreateForm(FormControlMixin, forms.ModelForm):
             'class': 'form-control select2 feature-select',
             'multiple': 'multiple'
         })
-        
+
 # Blog comment create form
 
+
 class BlogCommentForm(FormControlMixin, forms.ModelForm):
-        
+
     class Meta:
         model = Comment
         fields = '__all__'
@@ -354,6 +361,7 @@ class MessageForm(FormControlMixin, forms.ModelForm):
 
 # color create form
 
+
 class ColorCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Color
@@ -366,4 +374,3 @@ class AboutCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Abouts
         fields = '__all__'
-

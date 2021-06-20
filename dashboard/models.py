@@ -3,6 +3,7 @@ from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User, Group
 from django.db import models
 from django.db.models.enums import Choices
+from django.http.response import JsonResponse
 from django.utils import timezone
 
 
@@ -61,13 +62,12 @@ class Account(User):
 # Customer Model
 
 
-
 class Customer(User):
-    GENDER = (('Male','Male'),
+    GENDER = (('Male', 'Male'),
               ('Female', 'Female'),
-               ('Others', 'Others'),)
+              ('Others', 'Others'),)
     mobile = models.CharField(max_length=10)
-    gender = models.CharField(max_length=10, choices = GENDER)
+    gender = models.CharField(max_length=10, choices=GENDER)
     is_customer = models.BooleanField(default=True)
 
     class Meta:
@@ -78,14 +78,30 @@ class Customer(User):
     def __str__(self):
         return self.first_name
 
+# Categor type model
 
+
+class CategoryType(DateTimeModel):
+    type = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = ('Category Type')
+        verbose_name_plural = ('Category Types')
+        ordering = ['type']
+
+    def __str__(self):
+        return self.type
 # Category Model
+
+
 class Category(DateTimeModel):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
     parent = models.ForeignKey('self', related_name="sub_Category",
                                on_delete=models.CASCADE, null=True, blank=True, )
     description = RichTextField()
+    category_type = models.ForeignKey(
+        CategoryType, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = ('Category')
@@ -357,7 +373,7 @@ class Blog(DateTimeModel):
         return self.title
 
 
-#comment model 
+# comment model
 class Comment(DateTimeModel):
     full_name = models.CharField(max_length=30)
     email = models.EmailField()
@@ -372,9 +388,10 @@ class Comment(DateTimeModel):
         verbose_name_plural = ('Comments')
 
     def __str__(self):
-        return  'Comment {} by {}'.format(self.comment, self.full_name)
-    
+        return 'Comment {} by {}'.format(self.comment, self.full_name)
+
 # service model
+
 
 class service(DateTimeModel):
     image = models.ImageField(upload_to="service")

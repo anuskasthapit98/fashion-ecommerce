@@ -58,15 +58,11 @@
               <div class="col-md-6">
                 <div class="form-group">
                   {{form.first_name}}
-                 
-              
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                {{form.last_name}}   
-                        
-            
+                {{form.last_name}}
                 </div>
               </div>
             </div>
@@ -74,23 +70,19 @@
               <div class="col-md-6">
                 <div class="form-group">
                   {{form.username}}
-              
-           <span class = "form-errors">{{form.username.errors}}</span>  
+                  <span class = "form-errors">{{ form.errors.username }}</span>  
                 </div>
               </div>
             <div class="col-md-6">
                 <div class="form-group">
                    {{form.gender}}
-                
                 </div>
             </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                {{form.email}}   
-                       
-            <span class = "form-errors">{{form.errors.email}}</span>  
+                {{form.email}} 
                 </div>
               </div>
               <div class="col-md-6">
@@ -104,17 +96,15 @@
               <div class="col-md-6">
                 <div class="form-group">
                 {{form.password}}  
-           
                 </div>
+                <span>{{ form.errors.password }} errors</span>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                {{form.confirm_password}}  
-             <span class = "form-errors">{{form.errors.confirm_password}}</span>  
+                {{form.confirm_password}}
                 </div>
               </div>
             </div> 
-              
             <div class="row mt-5">
               <div class="col-md-12">
                 <div class="remember-checkbox clearfix mb-5">

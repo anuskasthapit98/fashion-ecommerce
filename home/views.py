@@ -1,17 +1,13 @@
 import re
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse
-from django.urls.base import clear_script_prefix
-from django.views.generic import TemplateView, CreateView, ListView, DetailView
-from django.views.generic.base import View
-from django.urls import reverse_lazy
-from django.shortcuts import redirect
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
 from django.conf import settings
 from django.contrib import messages
-from django.views.generic.edit import FormView
-
+from django.http import HttpResponseRedirect, JsonResponse
+from django.urls import reverse_lazy
+from django.urls.base import clear_script_prefix
+from django.views.generic import TemplateView, CreateView, ListView, DetailView, FormView, View
+from django.shortcuts import redirect, render
+from django.template.loader import get_template
 
 from dashboard.forms import *
 from dashboard.models import *
@@ -37,15 +33,15 @@ class HomeTemplateView(BaseMixin, TemplateView):
         context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
 
         return context
-    
-    
-#Resgistration 
+
+
+# Resgistration
 
 class CustomerRegistrationView(CreateView):
     template_name = 'home/auth/register.html'
     form_class = CustomerCreateForm
     success_url = reverse_lazy('home:home')
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CustomerCreateForm()
@@ -132,18 +128,18 @@ class ContactView(BaseMixin, CreateView):
         return super().form_valid(form)
 
 
-#blogs
+# blogs
 
 class BlogView(ListView):
-    template_name= 'home/blog/blog.html'
+    template_name = 'home/blog/blog.html'
     model = Blog
     paginate_by = 3
-    
-    def get_context_data(self, **kwargs) :
-        context =  super().get_context_data(**kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['tags'] = Tag.objects.filter(deleted_at__isnull=True)
         return context
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if 'keyword' in self.request.GET:
@@ -154,11 +150,12 @@ class BlogView(ListView):
                                            Q(description__icontains=search_item))
         return queryset
 
+
 class BlogDetailView(DetailView):
     template_name = 'home/blog/detail.html'
     model = Blog
     form_class = BlogCommentForm
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['blogs'] = Blog.objects.exclude(
@@ -167,7 +164,6 @@ class BlogDetailView(DetailView):
         blog = self.kwargs.get('pk')
         context['comment'] = Comment.objects.filter(blog=blog).order_by('-id')
         return context
-    
 
     def post(self, request, *args, **kwargs):
         name = request.POST.get('full_name')
@@ -179,9 +175,8 @@ class BlogDetailView(DetailView):
             full_name=name, email=email, comment=comment, blog=form)
 
         return redirect('blog-detail', pk=blog)
-    
-    
-    
+
+
 # newsletter
 
 
