@@ -11,8 +11,6 @@ urlpatterns = [
     path('products/<int:pk>/detail/',
          ProductDetailView.as_view(), name='product-detail'),
 
-   
-
     # about
     path('abouts/', AboutListView.as_view(), name="abouts"),
 
@@ -26,7 +24,14 @@ urlpatterns = [
     # cart funtionality url
     path('add-to-cart/<int:pro_id>/', AddToCartView.as_view(), name='add-to-cart'),
     # my cart
-    path('my-cart/', MyCartView.as_view(), name='my-cart')
+    path('my-cart/', MyCartView.as_view(), name='my-cart'),
 
+    # checkout
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
+
+    # coupon 
+    path('coupon/', CouponView.as_view(), name='coupon'),
+    
 
 ]
+

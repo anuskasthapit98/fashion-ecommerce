@@ -27,6 +27,8 @@
     <link type="text/css" href="{% static 'home/assets/toastr/toastr.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'home/assets/css/theme.css' %}">
 
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/themes/dark.css">
 </head>
 
 <body>
@@ -77,9 +79,11 @@
 
 <script src="{%static 'home/assets/js/theme-plugin.js'%}"></script>
 <script src="{% static 'home/assets/js/theme-script.js'%}"></script>
-  <script src="{% static 'home/assets/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'home/assets/toastr/toastr.min.js' %}"></script>
   
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+{% block script %}
+{% endblock %}
 <!-- inject js end -->
       <script>
         toastr.options = {

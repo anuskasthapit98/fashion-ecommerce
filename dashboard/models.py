@@ -186,48 +186,26 @@ class Products(DateTimeModel):
 # Coupon Model
 
 class Coupon(DateTimeModel):
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
     valid_to = models.DateTimeField(null=True, blank=True)
     valid_from = models.DateTimeField(null=True, blank=True)
     code = models.CharField(max_length=50, unique=True)
-    title = models.CharField(max_length=250)
     discount_percent = models.DecimalField(
         null=True, max_digits=12, decimal_places=2)
     discount_amt = models.DecimalField(
         null=True, max_digits=12, decimal_places=2)
-    discount_type = models.CharField(null=True, max_length=40, choices=TYPE)
     is_used = models.BooleanField(default=False, null=True, blank=True)
     validity_count = models.PositiveIntegerField(default=1)
+    discount_type = models.CharField(
+        max_length=20, choices=TYPE, default="Flat Discount")
+    
 
     class Meta:
         verbose_name = ('Coupon')
         verbose_name_plural = ('Coupons')
-        ordering = ['title']
+        ordering = ['code']
 
     def __str__(self):
         return "Coupon code: " + self.code
-
-# billingadress model
-
-
-class BillingAddress(DateTimeModel):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-    email = models.EmailField()
-    phone = models.CharField(max_length=200)
-    company_name = models.CharField(max_length=200, null=True, blank=True)
-    province = models.CharField(max_length=200)
-    address_one = models.CharField(max_length=200)
-    address_two = models.CharField(max_length=200, blank=True, null=True)
-    zip_code = models.PositiveIntegerField(blank=True, null=True)
-
-    class Meta:
-        verbose_name = ('Address')
-        verbose_name_plural = ('Addresses')
-        ordering = ['first_name']
-
-    def __str__(self):
-        return self.first_name
 
 
 # cart model
@@ -268,8 +246,7 @@ class Order(DateTimeModel):
     code = models.CharField(max_length=50, unique=True)
     coupon = models.ForeignKey(
         Coupon, on_delete=models.CASCADE, blank=True, null=True)
-    product = models.ManyToManyField(Products)
-    address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     subtotal = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
     status = models.CharField(max_length=50, choices=ORDER_STATUS)
@@ -277,7 +254,17 @@ class Order(DateTimeModel):
         max_length=20, choices=METHOD, default="Cash On Delivery")
     payment_completed = models.BooleanField(
         default=False, null=True, blank=True)
-    carts = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    shipping_charge = models.PositiveIntegerField()
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=200)
+    company_name = models.CharField(max_length=200, null=True, blank=True)
+    province = models.CharField(max_length=200)
+    address_one = models.CharField(max_length=200)
+    address_two = models.CharField(max_length=200, blank=True, null=True)
+    zip_code = models.PositiveIntegerField(blank=True, null=True)
+ 
 
     class Meta:
         verbose_name = ('Order')

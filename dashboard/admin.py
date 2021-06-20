@@ -4,4 +4,4 @@ from .models import*
 
 
 admin.site.register([Account,Customer, Category, Brands, Products, Tag, ProductImage, Coupon, Order, Size, Color,
-                        BillingAddress, Cart, Wishlist, CartProduct, Testimonials, Blog, service, Contact, Ads, Subscription, Message, Abouts])
+                         Cart, Wishlist, CartProduct, Testimonials, Blog, service, Contact, Ads, Subscription, Message, Abouts])
