@@ -12,7 +12,7 @@
                         <h2>Add new category</h2>
                     </div>
                     <div class="card-body">
-                        <form method="POST" enctype="multipart/form-data">
+                        <form method="POST" enctype="multipart/form-data" id="category_form" data-related-category="{% url 'dashboard:type-related-category' %}">
                             {% csrf_token %}
                             {{form.media}}
                              <span class= 'form-error'>{{ form.errors.slug }}</span>
@@ -22,9 +22,13 @@
                                     <label for="exampleFormControlInput1">Category Name</label>
                                 {{form.name}}
                                 </div>
-                                <div class="col-md-12 col-sm-12">
-                                    <label for="exampleFormControlInput1">Sub Category</label>
-                                {{form.parent}}
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Catogory Type</label>
+                                    {{form.category_type}}
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Parent</label>
+                                    {{form.parent}}
                                 </div>
                                 {% comment %} <div class="col-md-6 col-sm-12">
                                     <label for="exampleFormControlPassword">Description</label>
@@ -57,3 +61,24 @@
 
 
 {% endblock %}
+{% block script %}
+
+<script>
+    $("#id_category_type").change(function () {
+      var url = $("#category_form").attr("data-related-category");  // get the url of the `load_cities` view
+      var TypeId = $(this).val();  // get the selected country ID from the HTML input
+  
+      $.ajax({                       // initialize an AJAX request
+        url: url, 
+        method:'GET',                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'type': TypeId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_parent").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+  
+    });
+  </script>
+  {% endblock %}

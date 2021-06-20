@@ -8,6 +8,7 @@ class BaseMixin(object):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['contact'] = Contact.objects.all()
+        # accessing cart
         cart_id = self.request.session.get('cart_id')
         if cart_id:
             cart_product = CartProduct.objects.filter(cart=cart_id)

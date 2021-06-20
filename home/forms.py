@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.sessions.backends.base import CreateError
 from django.forms import ModelForm
 
 
@@ -44,6 +45,14 @@ class CustomerPasswordResetForm(FormControlMixin, forms.Form):
 
         return email
 
+class CouponForm(FormControlMixin, ModelForm):
+    class Meta:
+        model = Coupon
+        fields = '__all__'
 
 
-    
+class CheckoutForm(FormControlMixin, ModelForm):
+    class Meta:
+        model = Order
+        fields = ["first_name","last_name","email","phone","company_name","province","address_one","address_two","zip_code",
+                    "payment_method"]

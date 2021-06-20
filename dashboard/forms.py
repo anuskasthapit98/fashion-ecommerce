@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import ValidationError
 from django.forms import widgets
 
 from .mixines import *
@@ -308,11 +308,12 @@ class BlogCreateForm(FormControlMixin, forms.ModelForm):
             'class': 'form-control select2 feature-select',
             'multiple': 'multiple'
         })
-        
+
 # Blog comment create form
 
+
 class BlogCommentForm(FormControlMixin, forms.ModelForm):
-        
+
     class Meta:
         model = Comment
         fields = '__all__'
@@ -361,6 +362,7 @@ class MessageForm(FormControlMixin, forms.ModelForm):
 
 # color create form
 
+
 class ColorCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Color
@@ -373,4 +375,3 @@ class AboutCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Abouts
         fields = '__all__'
-

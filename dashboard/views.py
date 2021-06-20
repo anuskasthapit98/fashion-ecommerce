@@ -147,6 +147,16 @@ class AdminDashboardView(CustomLoginRequiredMixin, SidebarMixin, TemplateView):
 
 # category's view starts here
 
+class TypeRelatedCategoryView(TemplateView):
+    template_name = 'dashboard/category/category-ajax-view.html'
+    model = Category
+
+    def get(self, request, *args, **kwargs):
+        type = request.GET.get('type')
+        parents = Category.objects.filter(category_type__id=type)
+
+        return render(request, self.template_name, {"parents": parents})
+
 
 class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/category/list.html'
@@ -154,6 +164,7 @@ class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.filter(parent__isnull=False)
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
@@ -585,7 +596,6 @@ class MessageDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:messages')
 
 
-
 # blogcomments
 
 class BlogCommentListView(NonDeletedItemMixin, SidebarMixin, ListView):
@@ -603,7 +613,7 @@ class BlogCommentListView(NonDeletedItemMixin, SidebarMixin, ListView):
         if "blog_title" in self.request.GET:
             if self.request.GET.get('blog_title') != '':
                 queryset = queryset.filter(
-                    blog__title__contains=self.request.GET.get("blog_title"))        
+                    blog__title__contains=self.request.GET.get("blog_title"))
         return queryset
 
 
@@ -625,9 +635,6 @@ class BlogCommentDeleteView(DeleteMixin, DeleteView):
     success_url = reverse_lazy('dashboard:blog-comments')
 
 
-
-
-
 # color view starts here
 
 
@@ -642,6 +649,7 @@ class ColorListView(NonDeletedItemMixin, SidebarMixin, ListView):
                 queryset = queryset.filter(
                     title__contains=self.request.GET.get("title"))
         return queryset
+
 
 class ColorCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/color/form.html'
@@ -688,10 +696,10 @@ class AboutListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if "title" in self.request.GET:
-            if self.request.GET.get('title') != '':
+        if "title_one" in self.request.GET:
+            if self.request.GET.get('title_one') != '':
                 queryset = queryset.filter(
-                    title__contains=self.request.GET.get("title"))
+                    title_one__contains=self.request.GET.get("title_one"))
         return queryset
 
 

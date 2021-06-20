@@ -3,6 +3,7 @@ from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User, Group
 from django.db import models
 from django.db.models.enums import Choices
+from django.http.response import JsonResponse
 from django.utils import timezone
 
 
@@ -61,11 +62,10 @@ class Account(User):
 # Customer Model
 
 
-
 class Customer(User):
-    GENDER = (('Male','Male'),
+    GENDER = (('Male', 'Male'),
               ('Female', 'Female'),
-               ('Others', 'Others'),)
+              ('Others', 'Others'),)
     mobile = models.CharField(max_length=10)
     gender = models.CharField(max_length=10, choices = GENDER)
     is_customer = models.BooleanField(default=False)
@@ -78,14 +78,30 @@ class Customer(User):
     def __str__(self):
         return self.first_name
 
+# Categor type model
 
+
+class CategoryType(DateTimeModel):
+    type = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = ('Category Type')
+        verbose_name_plural = ('Category Types')
+        ordering = ['type']
+
+    def __str__(self):
+        return self.type
 # Category Model
+
+
 class Category(DateTimeModel):
     name = models.CharField(max_length=250)
     img = models.ImageField(upload_to="category")
     parent = models.ForeignKey('self', related_name="sub_Category",
                                on_delete=models.CASCADE, null=True, blank=True, )
     description = RichTextField()
+    category_type = models.ForeignKey(
+        CategoryType, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = ('Category')
@@ -189,48 +205,26 @@ class Products(DateTimeModel):
 # Coupon Model
 
 class Coupon(DateTimeModel):
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
     valid_to = models.DateTimeField(null=True, blank=True)
     valid_from = models.DateTimeField(null=True, blank=True)
     code = models.CharField(max_length=50, unique=True)
-    title = models.CharField(max_length=250)
     discount_percent = models.DecimalField(
         null=True, max_digits=12, decimal_places=2)
     discount_amt = models.DecimalField(
         null=True, max_digits=12, decimal_places=2)
-    discount_type = models.CharField(null=True, max_length=40, choices=TYPE)
     is_used = models.BooleanField(default=False, null=True, blank=True)
     validity_count = models.PositiveIntegerField(default=1)
+    discount_type = models.CharField(
+        max_length=20, choices=TYPE, default="Flat Discount")
+    
 
     class Meta:
         verbose_name = ('Coupon')
         verbose_name_plural = ('Coupons')
-        ordering = ['title']
+        ordering = ['code']
 
     def __str__(self):
         return "Coupon code: " + self.code
-
-# billingadress model
-
-
-class BillingAddress(DateTimeModel):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-    email = models.EmailField()
-    phone = models.CharField(max_length=200)
-    company_name = models.CharField(max_length=200, null=True, blank=True)
-    province = models.CharField(max_length=200)
-    address_one = models.CharField(max_length=200)
-    address_two = models.CharField(max_length=200, blank=True, null=True)
-    zip_code = models.PositiveIntegerField(blank=True, null=True)
-
-    class Meta:
-        verbose_name = ('Address')
-        verbose_name_plural = ('Addresses')
-        ordering = ['first_name']
-
-    def __str__(self):
-        return self.first_name
 
 
 # cart model
@@ -271,8 +265,7 @@ class Order(DateTimeModel):
     code = models.CharField(max_length=50, unique=True)
     coupon = models.ForeignKey(
         Coupon, on_delete=models.CASCADE, blank=True, null=True)
-    product = models.ManyToManyField(Products)
-    address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     subtotal = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
     status = models.CharField(max_length=50, choices=ORDER_STATUS)
@@ -280,7 +273,17 @@ class Order(DateTimeModel):
         max_length=20, choices=METHOD, default="Cash On Delivery")
     payment_completed = models.BooleanField(
         default=False, null=True, blank=True)
-    carts = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    shipping_charge = models.PositiveIntegerField()
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=200)
+    company_name = models.CharField(max_length=200, null=True, blank=True)
+    province = models.CharField(max_length=200)
+    address_one = models.CharField(max_length=200)
+    address_two = models.CharField(max_length=200, blank=True, null=True)
+    zip_code = models.PositiveIntegerField(blank=True, null=True)
+ 
 
     class Meta:
         verbose_name = ('Order')
@@ -357,7 +360,7 @@ class Blog(DateTimeModel):
         return self.title
 
 
-#comment model 
+# comment model
 class Comment(DateTimeModel):
     full_name = models.CharField(max_length=30)
     email = models.EmailField()
@@ -372,9 +375,10 @@ class Comment(DateTimeModel):
         verbose_name_plural = ('Comments')
 
     def __str__(self):
-        return  'Comment {} by {}'.format(self.comment, self.full_name)
-    
+        return 'Comment {} by {}'.format(self.comment, self.full_name)
+
 # service model
+
 
 class service(DateTimeModel):
     image = models.ImageField(upload_to="service")

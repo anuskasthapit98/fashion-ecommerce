@@ -24,6 +24,8 @@ urlpatterns = [
     path('dashboard/', AdminDashboardView.as_view(), name="dashboard"),
 
     # Category
+    path('dashboard/related/category/',
+         TypeRelatedCategoryView.as_view(), name='type-related-category'),
     path('dashboard/category/', CategoryListView.as_view(), name="categories"),
     path('dashboard/category/create/',
          CategoryCreateView.as_view(), name="category-create"),
@@ -106,8 +108,8 @@ urlpatterns = [
     path('dashboard/blogs/<int:pk>/delete/',
          BlogDeleteView.as_view(), name='blogs-delete'),
 
-     #blogs comment
-     path('dashboard/blog/comments/',
+    # blogs comment
+    path('dashboard/blog/comments/',
          BlogCommentListView.as_view(), name='blog-comments'),
     path('dashboard/blog/comments/create/',
          BlogCommentCreateView.as_view(), name='blog-comment-create'),
@@ -153,7 +155,7 @@ urlpatterns = [
     path('dashboard/color/<int:pk>/delete/',
          ColorDeleteView.as_view(), name='color-delete'),
 
-     # about urls 
+    # about urls
 
     path('dashboard/about/list/', AboutListView.as_view(), name='abouts'),
     path('dashboard/about/create/', AboutCreateView.as_view(), name='about-create'),
