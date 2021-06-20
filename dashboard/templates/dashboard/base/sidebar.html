@@ -91,6 +91,7 @@
                 <span class="nav-text">Tags</span>
               </a>
               </li>
+           
               <li  class="has-sub {% active_link 'dashboard:customers' 'active' %}" >
                 <a class="sidenav-item-link" href="{% url 'dashboard:customers' %}">
                 <i class="mdi mdi-account"></i>
@@ -107,6 +108,12 @@
                 <a class="sidenav-item-link" href="{% url 'dashboard:blogs' %}">
                 <i class="mdi mdi-blogger"></i>
                 <span class="nav-text">Blogs</span>
+              </a>
+              </li>
+                 <li  class="has-sub {% active_link 'dashboard:blog-comments' 'active' %}" >
+                <a class="sidenav-item-link" href="{% url 'dashboard:blog-comments' %}">
+                <i class="mdi mdi-blogger"></i>
+                <span class="nav-text">Blog Comments</span>
               </a>
               </li>
             

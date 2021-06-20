@@ -147,6 +147,16 @@ class AdminDashboardView(CustomLoginRequiredMixin, SidebarMixin, TemplateView):
 
 # category's view starts here
 
+class TypeRelatedCategoryView(TemplateView):
+    template_name = 'dashboard/category/category-ajax-view.html'
+    model = Category
+
+    def get(self, request, *args, **kwargs):
+        type = request.GET.get('type')
+        parents = Category.objects.filter(category_type__id=type)
+
+        return render(request, self.template_name, {"parents": parents})
+
 
 class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/category/list.html'
@@ -154,6 +164,7 @@ class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.filter(parent__isnull=False)
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
@@ -357,7 +368,7 @@ class SizeDeleteView(DeleteMixin, DeleteView):
 
 # customer view starts here
 
-class CustomerListView(NonDeletedItemMixin, SidebarMixin, ListView):
+class CustomerListView(SidebarMixin, ListView):
     template_name = 'dashboard/customer/list.html'
     model = Customer
 
@@ -583,6 +594,45 @@ class MessageUpdateView(UpdateView, SidebarMixin):
 class MessageDeleteView(DeleteMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('dashboard:messages')
+
+
+# blogcomments
+
+class BlogCommentListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    model = Comment
+    template_name = 'dashboard/blog-comment/list.html'
+    context_object_name = 'blog'
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "first_name" in self.request.GET:
+            if self.request.GET.get('first_name') != '':
+                queryset = queryset.filter(
+                    full_name__contains=self.request.GET.get("first_name"))
+        if "blog_title" in self.request.GET:
+            if self.request.GET.get('blog_title') != '':
+                queryset = queryset.filter(
+                    blog__title__contains=self.request.GET.get("blog_title"))
+        return queryset
+
+
+class BlogCommentCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/blog-comment/form.html'
+    form_class = BlogCommentForm
+    success_url = reverse_lazy('dashboard:blog-comments')
+
+
+class BlogCommentUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/blog-comment/form.html'
+    model = Comment
+    form_class = BlogCommentForm
+    success_url = reverse_lazy('dashboard:blog-comments')
+
+
+class BlogCommentDeleteView(DeleteMixin, DeleteView):
+    model = Comment
+    success_url = reverse_lazy('dashboard:blog-comments')
 
 
 # color view starts here

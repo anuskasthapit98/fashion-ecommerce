@@ -1,0 +1,122 @@
+{% extends 'dashboard/base/index.html' %} 
+{% block title %} Blog comments {% endblock %}
+{% load static %} 
+{% block content %}
+
+
+    <div class="content-wrapper">
+      <div class="content">
+ 
+
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb p-0">
+              <li class="breadcrumb-item">
+                <a href="index.html">
+                  <span class="mdi mdi-home"></span>
+                </a>
+              </li>
+              <li class="breadcrumb-item">components</li>
+              <li class="breadcrumb-item" aria-current="page">table</li>
+              
+            </ol>
+          </nav>
+        <div class="input-group justify-content-end">
+                        <form action="{% url 'dashboard:blog-comments' %}" method="GET" class="form-inline">
+                          <input
+                            type="text"
+                            name="blog_title"
+                            class="form-control float-right searchInput"
+                            id="SearchBlogTitle"
+                            placeholder="Blog Title"
+                          />
+                          <input
+                            type="text"
+                            name="first_name"
+                            class="form-control float-right searchInput"
+                            id="SearchFullName"
+                            placeholder="Name"
+                          />
+                          <div class="input-group-append">
+                            <button type="submit" class="btn btn-secondary">
+                              <span class="mdi mdi-magnify"></span>
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+  
+        
+
+        
+<div class="row">
+            
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom justify-content-between">
+											<h2>BLOG COMMENTS</h2>
+                    <a href="{% url 'dashboard:blog-comment-create' %}"  type="button" class="mb-1 btn btn-outline-primary">Add Blog Comment</a>
+          
+                      
+</div>
+<div class="card-body">
+							<table class="table table-hover ">
+												<thead>
+													<tr>
+														<th scope="col">SID</th>
+														<th scope="col">Full Name</th>
+                                                        <th scope="col">Email</th>
+                                                        <th scope="col">Blog</th>
+                                                        <th scope="col">Comment</th>
+                                                        <th scope="col">Action</th>
+													</tr>
+												</thead>
+												<tbody>
+                          {% for comment in object_list %} 
+													<tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td>{{comment.full_name}}</td>
+                            <td>{{comment.email}}</td>
+                            <td>{{comment.blog}}</td>
+                            <td>{{comment.comment|safe|truncatewords:5}}</td>
+                            <td>
+                                <span>
+                                <a href="{% url 'dashboard:blog-comment-update' comment.pk%}" class="btn btn-sm btn-success"> <span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
+                                </span>
+                                <span>
+                                <a  href="{% url 'dashboard:blog-comment-delete' comment.pk %}"class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
+                                 </span>
+                                </td>
+
+													</tr>
+                          {%endfor%}
+												</tbody>
+											</table>
+										</div>
+									</div>
+              </div>
+        </div>
+ </div>
+
+{% endblock %}
+{% block script %}
+<script>
+$('.delete').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will permanently deleted !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal(" 'Your file has been deleted.'!", {
+                        icon: "success",
+                    });
+                    window.location.href = $(this).attr('href');
+
+                }
+            });
+    })
+</script>
+{% endblock %}

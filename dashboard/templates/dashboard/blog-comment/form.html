@@ -1,0 +1,69 @@
+{% extends 'dashboard/base/index.html' %} 
+{% block title %} New Comment {% endblock %}
+{% load static %} 
+{% block content %}
+
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Add new comment</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                         {% csrf_token %}
+                         {{form.media}}
+                        
+                       <div class="row form-group"> 
+                             
+                              <div class="col-md-12 col-sm-12">
+                                    <label for="exampleFormControlInput1">Blog</label>
+                                {{form.blog}}
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <label for="exampleFormControlInput1">Full Name</label>
+                                {{form.full_name}}
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <label for="exampleFormControlInput1">Email</label>
+                                {{form.email}}
+                                </div>
+                              
+                            </div>
+                           
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Comment</label>
+                               <p>{{form.comment}}</p>
+                            </div>
+                        
+                            <div class="form-footer pt-4 pt-5 mt-4 border-top ">
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                                <button class="btn btn-secondary btn-default">
+                                 <a class="text-white" href="{% url 'dashboard:blog-comments' %}">Cancel</a>
+                                 </button>
+                            </div>
+                        </form>
+                    </di>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}
+{% block script %}
+<script>
+	$(".check-date").flatpickr({
+    enableTime: true,
+    dateFormat: "Y-m-d ",
+	minDate: "today"
+
+});
+
+</script>
+
+{% endblock %}
