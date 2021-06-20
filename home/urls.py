@@ -41,7 +41,12 @@ urlpatterns = [
          name='coupon-validation'),
 
 
+    # checkout
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
 
+    # coupon 
+    path('coupon/', CouponView.as_view(), name='coupon'),
+    
 
 ]
 
