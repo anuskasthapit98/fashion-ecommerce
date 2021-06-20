@@ -44,7 +44,7 @@
             {{ product_detail.name }}
             </h3>
               <div class="star-rating mb-4"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
-              </div> <span class="product-price h4">Nrs. {{ product_detail.price }}<del class="text-muted h6">$35.00</del></span>
+              </div> <span class="product-price h4">Nrs. {{ product_detail.selling_price  }}<del class="text-muted h6">Nrs. {{ product_detail.marked_price }}</del></span>
               <ul class="list-unstyled my-4">
                 <li class="mb-2">Availibility:{% if product_detail.status %} <span class="text-muted"> In Stock</span> {% else %}<span class="text-muted"> Out of Stock</span>{% endif %}
                 </li>
@@ -61,10 +61,10 @@
                     <button class="btn-product btn-product-down"> <i class="las la-plus"></i>
                     </button>
                   </div>
-                  <select class="custom-select mt-3 mt-sm-0" id="inputGroupSelect02">
-                    <option selected>Size</option>
+                  <select name='size' class="custom-select mt-3 mt-sm-0" id="inputGroupSelect02" required>
+                    <option selected disabled>Size</option>
                     {% for size in product_detail.size.all %}
-                    <option name='size' value="{{ size.id }}">{{ size.name }}</option>
+                    <option value="{{ size.name }}">{{ size.name }}</option>
                     {% endfor %}
                   </select>
                   <div class="d-flex text-center ml-sm-4 mt-3 mt-sm-0">

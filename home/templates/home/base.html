@@ -77,7 +77,10 @@
 
 <script src="{%static 'home/assets/js/theme-plugin.js'%}"></script>
 <script src="{% static 'home/assets/js/theme-script.js'%}"></script>
-  <script src="{% static 'home/assets/toastr/toastr.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+{% block script %}
+{% endblock %}  
+<script src="{% static 'home/assets/toastr/toastr.min.js' %}"></script>
   
 
 <!-- inject js end -->

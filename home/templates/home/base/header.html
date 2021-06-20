@@ -308,11 +308,13 @@
             </div>
               <a class="mr-3 d-none d-sm-inline" href="#"><i class="lar la-heart"></i></a>
               <div>
-                <a class="d-flex align-items-center" href="#" id="header-cart-btn" data-toggle="modal" data-target="#cartModal"> <span class="bg-white px-2 py-1 shadow-sm rounded" data-cart-items="2">
+                <a class="d-flex align-items-center" href="#" id="header-cart-btn" data-toggle="modal" data-target="#cartModal"> <span class="bg-white px-2 py-1 shadow-sm rounded" {% if cart_products %} data-cart-items="{{ cart_products.count }}" {% endif %}>
                   <i class="las la-shopping-cart"></i>
                 </span>
                   <div class="ml-4 d-none d-md-block"> <small class="d-block text-muted">My Cart</small>
+                    {% if cart_products %}
                     <span class="text-dark">{{ cart_products.count }} Items - Nrs.{{ subtotal }}</span>
+                    {% endif %}
                   </div>
                 </a>
               </div>
