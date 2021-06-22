@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf import settings as conf_settings
 from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
@@ -117,6 +118,58 @@ class CustomerForgotPasswordView(FormView):
         )
         messages.success(self.request, "Password reset code is sent")
         return super().form_valid(form)
+    
+    
+# password change view
+class CustomerPasswordsChangeView(PasswordChangeView):
+    template_name = 'home/auth/password-change.html'
+    form_class = CustomerChangePasswordForm
+    success_url = reverse_lazy('home:login')
+
+    def get_form(self):
+        form = super().get_form()
+        form.set_user(self.request.user)
+        return form
+    
+    
+
+class CustomerProfileView(TemplateView):
+    template_name = 'home/auth/customer-profile.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Customer.objects.filter(is_customer= True).exists():
+            pass
+        else:
+            return redirect("/customer/login/?next=/profile/")
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customer = self.request.user.customer
+        print(customer, '111111111111111111111111')
+        context['customer'] = customer
+        orders = Order.objects.filter(cart__customer=customer).order_by("-id")
+        context["orders"] = orders
+        return context
+
+class CustomerOrderDetailView(DetailView):
+    template_name = 'home/auth/order-detail.html'
+    model = Order
+    context_object_name = "ord_obj"
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Customer.objects.filter(is_customer= True).exists():
+            # order_id = self.kwargs["pk"]
+            # order = Order.objects.get(id=order_id)
+            # if request.user.customer != order.cart.customer:
+            #     return redirect("home:customerprofile")
+            pass
+        else:
+            return redirect("/login/?next=/profile/")
+        return super().dispatch(request, *args, **kwargs)
+
+    
+    
 
 # products view
 

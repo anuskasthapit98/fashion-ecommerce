@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.sessions.backends.base import CreateError
+from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import ModelForm
 
 
@@ -44,6 +45,42 @@ class CustomerPasswordResetForm(FormControlMixin, forms.Form):
             raise forms.ValidationError("User with this email doesn't exist")
 
         return email
+    
+    
+
+# password change form
+
+
+class CustomerChangePasswordForm(PasswordChangeForm):
+    old_password_flag = True
+
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control', 'placeholder':  'Old Password'}))
+
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control', 'placeholder':  'New Password'}))
+
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control', 'placeholder':  'New Password again'}))
+
+    def set_user(self, user):
+        self.user = user
+
+    def clean(self):
+        old_password = self.cleaned_data.get('old_password')
+        valpwd = self.cleaned_data.get('new_password1')
+        valrpwd = self.cleaned_data.get('new_password2')
+
+        if valpwd != valrpwd:
+            raise forms.ValidationError({
+                'new_password1': 'Password Not Matched'})
+        else:
+            pass
+        return self.cleaned_data
+    
 
 class CouponForm(FormControlMixin, ModelForm):
     class Meta:

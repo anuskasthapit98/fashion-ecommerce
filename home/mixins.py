@@ -27,7 +27,7 @@ class LoginRequiredMixin(object):
         if request.user.is_authenticated and request.user.customer:
             pass
         else:
-            return redirect("/customer/login/?next=/my-cart/")
+            return redirect("/customer/login/?next=/checkout/")
         return super().dispatch(request, *args, **kwargs)
     
 class EcomMixin(object):
