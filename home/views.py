@@ -1,34 +1,38 @@
-
-from django.http import HttpResponseRedirect, JsonResponse
+from django.conf import settings
+from django.conf import settings as conf_settings
+from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import authenticate, login, logout
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail
+from django.db.models import Q
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.urls.base import clear_script_prefix
-from django.views.generic import TemplateView, CreateView, ListView, DetailView
-from django.views.generic.base import View
-from django.urls import reverse_lazy
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.template.loader import get_template
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
-from django.contrib import messages
+from django.urls import reverse_lazy
+from django.urls.base import clear_script_prefix
+from django.utils.crypto import get_random_string
 from django.urls import reverse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 import random
-
-
+from django.views.generic import *
 from dashboard.forms import *
 from dashboard.models import *
-from dashboard.mixines import NonDeletedItemMixin
-
+from dashboard.mixines import *
+from dashboard.mixines import *
+from .forms import *
 from .mixins import *
 from .forms import *
 
 
-from django.db.models import Q
+
+
 # Create your views here.
 
 
-class HomeTemplateView(BaseMixin, TemplateView):
+class HomeTemplateView(EcomMixin, BaseMixin, TemplateView):
     template_name = 'home/base/index.html'
 
     def get_context_data(self, **kwargs):
@@ -39,7 +43,7 @@ class HomeTemplateView(BaseMixin, TemplateView):
         context['trend_products'] = Products.objects.filter(
             deleted_at__isnull=True).order_by('-view_count')
         context['brand'] = Brands.objects.filter(deleted_at__isnull=True)
-
+        print(self.request.user)
         return context
 
 
@@ -48,23 +52,134 @@ class HomeTemplateView(BaseMixin, TemplateView):
 class CustomerRegistrationView(CreateView):
     template_name = 'home/auth/register.html'
     form_class = CustomerCreateForm
-    success_url = reverse_lazy('home:home')
+    success_url = reverse_lazy('home:login')
+    
+    def form_valid(self, form):
+        form.instance.is_customer = True
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        if "next" in self.request.GET:
+            next_url = self.request.GET.get("next")
+            return next_url
+        else:
+            return self.success_url
+    
+    
+class CustomerLogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect("home:home")
+
+class CustomerLoginView(FormView):
+    template_name = "home/auth/login.html"
+    form_class = CustomerLoginForm
+    success_url = reverse_lazy("home:home")
+    
+    def get_success_url(self):
+        if "next" in self.request.GET:
+            next_url = self.request.GET.get("next")
+            return next_url
+        else:
+            return self.success_url
+    
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        pword = form.cleaned_data['password']
+        user = authenticate(username=username, password=pword)
+
+        if user is not None:
+            login(self.request, user)
+        else:
+            return redirect(self.success_url)
+            
+        return super().form_valid(form)
+    
+   
+class CustomerForgotPasswordView(FormView):
+    template_name = 'home/auth/reset-password.html'
+    form_class = CustomerPasswordResetForm
+    success_url = reverse_lazy('home:login')
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        user = User.objects.filter(email=email).first()
+        password = get_random_string(8)
+        user.set_password(password)
+        user.save(update_fields=['password'])
+
+        text_content = 'Your password has been changed. {} '.format(password)
+        send_mail(
+            'Password Reset | Ekocart',
+            text_content,
+            conf_settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+        messages.success(self.request, "Password reset code is sent")
+        return super().form_valid(form)
+    
+    
+# password change view
+class CustomerPasswordsChangeView(PasswordChangeView):
+    template_name = 'home/auth/password-change.html'
+    form_class = CustomerChangePasswordForm
+    success_url = reverse_lazy('home:login')
+
+    def get_form(self):
+        form = super().get_form()
+        form.set_user(self.request.user)
+        return form
+    
+    
+
+class CustomerProfileView(TemplateView):
+    template_name = 'home/auth/customer-profile.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Customer.objects.filter(is_customer= True).exists():
+            pass
+        else:
+            return redirect("/customer/login/?next=/profile/")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = CustomerCreateForm()
+        customer = self.request.user.customer
+        print(customer, '111111111111111111111111')
+        context['customer'] = customer
+        orders = Order.objects.filter(cart__customer=customer).order_by("-id")
+        context["orders"] = orders
         return context
 
+class CustomerOrderDetailView(DetailView):
+    template_name = 'home/auth/order-detail.html'
+    model = Order
+    context_object_name = "ord_obj"
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Customer.objects.filter(is_customer= True).exists():
+            # order_id = self.kwargs["pk"]
+            # order = Order.objects.get(id=order_id)
+            # if request.user.customer != order.cart.customer:
+            #     return redirect("home:customerprofile")
+            pass
+        else:
+            return redirect("/login/?next=/profile/")
+        return super().dispatch(request, *args, **kwargs)
+
+    
+    
 
 # products view
 
 
-class ProductListView(BaseMixin, NonDeletedItemMixin, ListView):
+class ProductListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
 
 
-class ProductDetailView(BaseMixin, DetailView):
+class ProductDetailView(EcomMixin, BaseMixin, DetailView):
     template_name = 'home/product/detail.html'
     model = Products
     context_object_name = 'product_detail'
@@ -81,7 +196,7 @@ class ProductDetailView(BaseMixin, DetailView):
 # about
 
 
-class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
+class AboutListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
     model = Abouts
     template_name = 'home/about/about.html'
 
@@ -99,7 +214,7 @@ class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
 # contact
 
 
-class ContactView(BaseMixin, CreateView):
+class ContactView(EcomMixin, BaseMixin, CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
     success_url = reverse_lazy('contact')
@@ -138,8 +253,8 @@ class ContactView(BaseMixin, CreateView):
 
 # blogs
 
-class BlogView(ListView):
-    template_name = 'home/blog/blog.html'
+class BlogView(EcomMixin, ListView):
+    template_name= 'home/blog/blog.html'
     model = Blog
     paginate_by = 3
 
@@ -158,8 +273,7 @@ class BlogView(ListView):
                                            Q(description__icontains=search_item))
         return queryset
 
-
-class BlogDetailView(DetailView):
+class BlogDetailView(EcomMixin, DetailView):
     template_name = 'home/blog/detail.html'
     model = Blog
     form_class = BlogCommentForm
@@ -214,7 +328,7 @@ class SubscriptionView(View):
 # cart funtionality view
 
 
-class AddToCartView(View):
+class AddToCartView(EcomMixin, View):
 
     def get(self, request, *args, **kwargs):
         quantity = 1
@@ -278,6 +392,7 @@ class AddToCartView(View):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
+
 class ManageCartView(View):
     def get(self, request, *args, **kwargs):
         cp_id = self.kwargs.get('p_id')
@@ -296,6 +411,7 @@ class ManageCartView(View):
 class MyCartView(BaseMixin, TemplateView):
     template_name = 'home/cart/cart.html'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_id = self.request.session.get('cart_id')
@@ -308,7 +424,7 @@ class MyCartView(BaseMixin, TemplateView):
 
 
 
-class CouponView(TemplateView):
+class CouponView(EcomMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         print("pppp")
         if request.is_ajax:
@@ -322,7 +438,7 @@ class CouponView(TemplateView):
         return JsonResponse({}, status=400)
         
 
-class CheckoutView(BaseMixin, CreateView):
+class CheckoutView(LoginRequiredMixin, EcomMixin, BaseMixin, CreateView):
     template_name = 'home/checkout/checkout.html'
     form_class = CheckoutForm
     success_url = reverse_lazy('home:home')
