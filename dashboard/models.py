@@ -67,13 +67,13 @@ class Customer(User):
               ('Female', 'Female'),
               ('Others', 'Others'),)
     mobile = models.CharField(max_length=10)
-    gender = models.CharField(max_length=10, choices=GENDER)
-    is_customer = models.BooleanField(default=True)
+    gender = models.CharField(max_length=10, choices = GENDER)
+    is_customer = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = ('Customer')
         verbose_name_plural = ('Customers')
-        ordering = ['username']
+        ordering = ['-username']
 
     def __str__(self):
         return self.first_name
