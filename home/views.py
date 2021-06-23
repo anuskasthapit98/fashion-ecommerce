@@ -54,6 +54,9 @@ class CustomerRegistrationView(BaseMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.is_customer = True
+        user = form.save()
+        password = form.cleaned_data.get('password')
+        user.set_password(password)
         return super().form_valid(form)
 
     def get_success_url(self):
