@@ -45,7 +45,7 @@ class HomeTemplateView(BaseMixin, TemplateView):
 
 # Resgistration
 
-class CustomerRegistrationView(CreateView):
+class CustomerRegistrationView(BaseMixin, CreateView):
     template_name = 'home/auth/register.html'
     form_class = CustomerCreateForm
     success_url = reverse_lazy('home:home')
@@ -62,6 +62,38 @@ class CustomerRegistrationView(CreateView):
 class ProductListView(BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
+    paginate_by = 9
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     kw = self.request.GET.get('t')
+    #     print(kw, 999999999999)
+    #     kw = kw.split(',')
+    #     type = kw[0]
+    #     category = kw[1]
+    #     if type != '':
+    #         if type == 'k':
+    #             queryset = queryset.filter(
+    #                 type__type="Kid", categories__name=category)
+    #         elif type == 'm':
+    #             queryset = queryset.filter(
+    #                 type__type="Men", categories__name=category)
+    #         elif type == 'w':
+    #             queryset = queryset.filter(
+    #                 type__type="Women", categories__name=category)
+    #     return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        kw = self.request.GET.get('t')
+        kw = kw.split(',')
+        type = kw[0]
+        category = kw[1]
+        sub = kw[2]
+        products = Category.objects.filter(
+            category_type__type=type, parent__name=category, name=sub)
+        context['object_list'] = products
+        return context
 
 
 class ProductDetailView(BaseMixin, DetailView):
@@ -77,6 +109,12 @@ class ProductDetailView(BaseMixin, DetailView):
         context['similar_product'] = Products.objects.filter(
             categories__name=category).exclude(pk=p_id)
         return context
+
+    def get_object(self):
+        obj = super().get_object()
+        obj.view_count += 1
+        obj.save()
+        return obj
 
 # about
 
@@ -307,7 +345,6 @@ class MyCartView(BaseMixin, TemplateView):
         return context
 
 
-
 class CouponView(TemplateView):
     def get(self, request, *args, **kwargs):
         print("pppp")
@@ -316,27 +353,27 @@ class CouponView(TemplateView):
             print(coupon_code)
             if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now()):
                 # if Coupon.objects.filter(discount_type=="Flat Discount")
-                return JsonResponse({"valid":True}, status=200) #
+                return JsonResponse({"valid": True}, status=200)
             else:
-                return JsonResponse({"valid":False}, status=200)
+                return JsonResponse({"valid": False}, status=200)
         return JsonResponse({}, status=400)
-        
+
 
 class CheckoutView(BaseMixin, CreateView):
     template_name = 'home/checkout/checkout.html'
     form_class = CheckoutForm
     success_url = reverse_lazy('home:home')
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart_id  = self.request.session.get('cart_id')
+        cart_id = self.request.session.get('cart_id')
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
         else:
             cart_obj = None
         context['cart'] = cart_obj
         return context
-    
+
     def form_valid(self, form):
         cart_id = self.request.session.get("cart_id")
         if cart_id:
@@ -344,21 +381,19 @@ class CheckoutView(BaseMixin, CreateView):
             form.instance.cart = cart_obj
             form.instance.shipping_charge = 50
             form.instance.subtotal = cart_obj.subtotal
-            form.instance.total = cart_obj.total + cart_obj.vat 
-            form.instance.code = random.randint(1,100)
+            form.instance.total = cart_obj.total + cart_obj.vat
+            form.instance.code = random.randint(1, 100)
             del self.request.session['cart_id']
             pm = form.cleaned_data.get("payment_method")
             # coupon= form.cleaned_data.get("coupon")
             order = form.save()
-            messages.success(self.request,"Your order is on the way.")
-            
-        
+            messages.success(self.request, "Your order is on the way.")
+
         else:
-            
+
             return redirect("home:home")
-            
+
         return super().form_valid(form)
-    
 
 
 # coupen validation form

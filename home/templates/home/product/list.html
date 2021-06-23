@@ -1,5 +1,439 @@
 {% extends 'home/base.html' %}
 {% load static %}
 {% block content %}
+<section class="bg-light">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="h2 mb-0">Shop Grid Left Sidebar</h1>
+        </div>
+        <div class="col-md-6 mt-3 mt-md-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-md-end bg-transparent p-0 m-0">
+              <li class="breadcrumb-item"><a class="text-dark" href="#"><i class="las la-home mr-1"></i>Home</a>
+              </li>
+              <li class="breadcrumb-item">Shop</li>
+              <li class="breadcrumb-item active text-primary" aria-current="page">Shop Grid Left Sidebar</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <!-- / .row -->
+    </div>
+    <!-- / .container -->
+  </section>
+  
+  <!--hero section end--> 
+  
+  
+  <!--body content start-->
+  
+  <div class="page-content">
+  
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9 col-md-12 order-lg-1">
+          <div class="row mb-4 align-items-center">
+            <div class="col-md-5 mb-3 mb-md-0"> <span class="text-muted">Showing 1 to 18 of 20 total</span>
+            </div>
+            <div class="col-md-7 d-flex align-items-center justify-content-md-end">
+              <div class="sort-filter ml-2 d-flex align-items-center">
+                <select class="custom-select" id="inputGroupSelect02">
+                  <option selected>Sort By</option>
+                  <option value="1">Newest Item</option>
+                  <option value="2">Populer</option>
+                  <option value="3">Best Match</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            {% for set in object_list %}
+            {% for product in set.category.all %}
+            <div class="col-lg-4 col-md-6">
+              <div class="card product-card">
+                <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="lar la-heart"></i>
+                </button>
+                <a class="card-img-hover d-block" href="{% url 'home:product-detail' product.id %}">
+                    {% for img in product.image.all|slice:2 %}
+                        {% if forloop.first %}
+                        <img class="card-img-top card-img-back" src="{{ img.image.url }}" alt="...">
+                        {% else %}
 
+                        <img class="card-img-top card-img-front" src="{{ img.image.url }}" alt="...">
+                            
+                        {% endif %}
+                    {% endfor %}
+                </a>
+                <div class="card-info">
+                  <div class="card-body">
+                    <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' product.id %}">{{ product.name }}</a>
+                    </div>
+                    <div class="mt-1"> <span class="product-price"><del class="text-muted">Nrs. {{ product.marked_price }}</del>Nrs. {{ product.selling_price }}</span>
+                      <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer bg-transparent border-0">
+                    <div class="product-link d-flex align-items-center justify-content-center">
+                      <button class="btn btn-compare" data-toggle="tooltip" data-placement="top" title="Compare" type="button"><i class="las la-random"></i> 
+                      </button>
+                      <a href="{% url 'home:add-to-cart' product.pk %}" class="btn-cart btn btn-primary btn-animated mx-3" type="button"><i class="las la-shopping-cart mr-1"></i>
+                      </a>
+                      <button class="btn btn-view" data-toggle="tooltip" data-placement="top" title="Quick View"><span data-target="#quick-view" data-toggle="modal"><i class="las la-eye"></i></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+          </div>
+          {% if page_obj.paginator.num_pages > 1 %}
+          <nav aria-label="Page navigation" class="mt-8">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number}}">Previous</a>
+                    </li>
+                {% endif %}
+                {% if page_obj.has_previous %}
+                    {% if page_obj.previous_page_number != 1 %}
+                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">1</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                    {% endif %}
+                {% endif %}
+                <li class="page-item"><a class="page-link active" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                </li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                    {% if page_obj.next_page_number != page_obj.paginator.num_pages%}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+                    </li>
+                    {% endif %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+          </nav>
+          {% endif %}
+        </div>
+        <div class="col-lg-3 col-md-12 sidebar mt-8 mt-lg-0">
+          <div class="shadow-sm p-5">
+            <div class="widget widget-categories mb-4 pb-4 border-bottom">
+              <h4 class="widget-title mb-3">Categories</h4>
+              <div id="accordion" class="accordion">
+                <div class="card border-0 mb-3">
+                  <div class="card-header">
+                    <h6 class="mb-0">
+                <a class="link-title" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">Seasonal Wear</a>
+                </h6>
+                  </div>
+                  <div id="collapse1" class="collapse show" data-parent="#accordion">
+                    <div class="card-body text-muted">
+                      <ul class="list-unstyled">
+                        <li><a href="#">Sweaters</a>
+                        </li>
+                        <li><a href="#">Jackets</a>
+                        </li>
+                        <li><a href="#">Sweatshirts</a>
+                        </li>
+                        <li><a href="#">Coat & Blazers</a>
+                        </li>
+                        <li><a href="#">Shrugs</a>
+                        </li>
+                        <li><a href="#">Thermals</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card border-0 mb-3">
+                  <div class="card-header">
+                    <h6 class="mb-0">
+                <a class="link-title" data-toggle="collapse" data-parent="#accordion" href="#collapse2">Footwear</a>
+                </h6>
+                  </div>
+                  <div id="collapse2" class="collapse" data-parent="#accordion">
+                    <div class="card-body text-muted">
+                      <ul class="list-unstyled">
+                        <li><a href="#">Men's Footwear</a>
+                        </li>
+                        <li><a href="#">Women's Footwear</a>
+                        </li>
+                        <li><a href="#">Kid's Footwear</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card border-0 mb-3">
+                  <div class="card-header">
+                    <h6 class="mb-0">
+                <a class="link-title" data-toggle="collapse" data-parent="#accordion" href="#collapse3">Clothing</a>
+                </h6>
+                  </div>
+                  <div id="collapse3" class="collapse" data-parent="#accordion">
+                    <div class="card-body text-muted">
+                      <ul class="list-unstyled">
+                        <li><a href="#">T-Shirts</a>
+                        </li>
+                        <li><a href="#">Shirts</a>
+                        </li>
+                        <li><a href="#">Dresses & Skirts</a>
+                        </li>
+                        <li><a href="#">Leggings & Jeggings</a>
+                        </li>
+                        <li><a href="#">Polos & T-Shirts</a>
+                        </li>
+                        <li><a href="#">Jeans</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card border-0 mb-3">
+                  <div class="card-header">
+                    <h6 class="mb-0">
+                <a class="link-title" data-toggle="collapse" data-parent="#accordion" href="#collapse4">Watches</a>
+                </h6>
+                  </div>
+                  <div id="collapse4" class="collapse" data-parent="#accordion">
+                    <div class="card-body text-muted">
+                      <ul class="list-unstyled">
+                        <li><a href="#">Fastrack</a>
+                        </li>
+                        <li><a href="#">Casio</a>
+                        </li>
+                        <li><a href="#">Titan</a>
+                        </li>
+                        <li><a href="#">Motion</a>
+                        </li>
+                        <li><a href="#">Sonata</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card border-0 mb-3">
+                  <div class="card-header">
+                    <h6 class="mb-0">
+                <a class="link-title" data-toggle="collapse" data-parent="#accordion" href="#collapse5">Bags</a>
+                </h6>
+                  </div>
+                  <div id="collapse5" class="collapse" data-parent="#accordion">
+                    <div class="card-body text-muted">
+                      <ul class="list-unstyled">
+                        <li><a href="#">Handbags</a>
+                        </li>
+                        <li><a href="#">Shoulder Bags</a>
+                        </li>
+                        <li><a href="#">Sling bags</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card border-0">
+                  <div class="card-header">
+                    <h6 class="mb-0">
+                <a class="link-title" data-toggle="collapse" data-parent="#accordion" href="#collapse6">Accessories</a>
+                </h6>
+                  </div>
+                  <div id="collapse6" class="collapse" data-parent="#accordion">
+                    <div class="card-body text-muted">
+                      <ul class="list-unstyled">
+                        <li><a href="#">Backpacks</a>
+                        </li>
+                        <li><a href="#">Sunglasses</a>
+                        </li>
+                        <li><a href="#">Wallets & Belts</a>
+                        </li>
+                        <li><a href="#">Jewellery</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+             <div class="widget widget-price mb-4 pb-4 border-bottom">
+              <h4 class="widget-title mb-3">Price</h4>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="priceCheck1">
+                <label class="custom-control-label" for="priceCheck1">$10 - $100</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="priceCheck2">
+                <label class="custom-control-label" for="priceCheck2">$100 - $200</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="priceCheck3">
+                <label class="custom-control-label" for="priceCheck3">$200 - $300</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="priceCheck4">
+                <label class="custom-control-label" for="priceCheck4">$300 - $400</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="priceCheck5">
+                <label class="custom-control-label" for="priceCheck5">$400 - $500</label>
+              </div>
+            </div>
+            <div class="widget widget-brand mb-4 pb-4 border-bottom">
+              <h4 class="widget-title mb-3">Brand</h4>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="brandCheck1">
+                <label class="custom-control-label" for="brandCheck1">Raymond</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="brandCheck2">
+                <label class="custom-control-label" for="brandCheck2">Adidas</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="brandCheck3">
+                <label class="custom-control-label" for="brandCheck3">Levi's</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="brandCheck4">
+                <label class="custom-control-label" for="brandCheck4">Reebok</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="brandCheck5">
+                <label class="custom-control-label" for="brandCheck5">Killer</label>
+              </div>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="brandCheck6">
+                <label class="custom-control-label" for="brandCheck6">John Players</label>
+              </div>
+            </div>
+            <div class="widget widget-color mb-4 pb-4 border-bottom">
+              <h4 class="widget-title mb-3">Color</h4>
+              <ul class="list-inline">
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter1" name="Radios">
+                    <label class="form-check-label" for="color-filter1" data-bg-color="#3cb371"></label>
+                  </div> <small>Green</small>
+                </li>
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter2" name="Radios" checked>
+                    <label class="form-check-label" for="color-filter2" data-bg-color="#4876ff"></label>
+                  </div> <small>Blue</small>
+                </li>
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter3" name="Radios">
+                    <label class="form-check-label" for="color-filter3" data-bg-color="#0a1b2b"></label>
+                  </div> <small>Black</small>
+                </li>
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter4" name="Radios">
+                    <label class="form-check-label" for="color-filter4" data-bg-color="#f94f15"></label>
+                  </div> <small>Orange</small>
+                </li>
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter5" name="Radios">
+                    <label class="form-check-label" for="color-filter5" data-bg-color="#FF00FF"></label>
+                  </div> <small>Fuchsia</small>
+                </li>
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter6" name="Radios">
+                    <label class="form-check-label" for="color-filter6" data-bg-color="#ffc300"></label>
+                  </div> <small>Yellow</small>
+                </li>
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter7" name="Radios">
+                    <label class="form-check-label" for="color-filter7" data-bg-color="#808080"></label>
+                  </div> <small>Gray</small>
+                </li>
+                <li>
+                  <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input" id="color-filter8" name="Radios">
+                    <label class="form-check-label" for="color-filter8" data-bg-color="#008080"></label>
+                  </div> <small>Teal</small>
+                </li>
+              </ul>
+            </div>
+            <div class="widget widget-size">
+              <h4 class="widget-title mb-3">Size</h4>
+              <ul class="list-inline clearfix">
+                <li>
+                  <input name="sc" id="xs-size" type="radio">
+                  <label for="xs-size">XS</label>
+                </li>
+                <li>
+                  <input name="sc" id="s-size" type="radio">
+                  <label for="s-size">S</label>
+                </li>
+                <li>
+                  <input name="sc" id="m-size" checked="" type="radio">
+                  <label for="m-size">M</label>
+                </li>
+                <li>
+                  <input name="sc" id="l-size" type="radio">
+                  <label for="l-size">L</label>
+                </li>
+                <li>
+                  <input name="sc" id="xl-size" type="radio">
+                  <label for="xl-size">XL</label>
+                </li>
+                <li>
+                  <input name="sc" id="xxl-size" type="radio">
+                  <label for="xxl-size">XXL</label>
+                </li>
+                <li>
+                  <input name="sc" id="3xl-size" type="radio">
+                  <label for="3xl-size">3XL</label>
+                </li>
+                <li>
+                  <input name="sc" id="4xl-size" type="radio">
+                  <label for="4xl-size">4XL</label>
+                </li>
+                <li>
+                  <input name="sc" id="5xl-size" type="radio">
+                  <label for="5xl-size">5XL</label>
+                </li>
+                <li>
+                  <input name="sc" id="36-size" type="radio">
+                  <label for="36-size">36</label>
+                </li>
+                <li>
+                  <input name="sc" id="38-size" type="radio">
+                  <label for="38-size">38</label>
+                </li>
+                <li>
+                  <input name="sc" id="39-size" type="radio">
+                  <label for="39-size">39</label>
+                </li>
+                <li>
+                  <input name="sc" id="40-size" type="radio">
+                  <label for="40-size">40</label>
+                </li>
+                <li>
+                  <input name="sc" id="42-size" type="radio">
+                  <label for="42-size">42</label>
+                </li>
+                <li>
+                  <input name="sc" id="44-size" type="radio">
+                  <label for="44-size">44</label>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  </div>
+  
 {% endblock %}

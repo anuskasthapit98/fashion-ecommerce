@@ -6,10 +6,10 @@ app_name = 'home'
 
 urlpatterns = [
     path('', HomeTemplateView.as_view(), name="home"),
-    
-    #registration
+
+    # registration
     path('register/', CustomerRegistrationView.as_view(), name="register"),
-    
+
     # products
     path('products/list/', ProductListView.as_view(), name='product-list'),
     path('products/<int:pk>/detail/',
@@ -25,10 +25,10 @@ urlpatterns = [
     # Newsletter
     path('newsletter/', SubscriptionView.as_view(), name='newsletter'),
 
-    #blogs 
-    path('blogs/', BlogView.as_view(), name ='blogs'),
-    path('blogs/<int:pk>/detail/', BlogDetailView.as_view(), name = 'blog-detail'),
-    
+    # blogs
+    path('blogs/', BlogView.as_view(), name='blogs'),
+    path('blogs/<int:pk>/detail/', BlogDetailView.as_view(), name='blog-detail'),
+
     # cart funtionality url
     path('add-to-cart/<int:pro_id>/', AddToCartView.as_view(), name='add-to-cart'),
     # my cart
@@ -44,9 +44,8 @@ urlpatterns = [
     # checkout
     path('checkout/', CheckoutView.as_view(), name='checkout'),
 
-    # coupon 
+    # coupon
     path('coupon/', CouponView.as_view(), name='coupon'),
-    
+
 
 ]
-

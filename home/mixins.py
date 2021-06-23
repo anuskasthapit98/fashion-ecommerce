@@ -24,5 +24,10 @@ class BaseMixin(object):
         # navbar
         context['category_type'] = CategoryType.objects.filter(
             deleted_at__isnull=True)
-        context['category'] = Category.objects.filter(parent__isnull=True)
+        context['kid_category'] = Category.objects.filter(
+            parent__isnull=True, category_type__type="Kid")
+        context['men_category'] = Category.objects.filter(
+            parent__isnull=True, category_type__type="Men")
+        context['women_category'] = Category.objects.filter(
+            parent__isnull=True, category_type__type="Women")
         return context

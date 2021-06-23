@@ -68,6 +68,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Brand</th>
                                     <th scope="col">Image</th>
+                                    <th scope="col">Product Type</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Marked Price</th>
                                     <th scope="col">Selling Price</th>
@@ -87,6 +88,7 @@
                                         <img width="100px" height="100px" src="{{ img.image.url}}" alt="">
                                         {% endfor %}
                                     </td>
+                                    <td>{{ product.type }}</td>
                                     <td>{{ product.categories }}</td>
                                     <td>{{ product.marked_price }}</td>
                                     <td>{{ product.selling_price }}</td>

@@ -205,7 +205,6 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
         mobile = self.cleaned_data['mobile']
         password = self.cleaned_data['password']
         confirm_password = self.cleaned_data['confirm_password']
-        print(username, mobile, password, confirm_password, "11111111111111111")
         if password != confirm_password:
             print('password did not matched')
             raise ValidationError({
