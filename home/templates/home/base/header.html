@@ -57,9 +57,9 @@
             <form class="form-inline border rounded w-100">
               <select class="custom-select border-0 rounded-0 bg-light form-control d-none d-lg-inline">
                 <option selected>All Categories</option>
-                <option value="1">Men</option>
-                <option value="2">Women</option>
-                <option value="3">Kids</option>
+                {% for type in category_type %}
+                <option value="{{ type.id }}">{{ type.type }}</option>
+                {% endfor %}
               </select>
               <input class="form-control border-0 border-left col" type="search" placeholder="Enter Your Keyword" aria-label="Search">
               <button class="btn btn-primary text-white col-auto" type="submit"><i class="las la-search"></i>
@@ -92,104 +92,87 @@
                     <div class="container p-0">
                       <div class="row w-100 no-gutters">
                         <div class="col-lg-8 p-lg-3">
+                          
                           <form>
                             <div class="tab">
                               <!-- Nav -->
-                              <nav class="nav nav-tabs border-0 mb-5"> <a class="nav-item nav-link active" data-toggle="tab" href="#navTab">
-                            Women
-                          </a>
-                                <a class="nav-item nav-link" data-toggle="tab" href="#navTab">
-                            Men
-                          </a>
-                                <a class="nav-item nav-link" data-toggle="tab" href="#navTab">
-                            Kids
-                          </a>
+                              <nav class=" border-0 mb-5 ">
+                                <ul class="nav nav-tabs">
+                                  {% for type in category_type %}
+                                    {% if type.type|lower == "kid" %}
+                                    <li>
+                                      <a class="nav-item nav-link active" data-toggle="tab" href="#kid">
+                                        {{ type.type }}
+                                      </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if type.type|lower == "men" %}
+                                    <li>
+                                      <a class="nav-item nav-link" data-toggle="tab" href="#men">
+                                        {{ type.type }}
+                                      </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if type.type|lower == "women" %}
+                                    <li>
+                                      <a class="nav-item nav-link" data-toggle="tab" href="#women">
+                                        {{ type.type }}
+                                      </a>
+                                    </li>
+                                    {% endif %}
+                                  {% endfor %}
+                                </ul>
                               </nav>
                               <div class="tab-content p-0">
-                                <div class="tab-pane fade show active" id="navTab">
+                                <div id="kid" class="tab-pane fade show active" >
                                   <div class="row">
+                                    {% for category in kid_category %}
                                     <div class="col-12 col-md-3 col-sm-6">
                                       <!-- Heading -->
-                                      <div class="mb-3 font-weight-bold">Clothing</div>
+                                      <div class="mb-3 font-weight-bold">{{ category.name }}</div>
                                       <!-- Links -->
                                       <ul class="list-unstyled mb-6 mb-md-0">
-                                        <li> <a href="shop-grid-left-sidebar.html">All Clothing</a>
+                                        {% for sub in category.sub_Category.all %}
+                                        <li> <a href="{% url 'home:product-list' %}?t=Kid,{{ category.name }},{{ sub.name }}">{{ sub.name }}</a>
                                         </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Top, T-Shirts & Shirts</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Lingerie & Sleepwear</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Leggings & Jeggings</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Kurtas & Kurtis</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Dresses & Skirts</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Jumpers & Cardigans</a>
-                                        </li>
+                                        {% endfor %}
                                       </ul>
                                     </div>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                                <div id="men" class="tab-pane fade show" >
+                                  <div class="row">
+                                    {% for category in men_category %}
                                     <div class="col-12 col-md-3 col-sm-6">
                                       <!-- Heading -->
-                                      <div class="mb-3 font-weight-bold">Shoes & Boots</div>
+                                      <div class="mb-3 font-weight-bold">{{ category.name }}</div>
                                       <!-- Links -->
                                       <ul class="list-unstyled mb-6 mb-md-0">
-                                        <li> <a href="shop-grid-left-sidebar.html">All Shoes & Boots</a>
+                                        {% for sub in category.sub_Category.all %}
+                                        <li> <a href="{% url 'home:product-list' %}?t=Men,{{ category.name }},{{ sub.name }}">{{ sub.name }}</a>
                                         </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Branded Shoes</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Boots</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Heels</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Sandals</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Shoes</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Wide Fit Shoes</a>
-                                        </li>
+                                        {% endfor %}
                                       </ul>
                                     </div>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                                <div id="women" class="tab-pane fade show" >
+                                  <div class="row">
+                                    {% for category in women_category %}
                                     <div class="col-12 col-md-3 col-sm-6">
                                       <!-- Heading -->
-                                      <div class="mb-3 font-weight-bold">Bags & Accessories</div>
+                                      <div class="mb-3 font-weight-bold">{{ category.name }}</div>
                                       <!-- Links -->
-                                      <ul class="list-unstyled mb-0">
-                                        <li> <a href="shop-grid-left-sidebar.html">All Bags & Accessories</a>
+                                      <ul class="list-unstyled mb-6 mb-md-0">
+                                        {% for sub in category.sub_Category.all %}
+                                        <li> <a href="{% url 'home:product-list' %}?t=Women,{ category.name }},{{ sub.name }}">{{ sub.name }}</a>
                                         </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Accessories</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Bags & Purses</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Shoulder Bags</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Skin Care</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Hair Accessories</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Artificial Jewellery</a>
-                                        </li>
+                                        {% endfor %}
                                       </ul>
                                     </div>
-                                    <div class="col-12 col-md-3 col-sm-6">
-                                      <!-- Heading -->
-                                      <div class="mb-3 font-weight-bold">Collections</div>
-                                      <!-- Links -->
-                                      <ul class="list-unstyled mb-0">
-                                        <li> <a href="shop-grid-left-sidebar.html">All Collections</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Winter & Seasonal Wear</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Beauty & Grooming</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Ballerinas</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Party Dresses</a>
-                                        </li>
-                                        <li> <a href="shop-grid-left-sidebar.html">Ethnic Wear</a>
-                                        </li>
-                                      </ul>
-                                    </div>
+                                    {% endfor %}
                                   </div>
                                 </div>
                               </div>
@@ -335,3 +318,4 @@
 </header>
 
 <!--header end-->
+

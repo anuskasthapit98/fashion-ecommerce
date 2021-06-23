@@ -93,11 +93,12 @@
           <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="Add to wishlist"><i class="lar la-heart"></i>
           </button>
           <a class="card-img-hover d-block" href="{% url 'home:product-detail' product.id %}">
-            {% for img in product.image.all|slice:1 %}
+            {% for img in product.image.all|slice:12 %}
+            {% if forloop.first %}
             <img class="card-img-top card-img-back" src="{{ img.image.url }}" alt="...">
-            {% endfor %}
-            {% for img in product.image.all|slice:1 %}
+            {% else %}
             <img class="card-img-top card-img-front" src="{{ img.image.url }}" alt="...">
+            {% endif %}
             {% endfor %}
           </a>
           <div class="card-info">

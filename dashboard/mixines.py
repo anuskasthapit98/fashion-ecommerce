@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User, Group
 from django.views.generic.base import TemplateView
 
-from dashboard.models import Category
+from dashboard.models import CategoryType
 
 
 class StaffRequiredMixin(object):
@@ -62,7 +62,7 @@ class SuperAdminRequiredMixin(object):
 class SidebarMixin():
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sidebar_categories'] = Category.objects.filter(
+        context['sidebar_categories'] = CategoryType.objects.filter(
             deleted_at__isnull=True)
 
         return context

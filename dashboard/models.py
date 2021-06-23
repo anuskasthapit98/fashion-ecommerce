@@ -171,7 +171,9 @@ class Color(DateTimeModel):
 
 
 class Products(DateTimeModel):
-    categories = models.ForeignKey(Category, on_delete=models.CASCADE)
+    type = models.ForeignKey(CategoryType, on_delete=models.CASCADE)
+    categories = models.ForeignKey(
+        Category, related_name='category', on_delete=models.CASCADE)
     brands = models.ForeignKey(Brands, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
     image = models.ManyToManyField(ProductImage)
@@ -216,7 +218,6 @@ class Coupon(DateTimeModel):
     validity_count = models.PositiveIntegerField(default=1)
     discount_type = models.CharField(
         max_length=20, choices=TYPE, default="Flat Discount")
-    
 
     class Meta:
         verbose_name = ('Coupon')
@@ -283,7 +284,6 @@ class Order(DateTimeModel):
     address_one = models.CharField(max_length=200)
     address_two = models.CharField(max_length=200, blank=True, null=True)
     zip_code = models.PositiveIntegerField(blank=True, null=True)
- 
 
     class Meta:
         verbose_name = ('Order')
