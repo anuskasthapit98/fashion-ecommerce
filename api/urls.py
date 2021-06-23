@@ -28,4 +28,8 @@ urlpatterns = [
     # customer api
     path('customers/', CustomerListCreate.as_view()),
     path('customers/<int:pk>/', CustomerUpdateDelete.as_view()),
+
+    # order api
+    path('order/', OrderListCreate.as_view()),
+    path('order/<int:pk>/', OrderUpdateDelete.as_view()),
 ]

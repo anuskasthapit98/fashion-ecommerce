@@ -13,6 +13,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse
 from django.utils import timezone
+from django.db.models import F
 import random
 
 
@@ -215,7 +216,6 @@ class SubscriptionView(View):
 
 
 class AddToCartView(View):
-
     def get(self, request, *args, **kwargs):
         quantity = 1
         size = None
@@ -223,7 +223,6 @@ class AddToCartView(View):
             quantity = int(request.GET.get('quantity'))
         if 'size' in request.GET:
             size = request.GET.get('size')
-
         print(quantity, size)
         # getting product id
         product_id = self.kwargs['pro_id']
@@ -295,7 +294,6 @@ class ManageCartView(View):
 
 class MyCartView(BaseMixin, TemplateView):
     template_name = 'home/cart/cart.html'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_id = self.request.session.get('cart_id')
@@ -307,15 +305,17 @@ class MyCartView(BaseMixin, TemplateView):
         return context
 
 
-
 class CouponView(TemplateView):
     def get(self, request, *args, **kwargs):
-        print("pppp")
         if request.is_ajax:
-            coupon_code = request.GET.get("coupon_code", None)
-            print(coupon_code)
-            if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now()):
-                # if Coupon.objects.filter(discount_type=="Flat Discount")
+            coupon_code = request.GET.get("coupon_code", None)          
+            if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now().exclude(order__user=self.request.user,max_value__lte=F('used')).first()):
+                code = self.request.session.get('code')
+                print(code,'222221')
+                if code:
+                    pass
+                else:
+                    request.session['code'] = coupon_code
                 return JsonResponse({"valid":True}, status=200) #
             else:
                 return JsonResponse({"valid":False}, status=200)
@@ -344,32 +344,24 @@ class CheckoutView(BaseMixin, CreateView):
             form.instance.cart = cart_obj
             form.instance.shipping_charge = 50
             form.instance.subtotal = cart_obj.subtotal
-            form.instance.total = cart_obj.total + cart_obj.vat 
+            form.instance.total = cart_obj.subtotal
             form.instance.code = random.randint(1,100)
             del self.request.session['cart_id']
             pm = form.cleaned_data.get("payment_method")
-            # coupon= form.cleaned_data.get("coupon")
             order = form.save()
-            messages.success(self.request,"Your order is on the way.")
-            
-        
-        else:
-            
+            code = self.request.session.get('code')
+            coupon_obj = Coupon.objects.get(code=code)
+            if coupon_obj:
+                form.instance.coupon = Coupon.objects.get(code=code)
+                order.total -= coupon_obj.discount_amt
+                order.save(update_fields=['coupon','total'])
+            messages.success(self.request,"Your order is on the way.")    
+        else:      
             return redirect("home:home")
             
         return super().form_valid(form)
     
+# wishlist
 
-
-# coupen validation form
-class CoupenValidation(View):
-    def dispatch(self, request, *args, **kwargs):
-        if self.request.is_ajax():
-            return super().dispatch(request, *args, **kwargs)
-        return JsonResponse({"error": "Cannot access this page"}, status=404)
-
-    def get(self, request, *args, **kwargs):
-        code = request.GET.get('code')
-        print('form validation called')
-        print(code, 999999999999999999999999)
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+# class WishlistView(View):
+#     def get(self, request, *args, **kwar

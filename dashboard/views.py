@@ -719,3 +719,35 @@ class AboutUpdateView(UpdateView, SidebarMixin):
 class AboutDeleteView(DeleteMixin, DeleteView):
     model = Abouts
     success_url = reverse_lazy('dashboard:abouts')
+
+
+# coupon
+class CouponListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/coupon/list.html'
+    model = Coupon
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "code" in self.request.GET:
+            if self.request.GET.get('code') != '':
+                queryset = queryset.filter(
+                    code__contains=self.request.GET.get("code"))
+        return queryset
+
+
+class CouponCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/coupon/form.html'
+    form_class = CouponCreateForm
+    success_url = reverse_lazy('dashboard:coupons')
+
+
+class CouponUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/coupon/form.html'
+    model = Coupon
+    form_class = CouponCreateForm
+    success_url = reverse_lazy('dashboard:coupons')
+
+
+class CouponDeleteView(DeleteMixin, DeleteView):
+    model = Coupon
+    success_url = reverse_lazy('dashboard:coupons')

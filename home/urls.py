@@ -36,17 +36,13 @@ urlpatterns = [
     # manage cart
     path('manage/<int:p_id>cart/', ManageCartView.as_view(), name='manage-cart'),
 
-    # coupen validation
-    path('coupen/validation/', CoupenValidation.as_view(),
-         name='coupon-validation'),
-
-
     # checkout
     path('checkout/', CheckoutView.as_view(), name='checkout'),
 
     # coupon 
     path('coupon/', CouponView.as_view(), name='coupon'),
     
-
+   # wishlist
+#    path('wishlist/<int:pro_id>/', WishlistView.as_view(), name='wishlist'),
 ]
 

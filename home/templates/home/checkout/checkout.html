@@ -120,16 +120,12 @@
  
 <script>
 $("#code").click(function(){ 
-
   var code = $("#c-code").val();
-  alert(code)
   $.ajax({
     url: "{% url 'home:coupon' %}",
-
     data: {
       'coupon_code': code
-    },
-  
+    }, 
     success: function (data){
       if (data.valid){
         alert("Coupon successfully added")

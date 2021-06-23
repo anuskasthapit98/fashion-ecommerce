@@ -36,9 +36,16 @@ class SizeSerializers(serializers.ModelSerializer):
         model = Size
         fields = ['name']
 
-# coupon
+# customer
 class CustomerSerializers(serializers.ModelSerializer):
     
     class Meta:
-        model = Customer
+        model = Order
+        fields = '__all__'
+
+
+# order
+class OrderSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Order
         fields = '__all__'

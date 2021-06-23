@@ -147,6 +147,12 @@
                 <span class="nav-text">Newsletter</span>
               </a>
             </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:coupons' %}">
+                <i class="mdi mdi-message-bulleted"></i>
+                <span class="nav-text">Coupon</span>
+              </a>
+            </li>
               {% if request.user.is_superuser %}
               
                   <li  class="has-sub {% active_link 'dashboard:users' 'active' %}" >
