@@ -199,41 +199,29 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
         fields = ['username', 'password', 'confirm_password',
                   'first_name', 'last_name', 'email', 'mobile', 'gender']
 
-    def clean(self):
-        cleaned_data = super().clean()
+    def clean_username(self):
         username = self.cleaned_data['username']
+        if Customer.objects.filter(username=username).exists():
+            raise forms.ValidationError('username is not available')
+
+        return username
+
+    def clean_mobile(self):
         mobile = self.cleaned_data['mobile']
+        if len(mobile) < 10:
+            print(mobile)
+            raise forms.ValidationError(
+                'Invalid mobile no.'
+            )
+        return mobile
+
+    def clean_confirm_password(self):
         password = self.cleaned_data['password']
         confirm_password = self.cleaned_data['confirm_password']
-        if password != confirm_password:
-            print('password did not matched')
-            raise ValidationError({
-                'password': 'Password did not match'
-            })
+        if confirm_password != password:
+            raise forms.ValidationError('Password Not Matched')
 
-        # if Customer.objects.filter(username=username).exists():
-        #     print(username)
-        #     raise ValidationError({
-        #         'username': 'username is not available'
-        #     })
-
-        # if Customer.objects.filter(mobile=mobile):
-        #     print(mobile)
-        #     raise ValidationError({
-        #         'mobile': 'mobile no. already exists'
-        #     })
-        # if len(mobile) < 10:
-        #     print(mobile)
-        #     raise ValidationError({
-        #         'mobile': 'Invalid mobile no.'
-        #     })
-
-        # if confirm_password != password:
-        #     print(confirm_password)
-        #     raise forms.ValidationError({
-        #         'confirm_password': 'Password Not Matched'})
-
-        # return self.cleaned_data
+        return confirm_password
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -259,6 +247,22 @@ class CustomerCreateForm(FormControlMixin, forms.ModelForm):
             'placeholder': "mobile"
         })
 
+
+class CustomerLoginForm(FormControlMixin, forms.Form):
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = Customer.objects.filter(
+            username=username, is_customer=True).first()
+        if user == None or not user.check_password(password):
+            raise ValidationError({
+                'username': 'Invalid username or password'
+            })
+        return self.cleaned_data
 
 # Testimonial create form
 

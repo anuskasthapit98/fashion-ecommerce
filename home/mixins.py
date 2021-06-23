@@ -31,3 +31,21 @@ class BaseMixin(object):
         context['women_category'] = Category.objects.filter(
             parent__isnull=True, category_type__type="Women")
         return context
+
+class LoginRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.customer:
+            pass
+        else:
+            return redirect("/customer/login/?next=/checkout/")
+        return super().dispatch(request, *args, **kwargs)
+    
+class EcomMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        cart_id = request.session.get("cart_id")
+        if cart_id:
+            cart_obj = Cart.objects.get(id=cart_id)
+            if request.user.is_authenticated and request.user.customer:
+                cart_obj.customer = request.user.customer
+                cart_obj.save()
+        return super().dispatch(request, *args, **kwargs)

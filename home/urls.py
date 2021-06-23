@@ -8,7 +8,18 @@ urlpatterns = [
     path('', HomeTemplateView.as_view(), name="home"),
 
     # registration
-    path('register/', CustomerRegistrationView.as_view(), name="register"),
+    path('customer/register/', CustomerRegistrationView.as_view(), name="register"),
+    path('customer/login/', CustomerLoginView.as_view(), name="login"),
+    path('customer/logout/', CustomerLogoutView.as_view(), name="logout"),
+    path('customer/forgot/password',
+         CustomerForgotPasswordView.as_view(), name="forgot-password"),
+    path('customer/change/password',
+         CustomerPasswordsChangeView.as_view(), name="change-password"),
+
+    path("profile/", CustomerProfileView.as_view(), name="customerprofile"),
+    path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(),
+         name="customerorderdetail"),
+
 
     # products
     path('products/list/', ProductListView.as_view(), name='product-list'),

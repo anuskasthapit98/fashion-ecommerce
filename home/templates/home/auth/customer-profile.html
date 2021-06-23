@@ -1,0 +1,44 @@
+{% extends 'home/base.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Detail Information</h3><hr>
+            <p><span class="font-weight-bold">Name: </span> {{customer.first_name}}</p>
+            <p><span class="font-weight-bold">Username: </span> {{customer.username}}</p>
+            <p><span class="font-weight-bold">Email: </span> {{user.customer.email}}</p>
+            {% comment %} <p><span class="font-weight-bold">Address: </span> {{user.customer.address}}</p> {% endcomment %}
+            <p><span class="font-weight-bold">Mobile: </span> {{customer.mobile}}</p>
+        </div>
+        <div class="col-md-8">
+            <h3>Previous Orders</h3>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Order ID</th>
+                        <th>Amount</th>
+                        <th>Ordered on</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ord in orders %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><a href="{% url 'home:customerorderdetail' ord.pk %}"> #ORDER_{{ord.code}}</a></td>
+                        <td>{{ord.total}}</td>
+                        <td>{{ord.created_at|timesince}} ago</td>
+                        <td>{{ord.status}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

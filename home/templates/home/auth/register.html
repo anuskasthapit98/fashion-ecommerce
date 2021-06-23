@@ -70,7 +70,8 @@
               <div class="col-md-6">
                 <div class="form-group">
                   {{form.username}}
-                  <span class = "form-errors">{{ form.errors.username }}</span>  
+              
+                    <span class = "form-errors">{{form.errors.username}}</span>  
                 </div>
               </div>
             <div class="col-md-6">
@@ -97,7 +98,7 @@
                 <div class="form-group">
                 {{form.password}}  
                 </div>
-                <span>{{ form.errors.password }} errors</span>
+                <span>{{ form.errors.password }}</span>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
@@ -118,7 +119,7 @@
             <div class="row">
               <div class="col-md-12">
                 <button class="btn btn-primary">Register as a Customer</button>
-                <span class="mt-4 d-block">Have An Account ? <a href="login.html"><i>Sign In!</i></a></span>
+                <span class="mt-4 d-block">Have An Account ? <a href="{% url 'home:login'%}"><i>Sign In!</i></a></span>
               </div>
             </div>
           </form>
