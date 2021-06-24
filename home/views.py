@@ -33,7 +33,7 @@ from .forms import *
 # Create your views here.
 
 
-class HomeTemplateView(EcomMixin, BaseMixin, TemplateView):
+class HomeTemplateView( BaseMixin, TemplateView):
     template_name = 'home/base/index.html'
 
     def get_context_data(self, **kwargs):
@@ -57,6 +57,9 @@ class CustomerRegistrationView(CreateView):
     
     def form_valid(self, form):
         form.instance.is_customer = True
+        user = form.save()
+        password = form.cleaned_data.get('password')
+        user.set_password(password)
         return super().form_valid(form)
     
     def get_success_url(self):
@@ -175,12 +178,12 @@ class CustomerOrderDetailView(DetailView):
 # products view
 
 
-class ProductListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
+class ProductListView( BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
 
 
-class ProductDetailView(EcomMixin, BaseMixin, DetailView):
+class ProductDetailView( BaseMixin, DetailView):
     template_name = 'home/product/detail.html'
     model = Products
     context_object_name = 'product_detail'
@@ -197,7 +200,7 @@ class ProductDetailView(EcomMixin, BaseMixin, DetailView):
 # about
 
 
-class AboutListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
+class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
     model = Abouts
     template_name = 'home/about/about.html'
 
@@ -215,7 +218,7 @@ class AboutListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
 # contact
 
 
-class ContactView(EcomMixin, BaseMixin, CreateView):
+class ContactView( BaseMixin, CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
     success_url = reverse_lazy('contact')
@@ -254,7 +257,7 @@ class ContactView(EcomMixin, BaseMixin, CreateView):
 
 # blogs
 
-class BlogView(EcomMixin, ListView):
+class BlogView(ListView):
     template_name= 'home/blog/blog.html'
     model = Blog
     paginate_by = 3
@@ -274,7 +277,7 @@ class BlogView(EcomMixin, ListView):
                                            Q(description__icontains=search_item))
         return queryset
 
-class BlogDetailView(EcomMixin, DetailView):
+class BlogDetailView( DetailView):
     template_name = 'home/blog/detail.html'
     model = Blog
     form_class = BlogCommentForm
@@ -329,7 +332,7 @@ class SubscriptionView(View):
 # cart funtionality view
 
 
-class AddToCartView(EcomMixin, View):
+class AddToCartView( View):
 
     def get(self, request, *args, **kwargs):
         quantity = 1
@@ -424,11 +427,11 @@ class MyCartView(BaseMixin, TemplateView):
 
 
 
-class CouponView(EcomMixin, TemplateView):
+class CouponView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.is_ajax:
             coupon_code = request.GET.get("coupon_code", None)          
-            if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now().exclude(order__user=self.request.user,max_value__lte=F('used')).first()):
+            if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now()):
                 code = self.request.session.get('code')
                 print(code,'222221')
                 if code:
@@ -441,7 +444,7 @@ class CouponView(EcomMixin, TemplateView):
         return JsonResponse({}, status=400)
         
 
-class CheckoutView(LoginRequiredMixin, EcomMixin, BaseMixin, CreateView):
+class CheckoutView( BaseMixin, CreateView):
     template_name = 'home/checkout/checkout.html'
     form_class = CheckoutForm
     success_url = reverse_lazy('home:home')
@@ -464,16 +467,17 @@ class CheckoutView(LoginRequiredMixin, EcomMixin, BaseMixin, CreateView):
             form.instance.shipping_charge = 50
             form.instance.subtotal = cart_obj.subtotal
             form.instance.total = cart_obj.subtotal
-            form.instance.code = random.randint(1,100)
+            form.instance.code = f'#Ekocart{cart_id}'
             del self.request.session['cart_id']
             pm = form.cleaned_data.get("payment_method")
             order = form.save()
             code = self.request.session.get('code')
-            coupon_obj = Coupon.objects.get(code=code)
-            if coupon_obj:
-                form.instance.coupon = Coupon.objects.get(code=code)
-                order.total -= coupon_obj.discount_amt
-                order.save(update_fields=['coupon','total'])
+            if code != '' and code != None:
+                coupon_obj = Coupon.objects.get(code=code)
+                if coupon_obj:
+                    form.instance.coupon = Coupon.objects.get(code=code)
+                    order.total -= coupon_obj.discount_amt
+                    order.save(update_fields=['coupon','total'])
             messages.success(self.request,"Your order is on the way.")    
         else:      
             return redirect("home:home")
