@@ -292,8 +292,8 @@ class ContactView( BaseMixin, CreateView):
 
 # blogs
 
-class BlogView(EcomMixin, ListView):
-    template_name = 'home/blog/blog.html'
+class BlogView(ListView):
+    template_name= 'home/blog/blog.html'
     model = Blog
     paginate_by = 3
 
@@ -313,7 +313,7 @@ class BlogView(EcomMixin, ListView):
         return queryset
 
 
-class BlogDetailView(EcomMixin, DetailView):
+class BlogDetailView( DetailView):
     template_name = 'home/blog/detail.html'
     model = Blog
     form_class = BlogCommentForm
@@ -498,9 +498,8 @@ class CheckoutView( BaseMixin, CreateView):
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
             form.instance.cart = cart_obj
-            form.instance.shipping_charge = 50
-            form.instance.subtotal = cart_obj.subtotal
-            form.instance.total = cart_obj.subtotal
+            form.instance.subtotal += cart_obj.vat
+            form.instance.total = cart_obj.total
             form.instance.code = f'#Ekocart{cart_id}'
             del self.request.session['cart_id']
             pm = form.cleaned_data.get("payment_method")

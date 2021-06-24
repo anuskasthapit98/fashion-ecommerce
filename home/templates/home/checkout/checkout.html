@@ -92,17 +92,20 @@
           </div> 
         <div class="p-3 p-lg-5 shadow-sm mb-5">
           <h3 class="mb-3">Your Order</h3>
-           {% for product in cart.cartproduct_set.all %}
+           
           <ul class="list-unstyled">
-            
-            <li class="mb-3 border-bottom pb-3"><span> 1 x {{ product.product.name }} </span>Rs. {{ product.rate }}</li>
-            <li class="mb-3 border-bottom pb-3"><span> Shipping </span>Rs. {{ product.shipping_charge }}</li>
-            <li class="mb-3 border-bottom pb-3"><span> Subtotal </span>{{ product.subtotal }}</li>
-            <li><span><strong class="cart-total"> Total :</strong></span>  <strong class="cart-total">Rs. {{ product.total }} </strong>
+            {% for product in cart.cartproduct_set.all %}
+            <li class="mb-3 border-bottom pb-3"><span> {{ product.quantity }} x {{ product.product.name }} </span>Rs. {{ product.rate }}</li>
+             {% endfor %}
+         
+             <li class="mb-3 border-bottom pb-3"><span> VAT </span>{{ cart.vat }}</li>
+             
+            <li><span><strong class="cart-total"> Total :</strong></span>  <strong class="cart-total">Rs. {{ cart.total }} </strong>
           
             </li>
+          
           </ul>
-          {% endfor %}
+          
         </div>
         <button class="btn btn-primary btn-animated btn-block">Proceed to Payment</button>
         </div>
