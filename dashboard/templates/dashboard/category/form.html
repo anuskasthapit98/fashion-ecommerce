@@ -17,11 +17,6 @@
                             {{form.media}}
                              <span class= 'form-error'>{{ form.errors.slug }}</span>
                             <div class="row form-group">
-                             
-                                <div class="col-md-12 col-sm-12">
-                                    <label for="exampleFormControlInput1">Category Name</label>
-                                {{form.name}}
-                                </div>
                                 <div class="col-md-6 col-sm-12">
                                     <label for="exampleFormControlInput1">Catogory Type</label>
                                     {{form.category_type}}
@@ -30,6 +25,11 @@
                                     <label for="exampleFormControlInput1">Parent</label>
                                     {{form.parent}}
                                 </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <label for="exampleFormControlInput1">Category Name</label>
+                                {{form.name}}
+                                </div>
+                                
                                 {% comment %} <div class="col-md-6 col-sm-12">
                                     <label for="exampleFormControlPassword">Description</label>
                                     {{form.description}}

@@ -15,15 +15,19 @@
                         <h2>Basic Form Controls</h2>
                     </div>
                     <div class="card-body">
-                        <form method="POST" enctype="multipart/form-data">
+                        <form method="POST" enctype="multipart/form-data" id="category_form" data-related-category="{% url 'dashboard:type-related-category' %}">
                             {% csrf_token %}
                             {{ form.media }}
                             <div class="row form-group">
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-4 col-sm-12">
+                                    <label for="exampleFormControlInput1">Product Type</label>
+                                    {{ form.type }}
+                                </div>
+                                <div class="col-md-4 col-sm-12">
                                     <label for="exampleFormControlInput1">Category </label>
                                     {{ form.categories }}
                                 </div>
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-4 col-sm-12">
                                     <label for="exampleFormControlPassword">Brand</label>
                                     {{ form.brands }}
                                 </div>
@@ -43,10 +47,6 @@
                                 <div class="col-md-6 col-sm-12">
                                     <label for="exampleFormControlInput1">Marked Price</label>
                                     {{ form.marked_price }}
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <label for="exampleFormControlInput1">Selling Price</label>
-                                    {{ form.selling_price }}
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <label for="exampleFormControlPassword">discount percent</label>
