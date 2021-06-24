@@ -377,3 +377,21 @@ class AboutCreateForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Abouts
         fields = '__all__'
+
+
+# coupon create form
+
+class CouponCreateForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Coupon
+        fields = '__all__'
+        widgets = {
+            'valid_from': forms.DateTimeInput(attrs={
+                'class': 'form-control check-date',
+                'placeholder': datetime.date.today()
+            }),
+            'valid_to': forms.DateTimeInput(attrs={
+                'class': 'form-control check-date',
+                'placeholder': datetime.date.today()
+            }),
+        }

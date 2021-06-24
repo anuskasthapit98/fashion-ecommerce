@@ -1,0 +1,121 @@
+{% extends 'dashboard/base/base.html' %}
+{% block title %} Coupons {% endblock %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+                     
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb p-0">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dashboard:dashboard' %}">
+                    <span class="mdi mdi-home"></span>                
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    Our
+                </li>
+                <li class="breadcrumb-item" aria-current="page">Coupons</li>
+                </ol>
+
+            </nav>
+          <div class="input-group justify-content-end">
+                    <form action="{% url 'dashboard:coupons' %}" method="GET" class="form-inline">
+                      <input
+                        type="text"
+                        name="code"
+                        class="form-control float-right searchInput"
+                        id="SearchCode"
+                        placeholder="Coupon code"
+                      />
+                      <div class="input-group-append">
+                         <button type="submit" class="mb-1 btn btn-success">
+                          <span class="mdi mdi-magnify"></span>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+     
+
+     <div class="row">
+            
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom justify-content-between">
+                        <h2>Coupons List</h2>
+                                    <a href="{% url 'dashboard:coupon-create' %}" type="button" class="mb-1 btn btn-outline-primary">Add Coupon</a>
+
+                </div>
+        
+                    <div class="card-body">
+                        <table class="table table-hover ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S.N</th>
+                                    <th scope="col" width='25%'>Code</th>
+                                    <th scope="col">Valid from</th>
+                                    <th scope="col">Valid To</th>
+                                    <th scope="col">Discount Percentage</th>
+                                    <th scope="col">Discount Amount</th>
+                                    <th scope="col">Is used</th>
+                                    <th scope="col">Validity Count</th>
+                                    <th scope="col">Discount Type</th>                                 
+                                    <th width='20%'>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for coupon in object_list %}
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ coupon.code }}</td>
+                                    <td>{{ coupon.valid_from }}</td>
+                                    <td>{{ coupon.valid_to }}</td>
+                                    <td>{{ coupon.discount_percent }}</td>
+                                    <td>{{ coupon.discount_amt }}</td>
+                                    <td>{{ coupon.is_used }}</td>
+                                    <td>{{ coupon.validity_count }}</td>
+                                    <td>{{ coupon.discount_type }}</td>
+                                    
+                                    <td>
+                                        <span>
+                                            <a href="{% url 'dashboard:coupon-update' coupon.pk %}" class="btn btn-sm btn-success"><span class ="mdi mr-1 mdi-square-edit-outline">Edit</span></a>
+                                        </span>
+                                        <span>
+                                            <a href="{% url 'dashboard:coupon-delete' coupon.pk %}" class="btn btn-sm btn-danger delete"><span class ="mdi mr-1 mdi-trash-can">Delete</span></a>
+                                        </span>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>				
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+$('.delete').click(function(e) {
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "It will permanently deleted !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = $(this).attr('href');
+                    swal(" 'Your file has been deleted.'!", {
+                        icon: "success",
+                    });
+                }
+            });
+    })
+</script>
+{% endblock %}

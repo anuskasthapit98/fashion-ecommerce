@@ -170,4 +170,14 @@ urlpatterns = [
          NewsletterListView.as_view(), name='newsletters'),
     path('dashboard/newsletter/<int:pk>/delete/',
          NewsletterDeleteView.as_view(), name='newsletter-delete'),
+
+
+    # coupon urls
+    
+    path('dashboard/coupon/list/', CouponListView.as_view(), name='coupons'),
+    path('dashboard/coupon/create/', CouponCreateView.as_view(), name='coupon-create'),
+    path('dashboard/coupon/<int:pk>/update/',
+         CouponUpdateView.as_view(), name='coupon-update'),
+    path('dashboard/coupon/<int:pk>/delete/',
+         CouponDeleteView.as_view(), name='coupon-delete'),
 ]
