@@ -1,0 +1,94 @@
+{% extends 'dashboard/base/base.html' %}
+{% block title %} New Coupon {% endblock %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">							
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header card-header-border-bottom">
+                        <h2>Basic Form Controls</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.media }}
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Coupon Code</label>
+                                    {{ form.code }}
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Valid from </label>
+                                    <span class="valid-from">{{ form.valid_from }}</span>
+                                </div> 
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Valid To</label>
+                                   <span class="valid-to"> {{ form.valid_to }}</span>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Discount Percentage</label>
+                                    {{ form.discount_percent }}
+                                </div> 
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Discount Amount</label>
+                                    {{ form.discount_amt }}
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Is used </label>
+                                    {{ form.is_used }}
+                                </div> 
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Validity Count</label>
+                                    {{ form.validity_count }}
+                                </div> 
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <label for="exampleFormControlInput1">Discount Type</label>
+                                    {{ form.discount_type }}
+                                </div> 
+                            </div>
+                            
+                            
+                            <div class="form-footer pt-4 pt-5 mt-4 border-top">
+                                <button type="submit" class="btn btn-primary btn-default">Submit</button>
+                                <a href="{% url 'dashboard:coupons' %}" class="btn btn-secondary btn-default">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+	$(".valid-from").flatpickr({
+    enableTime: true,
+    dateFormat: "Y-m-d ",
+	minDate: "today"
+
+});
+</script>
+<script>
+	$(".valid-to").flatpickr({
+    enableTime: true,
+    dateFormat: "Y-m-d ",
+	minDate: "today"
+});
+</script>
+{% endblock %}

@@ -48,8 +48,8 @@
                       </li>
                       {% for cat in sidebar_categories %}
                       <li  class="{% active_link 'dashboard:specific-products' 'active' %}" >
-                        <a class="sidenav-item-link" href="{% url 'dashboard:specific-products' %}?category={{ cat.name }}">
-                          <span class="nav-text">{{ cat.name }}</span>
+                        <a class="sidenav-item-link" href="{% url 'dashboard:specific-products' %}?category={{ cat.type }}">
+                          <span class="nav-text">{{ cat.type }}</span>
                         </a>
                       </li>
                       {% endfor %}
@@ -145,6 +145,12 @@
               <a class="sidenav-item-link" href="{% url 'dashboard:newsletters' %}">
                 <i class="mdi mdi-message-bulleted"></i>
                 <span class="nav-text">Newsletter</span>
+              </a>
+            </li>
+            <li  class="has-sub" >
+              <a class="sidenav-item-link" href="{% url 'dashboard:coupons' %}">
+                <i class="mdi mdi-message-bulleted"></i>
+                <span class="nav-text">Coupon</span>
               </a>
             </li>
               {% if request.user.is_superuser %}

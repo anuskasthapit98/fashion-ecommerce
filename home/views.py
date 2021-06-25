@@ -16,6 +16,7 @@ from django.utils.crypto import get_random_string
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
+from django.db.models import F
 import random
 from django.views.generic import *
 from dashboard.forms import *
@@ -27,12 +28,10 @@ from .mixins import *
 from .forms import *
 
 
-
-
 # Create your views here.
 
 
-class HomeTemplateView(EcomMixin, BaseMixin, TemplateView):
+class HomeTemplateView( BaseMixin, TemplateView):
     template_name = 'home/base/index.html'
 
     def get_context_data(self, **kwargs):
@@ -49,40 +48,44 @@ class HomeTemplateView(EcomMixin, BaseMixin, TemplateView):
 
 # Resgistration
 
-class CustomerRegistrationView(CreateView):
+class CustomerRegistrationView(BaseMixin, CreateView):
     template_name = 'home/auth/register.html'
     form_class = CustomerCreateForm
     success_url = reverse_lazy('home:login')
-    
+
     def form_valid(self, form):
         form.instance.is_customer = True
+        user = form.save()
+        password = form.cleaned_data.get('password')
+        user.set_password(password)
         return super().form_valid(form)
-    
+
     def get_success_url(self):
         if "next" in self.request.GET:
             next_url = self.request.GET.get("next")
             return next_url
         else:
             return self.success_url
-    
-    
+
+
 class CustomerLogoutView(View):
     def get(self, request):
         logout(request)
         return redirect("home:home")
 
+
 class CustomerLoginView(FormView):
     template_name = "home/auth/login.html"
     form_class = CustomerLoginForm
     success_url = reverse_lazy("home:home")
-    
+
     def get_success_url(self):
         if "next" in self.request.GET:
             next_url = self.request.GET.get("next")
             return next_url
         else:
             return self.success_url
-    
+
     def form_valid(self, form):
         username = form.cleaned_data['username']
         pword = form.cleaned_data['password']
@@ -92,10 +95,10 @@ class CustomerLoginView(FormView):
             login(self.request, user)
         else:
             return redirect(self.success_url)
-            
+
         return super().form_valid(form)
-    
-   
+
+
 class CustomerForgotPasswordView(FormView):
     template_name = 'home/auth/reset-password.html'
     form_class = CustomerPasswordResetForm
@@ -118,8 +121,8 @@ class CustomerForgotPasswordView(FormView):
         )
         messages.success(self.request, "Password reset code is sent")
         return super().form_valid(form)
-    
-    
+
+
 # password change view
 class CustomerPasswordsChangeView(PasswordChangeView):
     template_name = 'home/auth/password-change.html'
@@ -130,14 +133,13 @@ class CustomerPasswordsChangeView(PasswordChangeView):
         form = super().get_form()
         form.set_user(self.request.user)
         return form
-    
-    
+
 
 class CustomerProfileView(TemplateView):
     template_name = 'home/auth/customer-profile.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and Customer.objects.filter(is_customer= True).exists():
+        if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
             pass
         else:
             return redirect("/customer/login/?next=/profile/")
@@ -152,13 +154,14 @@ class CustomerProfileView(TemplateView):
         context["orders"] = orders
         return context
 
+
 class CustomerOrderDetailView(DetailView):
     template_name = 'home/auth/order-detail.html'
     model = Order
     context_object_name = "ord_obj"
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and Customer.objects.filter(is_customer= True).exists():
+        if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
             # order_id = self.kwargs["pk"]
             # order = Order.objects.get(id=order_id)
             # if request.user.customer != order.cart.customer:
@@ -168,18 +171,48 @@ class CustomerOrderDetailView(DetailView):
             return redirect("/login/?next=/profile/")
         return super().dispatch(request, *args, **kwargs)
 
-    
-    
 
 # products view
 
 
-class ProductListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
+class ProductListView( BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
+    paginate_by = 9
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     kw = self.request.GET.get('t')
+    #     print(kw, 999999999999)
+    #     kw = kw.split(',')
+    #     type = kw[0]
+    #     category = kw[1]
+    #     if type != '':
+    #         if type == 'k':
+    #             queryset = queryset.filter(
+    #                 type__type="Kid", categories__name=category)
+    #         elif type == 'm':
+    #             queryset = queryset.filter(
+    #                 type__type="Men", categories__name=category)
+    #         elif type == 'w':
+    #             queryset = queryset.filter(
+    #                 type__type="Women", categories__name=category)
+    #     return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        kw = self.request.GET.get('t')
+        kw = kw.split(',')
+        type = kw[0]
+        category = kw[1]
+        sub = kw[2]
+        products = Category.objects.filter(
+            category_type__type=type, parent__name=category, name=sub)
+        context['object_list'] = products
+        return context
 
 
-class ProductDetailView(EcomMixin, BaseMixin, DetailView):
+class ProductDetailView( BaseMixin, DetailView):
     template_name = 'home/product/detail.html'
     model = Products
     context_object_name = 'product_detail'
@@ -193,10 +226,16 @@ class ProductDetailView(EcomMixin, BaseMixin, DetailView):
             categories__name=category).exclude(pk=p_id)
         return context
 
+    def get_object(self):
+        obj = super().get_object()
+        obj.view_count += 1
+        obj.save()
+        return obj
+
 # about
 
 
-class AboutListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
+class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
     model = Abouts
     template_name = 'home/about/about.html'
 
@@ -214,7 +253,7 @@ class AboutListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
 # contact
 
 
-class ContactView(EcomMixin, BaseMixin, CreateView):
+class ContactView( BaseMixin, CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
     success_url = reverse_lazy('contact')
@@ -253,7 +292,7 @@ class ContactView(EcomMixin, BaseMixin, CreateView):
 
 # blogs
 
-class BlogView(EcomMixin, ListView):
+class BlogView(ListView):
     template_name= 'home/blog/blog.html'
     model = Blog
     paginate_by = 3
@@ -273,7 +312,8 @@ class BlogView(EcomMixin, ListView):
                                            Q(description__icontains=search_item))
         return queryset
 
-class BlogDetailView(EcomMixin, DetailView):
+
+class BlogDetailView( DetailView):
     template_name = 'home/blog/detail.html'
     model = Blog
     form_class = BlogCommentForm
@@ -328,7 +368,7 @@ class SubscriptionView(View):
 # cart funtionality view
 
 
-class AddToCartView(EcomMixin, View):
+class AddToCartView( View):
 
     def get(self, request, *args, **kwargs):
         quantity = 1
@@ -337,7 +377,6 @@ class AddToCartView(EcomMixin, View):
             quantity = int(request.GET.get('quantity'))
         if 'size' in request.GET:
             size = request.GET.get('size')
-
         print(quantity, size)
         # getting product id
         product_id = self.kwargs['pro_id']
@@ -392,7 +431,6 @@ class AddToCartView(EcomMixin, View):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
-
 class ManageCartView(View):
     def get(self, request, *args, **kwargs):
         cp_id = self.kwargs.get('p_id')
@@ -411,7 +449,6 @@ class ManageCartView(View):
 class MyCartView(BaseMixin, TemplateView):
     template_name = 'home/cart/cart.html'
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_id = self.request.session.get('cart_id')
@@ -424,68 +461,63 @@ class MyCartView(BaseMixin, TemplateView):
 
 
 
-class CouponView(EcomMixin, TemplateView):
+class CouponView(TemplateView):
     def get(self, request, *args, **kwargs):
-        print("pppp")
         if request.is_ajax:
-            coupon_code = request.GET.get("coupon_code", None)
-            print(coupon_code)
+            coupon_code = request.GET.get("coupon_code", None)          
             if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now()):
-                # if Coupon.objects.filter(discount_type=="Flat Discount")
+                code = self.request.session.get('code')
+                print(code,'222221')
+                if code:
+                    pass
+                else:
+                    request.session['code'] = coupon_code
                 return JsonResponse({"valid":True}, status=200) #
             else:
-                return JsonResponse({"valid":False}, status=200)
+                return JsonResponse({"valid": False}, status=200)
         return JsonResponse({}, status=400)
-        
 
-class CheckoutView(LoginRequiredMixin, EcomMixin, BaseMixin, CreateView):
+
+class CheckoutView( BaseMixin, CreateView):
     template_name = 'home/checkout/checkout.html'
     form_class = CheckoutForm
     success_url = reverse_lazy('home:home')
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart_id  = self.request.session.get('cart_id')
+        cart_id = self.request.session.get('cart_id')
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
         else:
             cart_obj = None
         context['cart'] = cart_obj
         return context
-    
+
     def form_valid(self, form):
         cart_id = self.request.session.get("cart_id")
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
             form.instance.cart = cart_obj
-            form.instance.shipping_charge = 50
-            form.instance.subtotal = cart_obj.subtotal
-            form.instance.total = cart_obj.total + cart_obj.vat 
-            form.instance.code = random.randint(1,100)
+            form.instance.subtotal += cart_obj.vat
+            form.instance.total = cart_obj.total
+            form.instance.code = f'#Ekocart{cart_id}'
             del self.request.session['cart_id']
             pm = form.cleaned_data.get("payment_method")
-            # coupon= form.cleaned_data.get("coupon")
             order = form.save()
-            messages.success(self.request,"Your order is on the way.")
-            
-        
-        else:
-            
+            code = self.request.session.get('code')
+            if code != '' and code != None:
+                coupon_obj = Coupon.objects.get(code=code)
+                if coupon_obj:
+                    form.instance.coupon = Coupon.objects.get(code=code)
+                    order.total -= coupon_obj.discount_amt
+                    order.save(update_fields=['coupon','total'])
+            messages.success(self.request,"Your order is on the way.")    
+        else:      
             return redirect("home:home")
-            
+
         return super().form_valid(form)
     
+# wishlist
 
-
-# coupen validation form
-class CoupenValidation(View):
-    def dispatch(self, request, *args, **kwargs):
-        if self.request.is_ajax():
-            return super().dispatch(request, *args, **kwargs)
-        return JsonResponse({"error": "Cannot access this page"}, status=404)
-
-    def get(self, request, *args, **kwargs):
-        code = request.GET.get('code')
-        print('form validation called')
-        print(code, 999999999999999999999999)
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+# class WishlistView(View):
+#     def get(self, request, *args, **kwar

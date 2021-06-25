@@ -153,7 +153,8 @@ class TypeRelatedCategoryView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         type = request.GET.get('type')
-        parents = Category.objects.filter(category_type__id=type)
+        parents = Category.objects.filter(
+            category_type__id=type, parent__isnull=True)
 
         return render(request, self.template_name, {"parents": parents})
 
@@ -165,10 +166,11 @@ class CategoryListView(NonDeletedItemMixin, SidebarMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(parent__isnull=False)
-        if "name" in self.request.GET:
-            if self.request.GET.get('name') != '':
+        name = self.request.GET.get('name')
+        if name in self.request.GET:
+            if name != '':
                 queryset = queryset.filter(
-                    name=self.request.GET.get("name"))
+                    name=name)
         return queryset
 
 
@@ -206,7 +208,7 @@ class SpecificProductList(NonDeletedItemMixin, SidebarMixin, ListView):
         queryset = super().get_queryset()
         category = self.request.GET.get('category')
         if category != '':
-            queryset = queryset.filter(categories__name=category)
+            queryset = queryset.filter(type__type=category)
         if "name" in self.request.GET:
             if self.request.GET.get('name') != '':
                 queryset = queryset.filter(
@@ -269,6 +271,13 @@ class ProductCreateView(CreateView, SidebarMixin):
     template_name = 'dashboard/product/form.html'
     form_class = ProductForm
     success_url = reverse_lazy('dashboard:products')
+
+    # def get_form_kwargs(self):
+    #     kwargs = super().get_form_kwargs()
+    #     category = Category.objects.filter(
+    #         parent__isnull=False, deleted_at__isnull=True)
+    #     kwargs['category'] = category
+    #     return kwargs
 
     def form_valid(self, form):
         discount = form.cleaned_data.get('discount_percent')
@@ -719,3 +728,35 @@ class AboutUpdateView(UpdateView, SidebarMixin):
 class AboutDeleteView(DeleteMixin, DeleteView):
     model = Abouts
     success_url = reverse_lazy('dashboard:abouts')
+
+
+# coupon
+class CouponListView(NonDeletedItemMixin, SidebarMixin, ListView):
+    template_name = 'dashboard/coupon/list.html'
+    model = Coupon
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if "code" in self.request.GET:
+            if self.request.GET.get('code') != '':
+                queryset = queryset.filter(
+                    code__contains=self.request.GET.get("code"))
+        return queryset
+
+
+class CouponCreateView(CreateView, SidebarMixin):
+    template_name = 'dashboard/coupon/form.html'
+    form_class = CouponCreateForm
+    success_url = reverse_lazy('dashboard:coupons')
+
+
+class CouponUpdateView(UpdateView, SidebarMixin):
+    template_name = 'dashboard/coupon/form.html'
+    model = Coupon
+    form_class = CouponCreateForm
+    success_url = reverse_lazy('dashboard:coupons')
+
+
+class CouponDeleteView(DeleteMixin, DeleteView):
+    model = Coupon
+    success_url = reverse_lazy('dashboard:coupons')

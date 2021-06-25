@@ -47,7 +47,9 @@
                   <thead>
                     <tr>
                       <th scope="col">SID</th>
-                      <th scope="col">Category</th>
+                      <th scope="">Type</th>
+                      <th>Category</th>
+                      <th scope="col">Sub Category</th>
                       <th scope="col">Description</th>
                       <th scope="col">Image</th>
                       <th scope="col">Action</th>
@@ -56,7 +58,9 @@
                   <tbody>
                     {% for category in object_list %} 
                     <tr>
-                      <td scope="row">{{category.slug}}</td>
+                      <td scope="row">{{ forloop.counter }}</td>
+                      <td>{{ category.category_type }}</td>
+                      <td>{{ category.parent }}</td>
                       <td>{{category.name}}</td>
                       <td>{{category.description|safe}}</td>
                       <td><img width="100px" height="100px" src="{{ category.img.url }}" alt="" /></td>
