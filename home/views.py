@@ -467,12 +467,13 @@ class CouponView(TemplateView):
             coupon_code = request.GET.get("coupon_code", None)          
             if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now()):
                 code = self.request.session.get('code')
-                print(code,'222221')
                 if code:
                     pass
                 else:
                     request.session['code'] = coupon_code
-                return JsonResponse({"valid":True}, status=200) #
+                return JsonResponse({"valid":True}, status=200) 
+                # if Coupon.objects.filter(is_used)
+                
             else:
                 return JsonResponse({"valid": False}, status=200)
         return JsonResponse({}, status=400)
@@ -498,7 +499,7 @@ class CheckoutView( BaseMixin, CreateView):
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
             form.instance.cart = cart_obj
-            form.instance.subtotal += cart_obj.vat
+            form.instance.subtotal = cart_obj.subtotal
             form.instance.total = cart_obj.total
             form.instance.code = f'#Ekocart{cart_id}'
             del self.request.session['cart_id']
