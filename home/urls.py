@@ -55,4 +55,8 @@ urlpatterns = [
     # coupon
     path('coupon/', CouponView.as_view(), name='coupon'),
 
+
+    path('add-to-wishlist/<int:pro_id>/', WishlistView.as_view(), name='add-to-wishlist'),
+    path('my-wishlist/', MyWishListView.as_view(), name='my-wishlist'),
+
 ]

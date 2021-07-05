@@ -437,6 +437,7 @@ class AddToCartView( View):
                 cart_obj.total = cart_obj.subtotal + cart_obj.vat
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
+                
             # if product doesnot exists
             else:
                 cartproduct = CartProduct.objects.create(
@@ -448,6 +449,7 @@ class AddToCartView( View):
                 cart_obj.total = cart_obj.subtotal + cart_obj.vat
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
+            
 
         # if cart does not exists
         else:
@@ -566,5 +568,45 @@ class CheckoutView( BaseMixin, CreateView):
     
 # wishlist
 
-# class WishlistView(View):
-#     def get(self, request, *args, **kwar
+class WishlistView(View):
+    def get(self, request, *args, **kwargs):
+        product_id = self.kwargs['pro_id']
+        print(product_id,'44444444444')
+        product_obj = Products.objects.get(id=product_id)
+        print(product_obj,'5555555555555')
+        wishlist_id = self.request.session.get('wishlist_id', None)
+        if wishlist_id:
+            wishlist_obj  = Wishlist.objects.get(id=wishlist_id)
+            print(wishlist_obj,'8888888888')
+            this_product_in_wishlist = wishlist_obj.filter(products=product_obj)
+            if this_product_in_wishlist:
+                messages.success(self.request, 'Item already in wishlist')
+            else:
+                wishlist_obj = Wishlist.objects.create(products=product_obj)
+                print('new','1111111111')
+                messages.success(self.request, 'Item added to wishlist')
+            wishlist_obj = Wishlist.objects.get(id=wishlist_id)
+            print('Old wishlist')
+            messages.success(self.request, 'Item is added to wishlist')
+        else:
+            wishlist_obj = Wishlist.objects.create(products=product_obj)
+            self.request.session['wishlist_id'] = wishlist_obj.id
+            print('New wishlist')
+            messages.success(self.request, 'Item is added to wishlist')
+            # wishlist = Wishlist.objects.create(products=product_obj)
+            # messages.success(self.request, 'Item is added to wishlist')
+        
+        return redirect('home:home')
+
+class MyWishListView(BaseMixin, TemplateView):
+    template_name = 'home/wishlist/wishlist.html'
+
+    def get_context_data(self, **kwargs):    
+        context = super().get_context_data(**kwargs)
+        wishlist_id = self.request.session.get("wishlist_id", None)
+        if wishlist_id:
+            wishlist = Wishlist.objects.get(id=wishlist_id)
+        else:
+            wishlist = None
+        context['wishlist'] = wishlist
+        return context
