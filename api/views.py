@@ -75,3 +75,16 @@ class CustomerListCreate(generics.ListCreateAPIView):
 class CustomerUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializers
+
+
+# order api
+
+
+class OrderListCreate(NonDeletedItemMixin, generics.ListCreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializers
+
+
+class OrderUpdateDelete(NonDeletedItemMixin, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializers

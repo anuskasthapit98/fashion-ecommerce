@@ -17,6 +17,7 @@ from django.utils.crypto import get_random_string
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
+from django.db.models import F
 import random
 from django.views.generic import *
 from dashboard.forms import *
@@ -31,7 +32,7 @@ from .forms import *
 # Create your views here.
 
 
-class HomeTemplateView(EcomMixin, BaseMixin, TemplateView):
+class HomeTemplateView( BaseMixin, TemplateView):
     template_name = 'home/base/index.html'
 
     def get_context_data(self, **kwargs):
@@ -183,7 +184,7 @@ class CustomerOrderDetailView(DetailView):
 # products view
 
 
-class ProductListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
+class ProductListView( BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
     paginate_by = 9
@@ -220,7 +221,7 @@ class ProductListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
         return context
 
 
-class ProductDetailView(EcomMixin, BaseMixin, DetailView):
+class ProductDetailView( BaseMixin, DetailView):
     template_name = 'home/product/detail.html'
     model = Products
     context_object_name = 'product_detail'
@@ -262,7 +263,7 @@ class ProductQuickView(View):
 # about
 
 
-class AboutListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
+class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
     model = Abouts
     template_name = 'home/about/about.html'
 
@@ -280,7 +281,7 @@ class AboutListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
 # contact
 
 
-class ContactView(EcomMixin, BaseMixin, CreateView):
+class ContactView( BaseMixin, CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
     success_url = reverse_lazy('contact')
@@ -319,8 +320,8 @@ class ContactView(EcomMixin, BaseMixin, CreateView):
 
 # blogs
 
-class BlogView(EcomMixin, ListView):
-    template_name = 'home/blog/blog.html'
+class BlogView(ListView):
+    template_name= 'home/blog/blog.html'
     model = Blog
     paginate_by = 3
 
@@ -340,7 +341,7 @@ class BlogView(EcomMixin, ListView):
         return queryset
 
 
-class BlogDetailView(EcomMixin, DetailView):
+class BlogDetailView( DetailView):
     template_name = 'home/blog/detail.html'
     model = Blog
     form_class = BlogCommentForm
@@ -395,7 +396,7 @@ class SubscriptionView(View):
 # cart funtionality view
 
 
-class AddToCartView(EcomMixin, View):
+class AddToCartView( View):
 
     def get(self, request, *args, **kwargs):
         quantity = 1
@@ -404,7 +405,6 @@ class AddToCartView(EcomMixin, View):
             quantity = int(request.GET.get('quantity'))
         if 'size' in request.GET:
             size = request.GET.get('size')
-
         print(quantity, size)
         # getting product id
         product_id = self.kwargs['pro_id']
@@ -506,21 +506,26 @@ class MyCartView(BaseMixin, TemplateView):
         return context
 
 
-class CouponView(EcomMixin, TemplateView):
+
+class CouponView(TemplateView):
     def get(self, request, *args, **kwargs):
-        print("pppp")
         if request.is_ajax:
-            coupon_code = request.GET.get("coupon_code", None)
-            print(coupon_code)
+            coupon_code = request.GET.get("coupon_code", None)          
             if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now()):
-                # if Coupon.objects.filter(discount_type=="Flat Discount")
-                return JsonResponse({"valid": True}, status=200)
+                code = self.request.session.get('code')
+                if code:
+                    pass
+                else:
+                    request.session['code'] = coupon_code
+                return JsonResponse({"valid":True}, status=200) 
+                # if Coupon.objects.filter(is_used)
+                
             else:
                 return JsonResponse({"valid": False}, status=200)
         return JsonResponse({}, status=400)
 
 
-class CheckoutView(LoginRequiredMixin, EcomMixin, BaseMixin, CreateView):
+class CheckoutView( BaseMixin, CreateView):
     template_name = 'home/checkout/checkout.html'
     form_class = CheckoutForm
     success_url = reverse_lazy('home:home')
@@ -540,32 +545,26 @@ class CheckoutView(LoginRequiredMixin, EcomMixin, BaseMixin, CreateView):
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
             form.instance.cart = cart_obj
-            form.instance.shipping_charge = 50
             form.instance.subtotal = cart_obj.subtotal
-            form.instance.total = cart_obj.total + cart_obj.vat
-            form.instance.code = random.randint(1, 100)
+            form.instance.total = cart_obj.total
+            form.instance.code = f'#Ekocart{cart_id}'
             del self.request.session['cart_id']
             pm = form.cleaned_data.get("payment_method")
-            # coupon= form.cleaned_data.get("coupon")
             order = form.save()
-            messages.success(self.request, "Your order is on the way.")
-
-        else:
-
+            code = self.request.session.get('code')
+            if code != '' and code != None:
+                coupon_obj = Coupon.objects.get(code=code)
+                if coupon_obj:
+                    form.instance.coupon = Coupon.objects.get(code=code)
+                    order.total -= coupon_obj.discount_amt
+                    order.save(update_fields=['coupon','total'])
+            messages.success(self.request,"Your order is on the way.")    
+        else:      
             return redirect("home:home")
 
         return super().form_valid(form)
+    
+# wishlist
 
-
-# coupen validation form
-class CoupenValidation(View):
-    def dispatch(self, request, *args, **kwargs):
-        if self.request.is_ajax():
-            return super().dispatch(request, *args, **kwargs)
-        return JsonResponse({"error": "Cannot access this page"}, status=404)
-
-    def get(self, request, *args, **kwargs):
-        code = request.GET.get('code')
-        print('form validation called')
-        print(code, 999999999999999999999999)
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+# class WishlistView(View):
+#     def get(self, request, *args, **kwar

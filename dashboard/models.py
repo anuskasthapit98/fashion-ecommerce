@@ -275,7 +275,6 @@ class Order(DateTimeModel):
         max_length=20, choices=METHOD, default="Cash On Delivery")
     payment_completed = models.BooleanField(
         default=False, null=True, blank=True)
-    shipping_charge = models.PositiveIntegerField()
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.EmailField()
