@@ -67,8 +67,9 @@ class Customer(User):
               ('Female', 'Female'),
               ('Others', 'Others'),)
     mobile = models.CharField(max_length=10)
-    gender = models.CharField(max_length=10, choices = GENDER)
+    gender = models.CharField(max_length=10, choices=GENDER)
     is_customer = models.BooleanField(default=False)
+    cart_items = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = ('Customer')
@@ -76,7 +77,7 @@ class Customer(User):
         ordering = ['-username']
 
     def __str__(self):
-        return self.first_name
+        return self.username
 
 # Categor type model
 
@@ -189,7 +190,7 @@ class Products(DateTimeModel):
     vat_percent = models.DecimalField(
         max_digits=12, decimal_places=2, null=True, blank=True)
     vat_amt = models.DecimalField(
-        max_digits=12, decimal_places=2, null=True, blank=True)
+        max_digits=12, decimal_places=2, null=True, blank=True, default=0)
     discount_percent = models.DecimalField(
         max_digits=12, decimal_places=2, null=True, blank=True)
 

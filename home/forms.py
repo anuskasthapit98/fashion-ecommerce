@@ -8,6 +8,8 @@ from dashboard.models import *
 from dashboard.mixines import FormControlMixin
 
 # newsletter
+
+
 class SubscriptionForm(FormControlMixin, ModelForm):
     class Meta:
         model = Subscription
@@ -18,7 +20,7 @@ class SubscriptionForm(FormControlMixin, ModelForm):
         self.fields['email'].widget.attr.update({
             'placeholder': 'Email Address'
         })
-    
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if Subscription.objects.filter(email=email).exists():
@@ -27,8 +29,8 @@ class SubscriptionForm(FormControlMixin, ModelForm):
             raise forms.ValidationError("User with this email doesn't exist")
 
         return email
-    
-    
+
+
 class CustomerPasswordResetForm(FormControlMixin, forms.Form):
 
     email = forms.CharField(widget=forms.EmailInput(attrs={
@@ -38,15 +40,13 @@ class CustomerPasswordResetForm(FormControlMixin, forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        print(email,'11111111111111111111111111111111111')
         if Customer.objects.filter(email=email).exists():
             pass
         else:
             raise forms.ValidationError("User with this email doesn't exist")
 
         return email
-    
-    
+
 
 # password change form
 
@@ -80,7 +80,7 @@ class CustomerChangePasswordForm(PasswordChangeForm):
         else:
             pass
         return self.cleaned_data
-    
+
 
 class CouponForm(FormControlMixin, ModelForm):
     class Meta:
@@ -91,5 +91,5 @@ class CouponForm(FormControlMixin, ModelForm):
 class CheckoutForm(FormControlMixin, ModelForm):
     class Meta:
         model = Order
-        fields = ["first_name","last_name","email","phone","company_name","province","address_one","address_two","zip_code",
-                    "payment_method"]
+        fields = ["first_name", "last_name", "email", "phone", "company_name", "province", "address_one", "address_two", "zip_code",
+                  "payment_method"]

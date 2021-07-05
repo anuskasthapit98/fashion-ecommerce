@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 
-from dashboard.models import Category, CategoryType, Contact, CartProduct, Cart
+from dashboard.models import Category, CategoryType, Contact, CartProduct, Cart, Customer, Size
 
 
 class BaseMixin(object):
@@ -9,8 +9,14 @@ class BaseMixin(object):
         context = super().get_context_data()
         context['contact'] = Contact.objects.all()
         # accessing cart
-        cart_id = self.request.session.get('cart_id')
-        if cart_id:
+        cart_id = None
+        if self.request.user.is_authenticated:
+            if self.request.user.is_staff == False:
+                customer = Customer.objects.get(username=self.request.user)
+                cart_id = customer.cart_items
+        else:
+            cart_id = self.request.session.get('cart_id')
+        if cart_id is not None:
             cart_product = CartProduct.objects.filter(cart=cart_id)
             cart = Cart.objects.get(id=cart_id)
             subtotal = cart.subtotal
@@ -30,7 +36,10 @@ class BaseMixin(object):
             parent__isnull=True, category_type__type="Men")
         context['women_category'] = Category.objects.filter(
             parent__isnull=True, category_type__type="Women")
+
+        context['product_size'] = Size.objects.filter(deleted_at__isnull=True)
         return context
+
 
 class LoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -39,13 +48,16 @@ class LoginRequiredMixin(object):
         else:
             return redirect("/customer/login/?next=/checkout/")
         return super().dispatch(request, *args, **kwargs)
-    
+
+
 class EcomMixin(object):
     def dispatch(self, request, *args, **kwargs):
-        cart_id = request.session.get("cart_id")
-        if cart_id:
-            cart_obj = Cart.objects.get(id=cart_id)
-            if request.user.is_authenticated and request.user.customer:
-                cart_obj.customer = request.user.customer
-                cart_obj.save()
+        if request.user is not None:
+            cart_id = request.session.get("cart_id")
+
+            if cart_id:
+                cart_obj = Cart.objects.get(id=cart_id)
+                # if request.user.is_authenticated and request.user.customer:
+                #     cart_obj.customer = request.user.customer
+                #     cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
