@@ -48,7 +48,7 @@
               <ul class="list-unstyled my-4">
                 <li class="mb-2">Availibility:{% if product_detail.status %} <span class="text-muted"> In Stock</span> {% else %}<span class="text-muted"> Out of Stock</span>{% endif %}
                 </li>
-                <li>Categories :<span class="text-muted"> {{ product_detail.categories }}</span>
+                <li>Categories :<span class="text-muted"> {{ product_detail.type}}/{{ product_detail.categories.parent }}/{{ product_detail.categories.name }}</span>
                 </li>
               </ul>
               <p class="mb-4">{{ product_detail.description|safe }}</p>

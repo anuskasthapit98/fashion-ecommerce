@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.db.models import Q
+from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -74,7 +75,7 @@ class CustomerLogoutView(View):
         return redirect("home:home")
 
 
-class CustomerLoginView(FormView):
+class CustomerLoginView(BaseMixin, FormView):
     template_name = "home/auth/login.html"
     form_class = CustomerLoginForm
     success_url = reverse_lazy("home:home")
@@ -93,6 +94,15 @@ class CustomerLoginView(FormView):
 
         if user is not None:
             login(self.request, user)
+            customer = Customer.objects.get(username=self.request.user)
+            cart_id = self.request.session.get('cart_id', None)
+            if cart_id:
+                if customer.cart_items is None:
+                    customer.cart_items = cart_id
+                    customer.save(update_fields=['cart_items'])
+                else:
+                    cart_product = CartProduct.objects.filter(cart__id=cart_id)
+                    print(cart_product, 8888888888888888)
         else:
             return redirect(self.success_url)
 
@@ -148,7 +158,6 @@ class CustomerProfileView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         customer = self.request.user.customer
-        print(customer, '111111111111111111111111')
         context['customer'] = customer
         orders = Order.objects.filter(cart__customer=customer).order_by("-id")
         context["orders"] = orders
@@ -231,6 +240,25 @@ class ProductDetailView( BaseMixin, DetailView):
         obj.view_count += 1
         obj.save()
         return obj
+
+
+class ProductQuickView(View):
+    def get(self, request, *args, **kwargs):
+        print("get method called")
+        if request.is_ajax:
+            product_id = request.GET.get("product_id", None)
+            product_obj = Products.objects.get(id=product_id)
+            product = {
+                'id': product_obj.id, 'name': product_obj.name, 'marked_price': product_obj.marked_price,
+                'selling_price': product_obj.selling_price, 'description': product_obj.description,
+                'status': product_obj.status
+            }
+            data = {
+                'product': product
+
+            }
+
+        return JsonResponse(product)
 
 # about
 
@@ -383,9 +411,15 @@ class AddToCartView( View):
         # get product
         product_obj = Products.objects.get(id=product_id)
         # check if cart exists of not
-        cart_id = self.request.session.get('cart_id', None)
+        cart_id = None
+        if request.user.is_authenticated:
+            if request.user.is_staff == False:
+                customer = Customer.objects.get(username=request.user)
+                cart_id = customer.cart_items
+        else:
+            cart_id = self.request.session.get('cart_id', None)
         # if cart exists
-        if cart_id:
+        if cart_id is not None:
             cart_obj = Cart.objects.get(id=cart_id)
             # checking for product existance
             this_product_in_cart = cart_obj.cartproduct_set.filter(
@@ -418,6 +452,12 @@ class AddToCartView( View):
         # if cart does not exists
         else:
             cart_obj = Cart.objects.create(total=0, subtotal=0)
+            if request.user.is_authenticated:
+                if request.user.is_staff == False:
+                    customer = Customer.objects.get(username=request.user)
+                    customer.cart_items = cart_obj.id
+                    customer.save(update_fields=['cart_items'])
+
             self.request.session['cart_id'] = cart_obj.id
             cartproduct = CartProduct.objects.create(
                 cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=quantity,
@@ -443,6 +483,7 @@ class ManageCartView(View):
             cart_obj.total = cart_obj.subtotal + cart_obj.vat
             cart_obj.save()
             cp_obj.delete()
+
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
@@ -451,7 +492,12 @@ class MyCartView(BaseMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart_id = self.request.session.get('cart_id')
+        cart_id = None
+        if self.request.user.is_authenticated and self.request.user.is_staff == False:
+            customer = Customer.objects.get(username=self.request.user)
+            cart_id = customer.cart_items
+        else:
+            cart_id = self.request.session.get('cart_id')
         if cart_id:
             cart = Cart.objects.get(id=cart_id)
         else:

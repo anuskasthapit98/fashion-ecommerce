@@ -198,6 +198,7 @@
   </div>
 </div>
 
+
 <!-- Quick View Modal -->
 <div class="modal fade view-modal" id="quick-view" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -207,9 +208,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="row align-items-center">
+        <div class="row align-items-center" id='quick-view-content'>
           <div class="col-lg-5 col-12">
-            <img class="img-fluid rounded" src="{% static 'home/assets/images/product/large/01.png'%}" alt="" />
+            <img class="img-fluid rounded" id="quick-img" src="{% static 'home/assets/images/product/large/01.png'%}" alt="" />
           </div>
           <div class="col-lg-7 col-12 mt-5 mt-lg-0">
             <div class="product-details">
@@ -285,4 +286,6 @@
     </div>
   </div>
 </div>
+
+
 

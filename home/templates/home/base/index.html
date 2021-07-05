@@ -116,7 +116,7 @@
                 </button>
                 <a href="{% url 'home:add-to-cart' product.pk %}" class="btn-cart btn btn-primary btn-animated mx-3" type="button"><i class="las la-shopping-cart mr-1"></i>
                 </a>
-                <button class="btn btn-view" data-toggle="tooltip" data-placement="top" title="Quick View"><span data-target="#quick-view" data-toggle="modal"><i class="las la-eye"></i></span>
+                <button class="btn btn-view" data-toggle="tooltip" data-placement="top" title="Quick View" data-sid="{{ product.id }}"><span data-target="#quick-view" data-toggle="modal"><i class="las la-eye"></i></span>
                 </button>
               </div>
             </div>
