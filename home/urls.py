@@ -25,6 +25,8 @@ urlpatterns = [
     path('products/list/', ProductListView.as_view(), name='product-list'),
     path('products/<int:pk>/detail/',
          ProductDetailView.as_view(), name='product-detail'),
+    path('products/quick/view/', ProductQuickView.as_view(),
+         name='product-quick-view'),
 
     # about
     path('abouts/', AboutListView.as_view(), name="abouts"),

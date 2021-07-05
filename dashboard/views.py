@@ -286,6 +286,8 @@ class ProductCreateView(CreateView, SidebarMixin):
         if discount != None:
             form.instance.selling_price = marked_price - \
                 ((marked_price*discount)/100)
+        else:
+            form.instance.selling_price = marked_price
         if vat != None:
             form.instance.vat_amt = (marked_price*vat)/100
         return super().form_valid(form)
