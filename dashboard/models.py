@@ -296,14 +296,14 @@ class Order(DateTimeModel):
 # wishlist model
 
 class Wishlist(DateTimeModel):
-    products = models.ForeignKey(Products, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Products, null=True, blank=True)
 
     class Meta:
         verbose_name = ('Wishlist')
         verbose_name_plural = ('Wishlists')
 
     def __str__(self):
-        return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
+        return f"Wishlist: {self.id}"
 
 
 # testimonials model
