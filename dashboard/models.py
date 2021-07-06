@@ -297,7 +297,7 @@ class Order(DateTimeModel):
 # wishlist model
 
 class Wishlist(DateTimeModel):
-    products = models.ManyToManyField(Products, null=True, blank=True)
+    products = models.ManyToManyField(Products)
 
     class Meta:
         verbose_name = ('Wishlist')

@@ -10,10 +10,9 @@ class BaseMixin(object):
         context['contact'] = Contact.objects.all()
         # accessing cart
         cart_id = None
-        if self.request.user.is_authenticated:
-            if self.request.user.is_staff == False:
-                customer = Customer.objects.get(username=self.request.user)
-                cart_id = customer.cart_items
+        if self.request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
+            customer = Customer.objects.get(username=self.request.user)
+            cart_id = customer.cart_items
         else:
             cart_id = self.request.session.get('cart_id')
         if cart_id is not None:
