@@ -431,6 +431,34 @@ class AddToCartView( View):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
+
+class UpdateQuantityView(View):
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax:
+            item_qty = request.GET.get("item_qty", None) 
+            product_id = request.GET.get("product_id", None) 
+            product = CartProduct.objects.get(id = product_id)
+            product_obj = product.cart
+            print(product, item_qty)
+            if item_qty > '1':
+                product.quantity = int(item_qty)
+                print(type(product.quantity))
+                product.subtotal  = (int(item_qty) * product.rate)
+                product_obj.subtotal = (int(item_qty) * product.rate)
+                
+                print( product_obj.subtotal, '11111111111111111111111111111')
+                if product_obj.vat:
+                    product_obj.vat += (int(item_qty) * product.product.vat_amt)
+                product_obj.total = product_obj.subtotal + product_obj.vat
+               
+                print('111111111111111', product_obj.total,product_obj.vat)
+                product.save(update_fields=['quantity', 'subtotal'])
+                product_obj.save(update_fields=['vat','total', 'subtotal'])
+            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+              
+
+          
+
 class ManageCartView(View):
     def get(self, request, *args, **kwargs):
         cp_id = self.kwargs.get('p_id')
