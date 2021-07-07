@@ -25,7 +25,7 @@ urlpatterns = [
     path('products/list/', ProductListView.as_view(), name='product-list'),
     path('products/<int:pk>/detail/',
          ProductDetailView.as_view(), name='product-detail'),
-    path('products/quick/view/', ProductQuickView.as_view(),
+    path('products/<int:pk>/quick/view/', ProductQuickView.as_view(),
          name='product-quick-view'),
 
     # about
@@ -46,6 +46,8 @@ urlpatterns = [
     path('add-to-cart/<int:pro_id>/', AddToCartView.as_view(), name='add-to-cart'),
     # my cart
     path('my-cart/', MyCartView.as_view(), name='my-cart'),
+    #update-quantity
+     path('update-quantity/', UpdateQuantityView.as_view(), name='update-quantity'),
     # manage cart
     path('manage/<int:p_id>cart/', ManageCartView.as_view(), name='manage-cart'),
 
