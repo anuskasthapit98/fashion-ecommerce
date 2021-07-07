@@ -54,10 +54,9 @@ class EcomMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user is not None:
             cart_id = request.session.get("cart_id")
-
             if cart_id:
                 cart_obj = Cart.objects.get(id=cart_id)
-                # if request.user.is_authenticated and request.user.customer:
-                #     cart_obj.customer = request.user.customer
-                #     cart_obj.save()
+                if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
+                    cart_obj.customer = Customer.objects.get(username=request.user)
+                    cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
