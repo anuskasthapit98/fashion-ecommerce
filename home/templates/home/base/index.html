@@ -106,7 +106,7 @@
             <div class="card-body">
               <div class="product-title"><a class="link-title" href="{% url 'home:product-detail' product.id %}">{{ product.name }}</a>
               </div>
-              <div class="mt-1"> <span class="product-price"><del class="text-muted">Nrs. {{ product.marked_price }}</del>Nrs. {{ product.selling_price }}</span>
+              <div class="mt-1"> <span class="product-price">{% if product.discount_percent %} <del class="text-muted">Nrs. {{ product.marked_price }}</del> {% endif %} Nrs. {{ product.selling_price }}</span>
                 <div class="star-rating"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
                 </div>
               </div>
@@ -117,8 +117,8 @@
                 </button>
                 <a href="{% url 'home:add-to-cart' product.pk %}" class="btn-cart btn btn-primary btn-animated mx-3" type="button"><i class="las la-shopping-cart mr-1"></i>
                 </a>
-                <button class="btn btn-view" data-toggle="tooltip" data-placement="top" title="Quick View" data-sid="{{ product.id }}"><span data-target="#quick-view" data-toggle="modal"><i class="las la-eye"></i></span>
-                </button>
+                <a href="{% url 'home:product-quick-view' product.pk %}" class="btn btn-view" data-toggle="tooltip" data-placement="top" title="Quick View" data-sid="{{ product.id }}"><span data-target="#quick-view" data-toggle="modal"><i class="las la-eye"></i></span>
+                </a>
               </div>
             </div>
           </div>
