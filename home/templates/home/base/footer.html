@@ -216,11 +216,12 @@
         {% endfor %}
         <div class="d-flex justify-content-between align-items-center mb-8"> <span class="text-muted">Subtotal:</span>  <span class="text-dark">Nrs. {{ subtotal }}</span> 
         </div> <a href="{% url 'home:my-cart' %}" class="btn btn-primary btn-animated mr-2"><i class="las la-shopping-cart mr-1"></i>View Cart</a>
-        <a href="product-checkout.html" class="btn btn-dark"><i class="las la-money-check mr-1"></i>Continue To Checkout</a>
+        <a href="{% url 'home:checkout' %}" class="btn btn-dark"><i class="las la-money-check mr-1"></i>Continue To Checkout</a>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- Quick View Modal -->
 <div class="modal fade view-modal" id="quick-view" tabindex="-1" role="dialog" aria-hidden="true">
@@ -231,9 +232,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="row align-items-center">
+        <div class="row align-items-center" id='quick-view-content'>
           <div class="col-lg-5 col-12">
-            <img class="img-fluid rounded" src="{% static 'home/assets/images/product/large/01.png'%}" alt="" />
+            <img class="img-fluid rounded" id="quick-img" src="{% static 'home/assets/images/product/large/01.png'%}" alt="" />
           </div>
           <div class="col-lg-7 col-12 mt-5 mt-lg-0">
             <div class="product-details">
@@ -309,4 +310,6 @@
     </div>
   </div>
 </div>
+
+
 

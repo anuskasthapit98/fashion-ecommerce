@@ -67,8 +67,9 @@ class Customer(User):
               ('Female', 'Female'),
               ('Others', 'Others'),)
     mobile = models.CharField(max_length=10)
-    gender = models.CharField(max_length=10, choices = GENDER)
+    gender = models.CharField(max_length=10, choices=GENDER)
     is_customer = models.BooleanField(default=False)
+    cart_items = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = ('Customer')
@@ -76,7 +77,7 @@ class Customer(User):
         ordering = ['-username']
 
     def __str__(self):
-        return self.first_name
+        return self.username
 
 # Categor type model
 
@@ -189,7 +190,7 @@ class Products(DateTimeModel):
     vat_percent = models.DecimalField(
         max_digits=12, decimal_places=2, null=True, blank=True)
     vat_amt = models.DecimalField(
-        max_digits=12, decimal_places=2, null=True, blank=True)
+        max_digits=12, decimal_places=2, null=True, blank=True, default=0)
     discount_percent = models.DecimalField(
         max_digits=12, decimal_places=2, null=True, blank=True)
 
@@ -274,7 +275,6 @@ class Order(DateTimeModel):
         max_length=20, choices=METHOD, default="Cash On Delivery")
     payment_completed = models.BooleanField(
         default=False, null=True, blank=True)
-    shipping_charge = models.PositiveIntegerField()
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.EmailField()
@@ -297,14 +297,14 @@ class Order(DateTimeModel):
 # wishlist model
 
 class Wishlist(DateTimeModel):
-    products = models.ForeignKey(Products, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Products)
 
     class Meta:
         verbose_name = ('Wishlist')
         verbose_name_plural = ('Wishlists')
 
     def __str__(self):
-        return "Wishlist: " + str(self.products.slug) + "WishlistProducts: " + str(self.id)
+        return f"Wishlist: {self.id}"
 
 
 # testimonials model
