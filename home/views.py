@@ -6,9 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.db.models import Q
-from django.forms.models import model_to_dict
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, request
 from django.shortcuts import redirect
 from django.template.loader import get_template
 from django.urls import reverse_lazy
@@ -75,7 +74,7 @@ class CustomerLogoutView(View):
         return redirect("home:home")
 
 
-class CustomerLoginView(BaseMixin, FormView):
+class CustomerLoginView(FormView):
     template_name = "home/auth/login.html"
     form_class = CustomerLoginForm
     success_url = reverse_lazy("home:home")
@@ -184,7 +183,7 @@ class CustomerPasswordsChangeView(PasswordChangeView):
         return form
 
 
-class CustomerProfileView(TemplateView):
+class CustomerProfileView(EcomMixin,TemplateView):
     template_name = 'home/auth/customer-profile.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -197,13 +196,14 @@ class CustomerProfileView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         customer = self.request.user.customer
+        print(customer, '111111111111111111111111')
         context['customer'] = customer
         orders = Order.objects.filter(cart__customer=customer).order_by("-id")
         context["orders"] = orders
         return context
 
 
-class CustomerOrderDetailView(DetailView):
+class CustomerOrderDetailView(EcomMixin,DetailView):
     template_name = 'home/auth/order-detail.html'
     model = Order
     context_object_name = "ord_obj"
@@ -306,7 +306,7 @@ class ProductQuickView(DetailView):
 # about
 
 
-class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
+class AboutListView(EcomMixin,BaseMixin, NonDeletedItemMixin, ListView):
     model = Abouts
     template_name = 'home/about/about.html'
 
@@ -324,7 +324,7 @@ class AboutListView(BaseMixin, NonDeletedItemMixin, ListView):
 # contact
 
 
-class ContactView(BaseMixin, CreateView):
+class ContactView(EcomMixin, BaseMixin, CreateView):
     template_name = 'home/contact/contact.html'
     form_class = MessageForm
     success_url = reverse_lazy('contact')
@@ -413,7 +413,7 @@ class BlogDetailView(DetailView):
 # newsletter
 
 
-class SubscriptionView(View):
+class SubscriptionView(EcomMixin,View):
     def post(self, request, *args, **kwargs):
         email = self.request.POST.get('email')
         if Subscription.objects.filter(email=email).exists():
@@ -439,7 +439,7 @@ class SubscriptionView(View):
 # cart funtionality view
 
 
-class AddToCartView(View):
+class AddToCartView(EcomMixin, View):
 
     def get(self, request, *args, **kwargs):
         quantity = 1
@@ -462,7 +462,7 @@ class AddToCartView(View):
         else:
             cart_id = self.request.session.get('cart_id', None)
         # if cart exists
-        if cart_id is not None:
+        if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
             # checking for product existance
             this_product_in_cart = cart_obj.cartproduct_set.filter(
@@ -554,21 +554,15 @@ class ManageCartView(View):
             cart_obj.total = cart_obj.subtotal + cart_obj.vat
             cart_obj.save()
             cp_obj.delete()
-
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
-class MyCartView(BaseMixin, TemplateView):
+class MyCartView(EcomMixin,BaseMixin, TemplateView):
     template_name = 'home/cart/cart.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart_id = None
-        if self.request.user.is_authenticated and self.request.user.is_staff == False:
-            customer = Customer.objects.get(username=self.request.user)
-            cart_id = customer.cart_items
-        else:
-            cart_id = self.request.session.get('cart_id')
+        cart_id = self.request.session.get('cart_id')
         if cart_id:
             cart = Cart.objects.get(id=cart_id)
         else:
@@ -577,7 +571,8 @@ class MyCartView(BaseMixin, TemplateView):
         return context
 
 
-class CouponView(TemplateView):
+
+class CouponView(EcomMixin,TemplateView):
     def get(self, request, *args, **kwargs):
         if request.is_ajax:
             coupon_code = request.GET.get("coupon_code", None)
@@ -595,7 +590,7 @@ class CouponView(TemplateView):
         return JsonResponse({}, status=400)
 
 
-class CheckoutView(BaseMixin, CreateView):
+class CheckoutView(EcomMixin, BaseMixin, CreateView):
     template_name = 'home/checkout/checkout.html'
     form_class = CheckoutForm
     success_url = reverse_lazy('home:home')
@@ -636,48 +631,52 @@ class CheckoutView(BaseMixin, CreateView):
 
 # wishlist
 
-
-class WishlistView(View):
-    def get(self, request, *args, **kwargs):
-        product_id = self.kwargs['pro_id']
-        product_obj = Products.objects.filter(id=product_id)
-        wishlist_id = self.request.session.get('wishlist_id', None)
-        if wishlist_id:
-            wishlist_obj = Wishlist.objects.get(id=wishlist_id)
-            print(wishlist_id, 99999999999999999)
-            if True:
-                pass
-            else:
-                wishlist_obj = Wishlist.objects.create()
-                wishlist_obj.products.set(product_obj)
-                print('new', '1111111111')
-                messages.success(self.request, 'Item added to wishlist')
-            wishlist_obj = Wishlist.objects.get(id=wishlist_id)
-            print('Old wishlist')
-            messages.success(self.request, 'Item is added to wishlist')
+class AddtoWishlist(View):
+    def dispatch(self, request, *args, **kwargs):    
+        if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
+            pass
         else:
-            wishlist_obj = Wishlist.objects.create()
-            wishlist_obj.products.set(product_obj)
-            self.request.session['wishlist_id'] = wishlist_obj.id
-            print('New wishlist')
-            messages.success(self.request, 'Item is added to wishlist')
-            # wishlist = Wishlist.objects.create(products=product_obj)
-            # messages.success(self.request, 'Item is added to wishlist')
-
+            return redirect("home:login")
+        return super().dispatch(request, *args, **kwargs)
+        
+    def get(self, request, *args, **kwargs):
+        product_id = self.kwargs['pro_id']   
+        product_obj = Products.objects.get(id=product_id)
+        user_obj = Customer.objects.get(username=request.user)        
+        if Customer.objects.filter(is_customer=True).exists():
+            wishlist_obj = Wishlist.objects.filter(user=user_obj)
+            this_product_in_wishlist = wishlist_obj.filter(products=product_obj)
+            if this_product_in_wishlist:
+                messages.success(self.request, 'Item already  in wishlist')
+            else:
+                wishlist_obj = Wishlist.objects.create(products=product_obj,user=user_obj)
+                messages.success(self.request, 'Item added to wishlist')
         return redirect('home:home')
 
 
 class MyWishListView(BaseMixin, TemplateView):
     template_name = 'home/wishlist/wishlist.html'
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        wishlist_id = self.request.session.get("wishlist_id", None)
-        print(wishlist_id, 77777777777777777)
-        if wishlist_id:
-            wishlist = Wishlist.objects.get(id=wishlist_id)
-            print(wishlist.products, 88888888888888)
-        else:
-            wishlist = None
-        context['wishlist'] = wishlist
+        context['wishlist'] = Wishlist.objects.filter(user=self.request.user)
         return context
+
+
+class ProductQuickView(View):
+    def get(self, request, *args, **kwargs):
+        print("get method called")
+        if request.is_ajax:
+            product_id = request.GET.get("product_id", None)
+            product_obj = Products.objects.get(id=product_id)
+            product = {
+                'id': product_obj.id, 'name': product_obj.name, 'marked_price': product_obj.marked_price,
+                'selling_price': product_obj.selling_price, 'description': product_obj.description,
+                'status': product_obj.status
+            }
+            data = {
+                'product': product
+
+            }
+
+        return JsonResponse(product)

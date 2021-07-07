@@ -297,7 +297,8 @@ class Order(DateTimeModel):
 # wishlist model
 
 class Wishlist(DateTimeModel):
-    products = models.ManyToManyField(Products)
+    products = models.ForeignKey(Products,on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = ('Wishlist')
