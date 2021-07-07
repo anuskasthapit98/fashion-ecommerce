@@ -31,7 +31,7 @@ from .forms import *
 # Create your views here.
 
 
-class HomeTemplateView(BaseMixin, TemplateView):
+class HomeTemplateView(EcomMixin, BaseMixin, TemplateView):
     template_name = 'home/base/index.html'
 
     def get_context_data(self, **kwargs):
@@ -93,54 +93,6 @@ class CustomerLoginView(FormView):
 
         if user is not None:
             login(self.request, user)
-            customer = Customer.objects.get(username=self.request.user)
-            cart_id = self.request.session.get('cart_id', None)
-            if cart_id:
-                if customer.cart_items is None:
-                    customer.cart_items = cart_id
-                    customer.save(update_fields=['cart_items'])
-                else:
-                    session_cart_product = CartProduct.objects.filter(
-                        cart__id=cart_id)
-                    print(session_cart_product, "session cart product")
-                    for product in session_cart_product:
-                        print(product.product, "session product")
-                        pro_id = product.product.id
-                        print(pro_id, "id showing")
-                        cart_obj = Cart.objects.get(id=customer.cart_items)
-                        product_obj = Products.objects.get(id=pro_id)
-                        # checking for product existance
-                        this_product_in_cart = cart_obj.cartproduct_set.filter(
-                            product=product_obj)
-                        # if product already exists
-                        if this_product_in_cart:
-                            cartproduct = this_product_in_cart.last()
-                            cartproduct.quantity += product.quantity
-                            cartproduct.size = product.size
-                            cartproduct.subtotal += (product.quantity *
-                                                     product_obj.selling_price)
-                            cartproduct.save()
-                            cart_obj.subtotal += (product.quantity *
-                                                  product_obj.selling_price)
-                            if product_obj.vat_amt:
-                                cart_obj.vat += (product.quantity *
-                                                 product_obj.vat_amt)
-                            cart_obj.total = cart_obj.subtotal + cart_obj.vat
-                            cart_obj.save()
-
-                        # if product doesnot exists
-                        else:
-                            cartproduct = CartProduct.objects.create(
-                                cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=product.quantity,
-                                subtotal=(product.quantity * product_obj.selling_price), size=product.size)
-                            cart_obj.subtotal += (product.quantity *
-                                                  product_obj.selling_price)
-                            if product_obj.vat_amt:
-                                cart_obj.vat += (product.quantity *
-                                                 product_obj.vat_amt)
-                            cart_obj.total = cart_obj.subtotal + cart_obj.vat
-                            cart_obj.save()
-
         else:
             return redirect(self.success_url)
 
@@ -223,7 +175,7 @@ class CustomerOrderDetailView(EcomMixin,DetailView):
 # products view
 
 
-class ProductListView(BaseMixin, NonDeletedItemMixin, ListView):
+class ProductListView(EcomMixin, BaseMixin, NonDeletedItemMixin, ListView):
     template_name = 'home/product/list.html'
     model = Products
     paginate_by = 9
@@ -260,7 +212,7 @@ class ProductListView(BaseMixin, NonDeletedItemMixin, ListView):
         return context
 
 
-class ProductDetailView(BaseMixin, DetailView):
+class ProductDetailView(EcomMixin, BaseMixin, DetailView):
     template_name = 'home/product/detail.html'
     model = Products
     context_object_name = 'product_detail'
@@ -279,29 +231,6 @@ class ProductDetailView(BaseMixin, DetailView):
         obj.view_count += 1
         obj.save()
         return obj
-
-
-class ProductQuickView(DetailView):
-    template_name = 'home/product/quick-view.html'
-    model = Products
-    context_object_name = 'product'
-
-    # def get(self, request, *args, **kwargs):
-    #     print("get method called")
-    #     if request.is_ajax:
-    #         product_id = request.GET.get("product_id", None)
-    #         product_obj = Products.objects.get(id=product_id)
-    #         product = {
-    #             'id': product_obj.id, 'name': product_obj.name, 'marked_price': product_obj.marked_price,
-    #             'selling_price': product_obj.selling_price, 'description': product_obj.description,
-    #             'status': product_obj.status
-    #         }
-    #         data = {
-    #             'product': product
-
-    #         }
-    #     print(product)
-    #     return JsonResponse(request, self.template_name, {'product': product})
 
 # about
 
@@ -363,8 +292,8 @@ class ContactView(EcomMixin, BaseMixin, CreateView):
 
 # blogs
 
-class BlogView(ListView):
-    template_name = 'home/blog/blog.html'
+class BlogView(EcomMixin,ListView):
+    template_name= 'home/blog/blog.html'
     model = Blog
     paginate_by = 3
 
@@ -384,7 +313,7 @@ class BlogView(ListView):
         return queryset
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(EcomMixin, DetailView):
     template_name = 'home/blog/detail.html'
     model = Blog
     form_class = BlogCommentForm
@@ -451,16 +380,10 @@ class AddToCartView(EcomMixin, View):
         print(quantity, size)
         # getting product id
         product_id = self.kwargs['pro_id']
-        print(product_id, "add to cart")
         # get product
         product_obj = Products.objects.get(id=product_id)
         # check if cart exists of not
-        cart_id = None
-        if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
-            customer = Customer.objects.get(username=request.user)
-            cart_id = customer.cart_items
-        else:
-            cart_id = self.request.session.get('cart_id', None)
+        cart_id = self.request.session.get('cart_id', None)
         # if cart exists
         if cart_id:
             cart_obj = Cart.objects.get(id=cart_id)
@@ -480,7 +403,7 @@ class AddToCartView(EcomMixin, View):
                 cart_obj.total = cart_obj.subtotal + cart_obj.vat
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
-
+                
             # if product doesnot exists
             else:
                 cartproduct = CartProduct.objects.create(
@@ -492,15 +415,11 @@ class AddToCartView(EcomMixin, View):
                 cart_obj.total = cart_obj.subtotal + cart_obj.vat
                 cart_obj.save()
                 messages.success(self.request, "Item added to cart")
+            
 
         # if cart does not exists
         else:
             cart_obj = Cart.objects.create(total=0, subtotal=0)
-            if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
-                customer = Customer.objects.get(username=request.user)
-                customer.cart_items = cart_obj.id
-                customer.save(update_fields=['cart_items'])
-
             self.request.session['cart_id'] = cart_obj.id
             cartproduct = CartProduct.objects.create(
                 cart=cart_obj, product=product_obj, rate=product_obj.selling_price, quantity=quantity,
@@ -514,35 +433,7 @@ class AddToCartView(EcomMixin, View):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
-
-class UpdateQuantityView(View):
-    def get(self, request, *args, **kwargs):
-        if request.is_ajax:
-            item_qty = request.GET.get("item_qty", None) 
-            product_id = request.GET.get("product_id", None) 
-            product = CartProduct.objects.get(id = product_id)
-            product_obj = product.cart
-            print(product, item_qty)
-            if item_qty > '1':
-                product.quantity = int(item_qty)
-                print(type(product.quantity))
-                product.subtotal  = (int(item_qty) * product.rate)
-                product_obj.subtotal = (int(item_qty) * product.rate)
-                
-                print( product_obj.subtotal, '11111111111111111111111111111')
-                if product_obj.vat:
-                    product_obj.vat += (int(item_qty) * product.product.vat_amt)
-                product_obj.total = product_obj.subtotal + product_obj.vat
-               
-                print('111111111111111', product_obj.total,product_obj.vat)
-                product.save(update_fields=['quantity', 'subtotal'])
-                product_obj.save(update_fields=['vat','total', 'subtotal'])
-            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
-              
-
-          
-
-class ManageCartView(View):
+class ManageCartView(EcomMixin,View):
     def get(self, request, *args, **kwargs):
         cp_id = self.kwargs.get('p_id')
         action = request.GET.get('action')
@@ -575,16 +466,16 @@ class MyCartView(EcomMixin,BaseMixin, TemplateView):
 class CouponView(EcomMixin,TemplateView):
     def get(self, request, *args, **kwargs):
         if request.is_ajax:
-            coupon_code = request.GET.get("coupon_code", None)
+            coupon_code = request.GET.get("coupon_code", None)          
             if Coupon.objects.filter(deleted_at__isnull=True, code=coupon_code, validity_count__gte=1, valid_from__lte=timezone.now(), valid_to__gte=timezone.now()):
                 code = self.request.session.get('code')
                 if code:
                     pass
                 else:
                     request.session['code'] = coupon_code
-                return JsonResponse({"valid": True}, status=200)
+                return JsonResponse({"valid":True}, status=200) 
                 # if Coupon.objects.filter(is_used)
-
+                
             else:
                 return JsonResponse({"valid": False}, status=200)
         return JsonResponse({}, status=400)
@@ -622,13 +513,13 @@ class CheckoutView(EcomMixin, BaseMixin, CreateView):
                 if coupon_obj:
                     form.instance.coupon = Coupon.objects.get(code=code)
                     order.total -= coupon_obj.discount_amt
-                    order.save(update_fields=['coupon', 'total'])
-            messages.success(self.request, "Your order is on the way.")
-        else:
+                    order.save(update_fields=['coupon','total'])
+            messages.success(self.request,"Your order is on the way.")    
+        else:      
             return redirect("home:home")
 
         return super().form_valid(form)
-
+    
 # wishlist
 
 class AddtoWishlist(View):
@@ -660,6 +551,7 @@ class MyWishListView(BaseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['wishlist'] = Wishlist.objects.filter(user=self.request.user)
+        
         return context
 
 
