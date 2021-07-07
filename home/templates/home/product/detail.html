@@ -44,7 +44,7 @@
             {{ product_detail.name }}
             </h3>
               <div class="star-rating mb-4"><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
-              </div> <span class="product-price h4">Nrs. {{ product_detail.selling_price  }}<del class="text-muted h6">Nrs. {{ product_detail.marked_price }}</del></span>
+              </div> <span class="product-price h4">Nrs. {{ product_detail.selling_price  }} {% if product_detail.discount_percent %}<del class="text-muted h6">Nrs. {{ product_detail.marked_price }}</del>{% endif %}</span>
               <ul class="list-unstyled my-4">
                 <li class="mb-2">Availibility:{% if product_detail.status %} <span class="text-muted"> In Stock</span> {% else %}<span class="text-muted"> Out of Stock</span>{% endif %}
                 </li>

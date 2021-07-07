@@ -281,23 +281,27 @@ class ProductDetailView(BaseMixin, DetailView):
         return obj
 
 
-class ProductQuickView(View):
-    def get(self, request, *args, **kwargs):
-        print("get method called")
-        if request.is_ajax:
-            product_id = request.GET.get("product_id", None)
-            product_obj = Products.objects.get(id=product_id)
-            product = {
-                'id': product_obj.id, 'name': product_obj.name, 'marked_price': product_obj.marked_price,
-                'selling_price': product_obj.selling_price, 'description': product_obj.description,
-                'status': product_obj.status
-            }
-            data = {
-                'product': product
+class ProductQuickView(DetailView):
+    template_name = 'home/product/quick-view.html'
+    model = Products
+    context_object_name = 'product'
 
-            }
+    # def get(self, request, *args, **kwargs):
+    #     print("get method called")
+    #     if request.is_ajax:
+    #         product_id = request.GET.get("product_id", None)
+    #         product_obj = Products.objects.get(id=product_id)
+    #         product = {
+    #             'id': product_obj.id, 'name': product_obj.name, 'marked_price': product_obj.marked_price,
+    #             'selling_price': product_obj.selling_price, 'description': product_obj.description,
+    #             'status': product_obj.status
+    #         }
+    #         data = {
+    #             'product': product
 
-        return JsonResponse(product)
+    #         }
+    #     print(product)
+    #     return JsonResponse(request, self.template_name, {'product': product})
 
 # about
 
