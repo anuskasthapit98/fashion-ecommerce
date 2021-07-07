@@ -66,10 +66,10 @@
                   </td>
                   <td>
                     <div class="d-flex justify-content-center align-items-center">
-                      <button class="btn-product btn-product-up"> <i class="las la-minus"></i>
+                      <button class="btn-product btn-product-up" id="minus" data-pid = "{{product.id}}" > <i class="las la-minus"></i>
                       </button>
-                      <input class="form-product" type="number" name="form-product" value="{{ product.quantity }}">
-                      <button class="btn-product btn-product-down"> <i class="las la-plus"></i>
+                      <input class="form-product" type="number" name="form-product" id="qty"  value="{{ product.quantity }}" >
+                      <button class="btn-product btn-product-down" id="plus" data-pid = "{{product.id}}"  > <i class="las la-plus"></i>
                       </button>
                     </div>
                   </td>
@@ -95,7 +95,7 @@
                 </div>
               </div>
             </form>
-            <button class="btn btn-primary btn-animated mt-3 mt-md-0">Update Cart</button>
+            <button class="btn btn-primary btn-animated mt-3 mt-md-0" >Update Cart</button>
           </div>
         </div>
         <div class="col-lg-4 pl-lg-5 mt-8 mt-lg-0">
@@ -137,6 +137,46 @@ $("#code").click(function(){
       }
       else{
         alert("Coupon not found");
+      }
+    }
+  });
+});
+
+$("#plus").click(function(){  
+  var qty = $("#qty").val();
+  var p_id = $(this).attr("data-pid");
+  alert(qty)
+  $.ajax({
+    url: "{% url 'home:update-quantity' %}",
+    method:'GET',
+    data: {
+      'item_qty': qty,
+      'product_id':p_id
+    },
+  
+    success: function (data){
+      if (data.valid){
+        alert("Item quantity increased")
+      }
+    }
+  });
+});
+
+$("#minus").click(function(){ 
+  var qty = $("#qty").val();
+  var p_id = $(this).attr("data-pid");
+  alert(qty)
+  $.ajax({
+    url: "{% url 'home:update-quantity' %}",
+    method:'GET',
+    data: {
+      'item_qty': qty,
+      'product_id':p_id
+    },
+  
+    success: function (data){
+      if (data.valid){
+        alert("Item quantity decreased")
       }
     }
   });
