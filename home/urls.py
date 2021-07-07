@@ -25,6 +25,8 @@ urlpatterns = [
     path('products/list/', ProductListView.as_view(), name='product-list'),
     path('products/<int:pk>/detail/',
          ProductDetailView.as_view(), name='product-detail'),
+    path('products/quick/view/', ProductQuickView.as_view(),
+         name='product-quick-view'),
 
     # about
     path('abouts/', AboutListView.as_view(), name="abouts"),
@@ -54,5 +56,9 @@ urlpatterns = [
 
     # coupon
     path('coupon/', CouponView.as_view(), name='coupon'),
+
+
+    path('add-to-wishlist/<int:pro_id>/', WishlistView.as_view(), name='add-to-wishlist'),
+    path('my-wishlist/', MyWishListView.as_view(), name='my-wishlist'),
 
 ]
