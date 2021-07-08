@@ -47,7 +47,7 @@ urlpatterns = [
     # my cart
     path('my-cart/', MyCartView.as_view(), name='my-cart'),
     #update-quantity
-     path('update-quantity/', UpdateQuantityView.as_view(), name='update-quantity'),
+    path('update-quantity/', UpdateQuantityView.as_view(), name='update-quantity'),
     # manage cart
     path('manage/<int:p_id>cart/', ManageCartView.as_view(), name='manage-cart'),
 

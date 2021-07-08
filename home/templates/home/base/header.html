@@ -286,8 +286,9 @@
                 
                 </a>
               </div>
-            
-              <a class="mr-3 ml-2 d-none d-sm-inline" href="#"><i class="lar la-heart"></i></a>
+            {% if request.user.customer %}
+              <a class="mr-3 ml-2 d-none d-sm-inline" href="{% url 'home:my-wishlist' %}"><i class="lar la-heart"></i></a>
+            {% endif %}
               <div>
                 <a class="d-flex align-items-center" href="#" id="header-cart-btn" data-toggle="modal" data-target="#cartModal"> <span class="bg-white px-2 py-1 shadow-sm rounded" {% if cart_products %} data-cart-items="{{ cart_products.count }}" {% endif %}>
                   <i class="las la-shopping-cart"></i>
