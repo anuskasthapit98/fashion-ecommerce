@@ -1,18 +1,22 @@
-from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+
 
 from dashboard.models import Category, CategoryType, Contact, CartProduct, Cart, Customer, Size
 
 
 class BaseMixin(object):
+    def get_cart_items(self):
+        if self.request.user.is_authenticated and hasattr(self.request.user, 'customer'):
+            return self.request.user.customer.cart_items
+        # return self.handle_no_permission()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['contact'] = Contact.objects.all()
-        # accessing cart
         cart_id = None
-        if self.request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
-            customer = Customer.objects.get(username=self.request.user)
-            cart_id = customer.cart_items
+        if self.get_cart_items():
+            cart_id = self.get_cart_items()
         else:
             cart_id = self.request.session.get('cart_id')
         if cart_id is not None:

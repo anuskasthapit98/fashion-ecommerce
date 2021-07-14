@@ -1,12 +1,12 @@
 
 from django.conf import settings as conf_settings
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
 from django.db.models.query_utils import Q
 from django.http import JsonResponse
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.crypto import get_random_string
@@ -29,6 +29,8 @@ class LoginView(FormView):
         username = form.cleaned_data['username']
         pword = form.cleaned_data['password']
         user = authenticate(username=username, password=pword)
+        if self.request.POST.get('remember', None) == None:
+            self.request.session.set_expiry(0)
 
         if user is not None:
             login(self.request, user)
@@ -245,7 +247,20 @@ class ProductImageCreateView(CreateView, SidebarMixin):
         return JsonResponse({"errors": form.errors}, status=400)
 
 
+class ParentRelatedCategoryView(TemplateView):
+    template_name = 'dashboard/product/product-ajax-view.html'
+    model = Products
+
+    def get(self, request, *args, **kwargs):
+        type = request.GET.get('type')
+        parents = Category.objects.filter(
+            category_type__id=type, parent__isnull=False, deleted_at__isnull=True)
+
+        return render(request, self.template_name, {"parents": parents})
+
 # products view starts here
+
+
 class ProductListView(NonDeletedItemMixin, SidebarMixin, ListView):
     template_name = 'dashboard/product/list.html'
     model = Products

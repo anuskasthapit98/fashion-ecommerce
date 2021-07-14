@@ -15,7 +15,7 @@
                         <h2>Basic Form Controls</h2>
                     </div>
                     <div class="card-body">
-                        <form method="POST" enctype="multipart/form-data" id="category_form" data-related-category="{% url 'dashboard:type-related-category' %}">
+                        <form method="POST" enctype="multipart/form-data" id="category_form" data-related-category="{% url 'dashboard:parent-related-category' %}">
                             {% csrf_token %}
                             {{ form.media }}
                             <div class="row form-group">
@@ -109,4 +109,22 @@
 <script>
 {% include 'dashboard/documents/upload-file.js' %}
 </script>
+<script>
+    $("#id_type").change(function () {
+      var url = $("#category_form").attr("data-related-category");  // get the url of the `load_cities` view
+      var TypeId = $(this).val();  // get the selected country ID from the HTML input
+  
+      $.ajax({                       // initialize an AJAX request
+        url: url, 
+        method:'GET',                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'type': TypeId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_categories").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+  
+    });
+  </script>
 {% endblock %}

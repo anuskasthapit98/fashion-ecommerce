@@ -1,29 +1,25 @@
-from django.conf import settings
+import random
+
 from django.conf import settings as conf_settings
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth import authenticate, login, logout
-from django.core.mail import EmailMultiAlternatives
-from django.core.mail import send_mail
-from django.db.models import Q
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.db.models import Q, F
 from django.forms.models import model_to_dict
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect
 from django.template.loader import get_template
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.urls.base import clear_script_prefix
 from django.utils.crypto import get_random_string
-from django.urls import reverse
-from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
-from django.db.models import F
-import random
 from django.views.generic import *
+
 from dashboard.forms import *
 from dashboard.models import *
 from dashboard.mixines import *
-from dashboard.mixines import *
+
 from .forms import *
 from .mixins import *
 from .forms import *
@@ -93,6 +89,9 @@ class CustomerLoginView(BaseMixin, FormView):
         user = authenticate(username=username, password=pword)
 
         if user is not None:
+            if self.request.POST.get('remember', None) == None:
+                self.request.session.set_expiry(0)
+
             login(self.request, user)
             customer = Customer.objects.get(username=self.request.user)
             cart_id = self.request.session.get('cart_id', None)
@@ -103,11 +102,9 @@ class CustomerLoginView(BaseMixin, FormView):
                 else:
                     session_cart_product = CartProduct.objects.filter(
                         cart__id=cart_id)
-                    print(session_cart_product, "session cart product")
                     for product in session_cart_product:
                         print(product.product, "session product")
                         pro_id = product.product.id
-                        print(pro_id, "id showing")
                         cart_obj = Cart.objects.get(id=customer.cart_items)
                         product_obj = Products.objects.get(id=pro_id)
                         # checking for product existance
@@ -423,7 +420,7 @@ class SubscriptionView(View):
             messages.success(
                 request, f'Thank you for Subscription {email}')
             subject = "Thank you for joining Us"
-            from_email = settings.EMAIL_HOST_USER
+            from_email = conf_settings.EMAIL_HOST_USER
             to_email = [email]
             html_template = get_template(
                 "home/newsletter/newsletter.html").render()
@@ -439,7 +436,7 @@ class SubscriptionView(View):
 # cart funtionality view
 
 
-class AddToCartView(View):
+class AddToCartView(BaseMixin, View):
 
     def get(self, request, *args, **kwargs):
         quantity = 1
@@ -448,15 +445,13 @@ class AddToCartView(View):
             quantity = int(request.GET.get('quantity'))
         if 'size' in request.GET:
             size = request.GET.get('size')
-        print(quantity, size)
         # getting product id
         product_id = self.kwargs['pro_id']
-        print(product_id, "add to cart")
         # get product
         product_obj = Products.objects.get(id=product_id)
         # check if cart exists of not
         cart_id = None
-        if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
+        if self.request.user.is_authenticated and hasattr(self.request.user, 'customer'):
             customer = Customer.objects.get(username=request.user)
             cart_id = customer.cart_items
         else:
@@ -496,7 +491,7 @@ class AddToCartView(View):
         # if cart does not exists
         else:
             cart_obj = Cart.objects.create(total=0, subtotal=0)
-            if request.user.is_authenticated and Customer.objects.filter(is_customer=True).exists():
+            if self.request.user.is_authenticated and hasattr(self.request.user, 'customer'):
                 customer = Customer.objects.get(username=request.user)
                 customer.cart_items = cart_obj.id
                 customer.save(update_fields=['cart_items'])
@@ -514,33 +509,29 @@ class AddToCartView(View):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
-
 class UpdateQuantityView(View):
     def get(self, request, *args, **kwargs):
         if request.is_ajax:
-            item_qty = request.GET.get("item_qty", None) 
-            product_id = request.GET.get("product_id", None) 
-            product = CartProduct.objects.get(id = product_id)
+            item_qty = request.GET.get("item_qty", None)
+            product_id = request.GET.get("product_id", None)
+            product = CartProduct.objects.get(id=product_id)
             product_obj = product.cart
             print(product, item_qty)
             if item_qty > '1':
                 product.quantity = int(item_qty)
                 print(type(product.quantity))
-                product.subtotal  = (int(item_qty) * product.rate)
+                product.subtotal = (int(item_qty) * product.rate)
                 product_obj.subtotal = (int(item_qty) * product.rate)
-                
-                print( product_obj.subtotal, '11111111111111111111111111111')
-                if product_obj.vat:
-                    product_obj.vat += (int(item_qty) * product.product.vat_amt)
-                product_obj.total = product_obj.subtotal + product_obj.vat
-               
-                print('111111111111111', product_obj.total,product_obj.vat)
-                product.save(update_fields=['quantity', 'subtotal'])
-                product_obj.save(update_fields=['vat','total', 'subtotal'])
-            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
-              
 
-          
+                if product_obj.vat:
+                    product_obj.vat += (int(item_qty) *
+                                        product.product.vat_amt)
+                product_obj.total = product_obj.subtotal + product_obj.vat
+
+                product.save(update_fields=['quantity', 'subtotal'])
+                product_obj.save(update_fields=['vat', 'total', 'subtotal'])
+            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
 
 class ManageCartView(View):
     def get(self, request, *args, **kwargs):
