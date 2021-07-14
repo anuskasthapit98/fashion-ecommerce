@@ -47,7 +47,7 @@ urlpatterns = [
     # my cart
     path('my-cart/', MyCartView.as_view(), name='my-cart'),
     #update-quantity
-     path('update-quantity/', UpdateQuantityView.as_view(), name='update-quantity'),
+    path('update-quantity/', UpdateQuantityView.as_view(), name='update-quantity'),
     # manage cart
     path('manage/<int:p_id>cart/', ManageCartView.as_view(), name='manage-cart'),
 
@@ -58,8 +58,7 @@ urlpatterns = [
     path('coupon/', CouponView.as_view(), name='coupon'),
 
 
-    path('add-to-wishlist/<int:pro_id>/',
-         WishlistView.as_view(), name='add-to-wishlist'),
+    path('add-to-wishlist/<int:pro_id>/', AddtoWishlist.as_view(), name='add-to-wishlist'),
     path('my-wishlist/', MyWishListView.as_view(), name='my-wishlist'),
 
 ]

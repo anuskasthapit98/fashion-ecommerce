@@ -46,14 +46,13 @@
                 </tr>
               </thead>
               <tbody>
-              {{ wishlist.products }}
-              {{ wishlist.products.selling_price }}
+          
               
-                {% for wishlist in wishlist.products_set.all %}
+                {% for wishlist in wishlist %}
                 <tr>
                   <td>
                     <div class="media align-items-center">
-                        {% for img in products.image.all|slice:1 %}
+                        {% for img in wishlist.products.image.all|slice:1 %}
                       <a href="#">
                         <img style="width: 100px"  class="img-fluid" src="{{ img.image.url }}" alt="">
                       </a>
@@ -67,7 +66,7 @@
                   <td> <span class="product-price text-muted">Nrs. {{ wishlist.products.selling_price }}</span>
                   </td>
                 </tr>
-                {% endfor %}
+                {% endfor %} 
               </tbody>
             </table>
           </div>
