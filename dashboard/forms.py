@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
+from django.db.models.query import QuerySet
 from django.forms import widgets
 
 from .mixines import *
@@ -126,6 +127,11 @@ class CategoryForm(FormControlMixin, forms.ModelForm):
         model = Category
         fields = "__all__"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].queryset = Category.objects.filter(
+            parent__isnull=True)
+
 
 # product image form
 
@@ -157,6 +163,8 @@ class ProductForm(FormControlMixin, forms.ModelForm):
         self.fields['color'].widget.attrs.update({
             'class': 'form-control select2'
         })
+        self.fields['categories'].queryset = Category.objects.filter(
+            parent__isnull=False, deleted_at__isnull=True)
 
 # brand create form
 

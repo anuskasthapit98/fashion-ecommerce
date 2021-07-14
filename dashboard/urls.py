@@ -41,6 +41,8 @@ urlpatterns = [
     # product urls here
     path('dashboard/product/specific-list/',
          SpecificProductList.as_view(), name='specific-products'),
+    path('dashboard/parents/related/category/',
+         ParentRelatedCategoryView.as_view(), name='parent-related-category'),
     path('dashboard/product/list/',
          ProductListView.as_view(), name='products'),
     path('dashboard/product/create/',
@@ -173,9 +175,10 @@ urlpatterns = [
 
 
     # coupon urls
-    
+
     path('dashboard/coupon/list/', CouponListView.as_view(), name='coupons'),
-    path('dashboard/coupon/create/', CouponCreateView.as_view(), name='coupon-create'),
+    path('dashboard/coupon/create/',
+         CouponCreateView.as_view(), name='coupon-create'),
     path('dashboard/coupon/<int:pk>/update/',
          CouponUpdateView.as_view(), name='coupon-update'),
     path('dashboard/coupon/<int:pk>/delete/',
